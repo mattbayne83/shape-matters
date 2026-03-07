@@ -454,6 +454,42 @@ export function ScrollPage() {
                     <span className="text-slate-400">Moment of Inertia{'      '}</span> = Sum(n<sub>k</sub>·(k - centroid)<sup>2</sup>){' '}
                     <span className="text-slate-400 text-xs">organizational rigidity proxy</span>
                   </div>
+                  <div>
+                    <span className="text-slate-400">Pivot Speed (Agility){'  '}</span> = 1 - I / I<sub>max</sub>{' '}
+                    <span className="text-slate-400 text-xs">where I<sub>max</sub> = N × L²</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Layer Inertia{'          '}</span> = n<sub>k</sub> × (k - centroid)<sup>2</sup>{' '}
+                    <span className="text-slate-400 text-xs">per-layer rigidity contribution</span>
+                  </div>
+                </div>
+              </div>
+
+              <Prose>
+                <h3>Shape Classification</h3>
+                <p>
+                  Organizations are classified into four shape archetypes based on their slope angle and shape gap:
+                </p>
+              </Prose>
+
+              <div className="my-6 bg-white border border-slate-200 rounded-xl p-5">
+                <div className="font-mono text-sm text-slate-800 leading-loose space-y-1">
+                  <div>
+                    <span className="text-slate-400">Mesa{'                   '}</span> slope &lt; 30° or levels ≤ 2{' '}
+                    <span className="text-slate-400 text-xs">— flat and wide, minimal hierarchy</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Pyramid{'                '}</span> slope 30-55°, gap &lt; 8%{' '}
+                    <span className="text-slate-400 text-xs">— balanced, closest to idealized triangle</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Diamond{'                '}</span> gap &gt; 8%, slope &gt; 40°{' '}
+                    <span className="text-slate-400 text-xs">— bloated middle layers, hidden costs</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Obelisk{'                '}</span> slope &gt; 55°{' '}
+                    <span className="text-slate-400 text-xs">— steep and deep, narrow span of control</span>
+                  </div>
                 </div>
               </div>
 

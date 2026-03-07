@@ -344,7 +344,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           Ideal centroid (h/3)
         </text>
 
-        {/* Actual centroid */}
+        {/* Actual centroid line + center of mass dot */}
         <line
           x1={PAD.left + 20}
           y1={actualCentroidY}
@@ -362,8 +362,38 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           fontWeight="bold"
           style={{ animation: 'fade-in 0.4s ease-out 1.2s both' }}
         >
-          Actual centroid
+          Center of mass
         </text>
+
+        {/* Center of mass dot — weighted position on the actual org shape */}
+        <circle
+          cx={CENTER_X}
+          cy={actualCentroidY}
+          r={7}
+          fill="#7c3aed"
+          opacity={0.9}
+          style={{ animation: 'fade-in 0.5s ease-out 1.3s both' }}
+        />
+        <circle
+          cx={CENTER_X}
+          cy={actualCentroidY}
+          r={12}
+          fill="none"
+          stroke="#7c3aed"
+          strokeWidth={1.5}
+          opacity={0.3}
+          style={{ animation: 'fade-in 0.5s ease-out 1.4s both' }}
+        />
+        <circle
+          cx={CENTER_X}
+          cy={actualCentroidY}
+          r={18}
+          fill="none"
+          stroke="#7c3aed"
+          strokeWidth={1}
+          opacity={0.15}
+          style={{ animation: 'fade-in 0.5s ease-out 1.5s both' }}
+        />
 
         {/* Max gap annotation */}
         {maxGapLayer.gap > 0 && levels > 2 && (

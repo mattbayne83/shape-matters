@@ -64,6 +64,26 @@ export interface DepthTaxResult {
   decisionsPerMonth: number;
 }
 
+export type ShapeClassification = 'mesa' | 'pyramid' | 'diamond' | 'obelisk';
+
+export interface LayerInertia {
+  layer: number;
+  count: number;
+  distance: number;         // distance from centroid
+  contribution: number;     // count × distance²
+  contributionPct: number;  // % of total inertia
+  gapFromIdeal: number;     // actual - ideal count (positive = bloated)
+}
+
+export interface RestructuringImpact {
+  currentLevels: number;
+  proposedLevels: number;
+  agilityDelta: number;       // positive = improvement
+  inertiaReduction: number;   // percentage reduction
+  gravityDelta: number;       // negative = more decentralized
+  fidelityGain: number;       // percentage points gained at top
+}
+
 export interface TriangleGeometry {
   height: number;
   base: number;
@@ -78,4 +98,10 @@ export interface TriangleGeometry {
   agilityScore: number;
   perimeter: number;
   perimeterToArea: number;
+  // New: per-layer decomposition
+  layerInertia: LayerInertia[];
+  peakInertiaLayer: number;   // layer index with highest inertia contribution
+  // New: shape classification
+  shapeClass: ShapeClassification;
+  shapeClassLabel: string;
 }

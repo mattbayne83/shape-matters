@@ -34,7 +34,7 @@ export function ParallaxBackground() {
                         <path
                             d="M 60 0 L 0 0 0 60"
                             fill="none"
-                            stroke="#cbd5e1"
+                            stroke="#d6d3d1"
                             strokeWidth="0.5"
                         />
                     </pattern>
@@ -42,11 +42,11 @@ export function ParallaxBackground() {
 
                     {/* Subtle floating geometry that scrolls with the grid */}
                     <g opacity="0.4">
-                        <polygon points="20vw,20vh 25vw,10vh 25vw,30vh" fill="#94a3b8" />
-                        <polygon points="70vw,40vh 80vw,35vh 75vw,50vh" fill="#cbd5e1" />
-                        <polygon points="40vw,70vh 45vw,60vh 50vw,75vh" fill="none" stroke="#94a3b8" strokeWidth="2" />
-                        <circle cx="85vw" cy="85vh" r="4vw" fill="none" stroke="#e2e8f0" strokeWidth="1" />
-                        <circle cx="15vw" cy="90vh" r="8vw" fill="none" stroke="#f1f5f9" strokeWidth="2" />
+                        <polygon points="20vw,20vh 25vw,10vh 25vw,30vh" fill="#a8a29e" />
+                        <polygon points="70vw,40vh 80vw,35vh 75vw,50vh" fill="#d6d3d1" />
+                        <polygon points="40vw,70vh 45vw,60vh 50vw,75vh" fill="none" stroke="#a8a29e" strokeWidth="2" />
+                        <circle cx="85vw" cy="85vh" r="4vw" fill="none" stroke="#e7e5e4" strokeWidth="1" />
+                        <circle cx="15vw" cy="90vh" r="8vw" fill="none" stroke="#f5f5f4" strokeWidth="2" />
                     </g>
                 </svg>
             </motion.div>

@@ -51,8 +51,8 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
   const txMax = xFor(TYPICAL_MAX);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 mb-2">
+    <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-sm">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-2">
         Sensitivity — Round-Trip Fidelity vs. Per-Layer Rate
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
@@ -60,9 +60,9 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
         <rect
           x={txMin} y={PAD.top}
           width={txMax - txMin} height={plotH}
-          fill="#e2e8f0" opacity={0.4} rx={2}
+          fill="#e7e5e4" opacity={0.4} rx={2}
         />
-        <text x={(txMin + txMax) / 2} y={PAD.top + 8} textAnchor="middle" className="fill-slate-400" fontSize={7} fontWeight={600}>
+        <text x={(txMin + txMax) / 2} y={PAD.top + 8} textAnchor="middle" className="fill-stone-400" fontSize={7} fontWeight={600}>
           typical range
         </text>
 
@@ -70,7 +70,7 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
         <polyline
           points={polyline}
           fill="none"
-          stroke="#334155"
+          stroke="#44403c"
           strokeWidth={1.5}
           strokeLinejoin="round"
         />
@@ -102,13 +102,13 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
         </text>
 
         {/* X axis labels */}
-        <text x={PAD.left} y={H - 4} fontSize={7} fill="#94a3b8" textAnchor="start">50%</text>
-        <text x={PAD.left + plotW} y={H - 4} fontSize={7} fill="#94a3b8" textAnchor="end">98%</text>
-        <text x={PAD.left + plotW / 2} y={H - 4} fontSize={7} fill="#94a3b8" textAnchor="middle">per-layer rate</text>
+        <text x={PAD.left} y={H - 4} fontSize={7} fill="#a8a29e" textAnchor="start">50%</text>
+        <text x={PAD.left + plotW} y={H - 4} fontSize={7} fill="#a8a29e" textAnchor="end">98%</text>
+        <text x={PAD.left + plotW / 2} y={H - 4} fontSize={7} fill="#a8a29e" textAnchor="middle">per-layer rate</text>
 
         {/* Y axis labels */}
-        <text x={PAD.left - 4} y={PAD.top + 5} fontSize={7} fill="#94a3b8" textAnchor="end">100%</text>
-        <text x={PAD.left - 4} y={PAD.top + plotH} fontSize={7} fill="#94a3b8" textAnchor="end">0%</text>
+        <text x={PAD.left - 4} y={PAD.top + 5} fontSize={7} fill="#a8a29e" textAnchor="end">100%</text>
+        <text x={PAD.left - 4} y={PAD.top + plotH} fontSize={7} fill="#a8a29e" textAnchor="end">0%</text>
       </svg>
     </div>
   );

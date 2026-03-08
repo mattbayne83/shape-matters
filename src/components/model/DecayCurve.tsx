@@ -131,7 +131,7 @@ export function DecayCurve({
             y1={yPos(tick)}
             x2={W - PAD.right}
             y2={yPos(tick)}
-            stroke={tick === 0 ? '#cbd5e1' : '#f1f5f9'}
+            stroke={tick === 0 ? '#d6d3d1' : '#f5f5f4'}
             strokeWidth={tick === 0 ? 1 : 0.5}
           />
         ))}
@@ -166,7 +166,7 @@ export function DecayCurve({
         <path
           d={rtPath}
           fill="none"
-          stroke="#94a3b8"
+          stroke="#a8a29e"
           strokeWidth={1.5}
           strokeDasharray="6 4"
           strokeLinecap="round"
@@ -213,7 +213,7 @@ export function DecayCurve({
               cy={m.rtY}
               r={3}
               fill="white"
-              stroke="#94a3b8"
+              stroke="#a8a29e"
               strokeWidth={1.5}
             />
             <text
@@ -222,7 +222,7 @@ export function DecayCurve({
               textAnchor="start"
               className="font-mono"
               fontSize={9}
-              fill="#94a3b8"
+              fill="#a8a29e"
             >
               {m.rtPct.toFixed(1)}%
             </text>
@@ -238,7 +238,7 @@ export function DecayCurve({
             textAnchor="end"
             className="font-mono"
             fontSize={10}
-            fill="#94a3b8"
+            fill="#a8a29e"
           >
             {tick}%
           </text>
@@ -255,7 +255,7 @@ export function DecayCurve({
                 textAnchor="middle"
                 className="font-mono"
                 fontSize={10}
-                fill="#94a3b8"
+                fill="#a8a29e"
               >
                 {tick}
               </text>
@@ -266,7 +266,7 @@ export function DecayCurve({
                   textAnchor="middle"
                   className="font-semibold"
                   fontSize={9}
-                  fill="#64748b"
+                  fill="#78716c"
                 >
                   {label}
                 </text>
@@ -281,7 +281,7 @@ export function DecayCurve({
           y={H - 4}
           textAnchor="middle"
           fontSize={10}
-          fill="#94a3b8"
+          fill="#a8a29e"
         >
           Organizational Levels
         </text>
@@ -290,7 +290,7 @@ export function DecayCurve({
           y={PAD.top + PLOT_H / 2}
           textAnchor="middle"
           fontSize={10}
-          fill="#94a3b8"
+          fill="#a8a29e"
           transform={`rotate(-90, 12, ${PAD.top + PLOT_H / 2})`}
         >
           Signal Retained
@@ -299,11 +299,11 @@ export function DecayCurve({
         {/* Legend — top right */}
         <g>
           <line x1={W - PAD.right - 130} y1={PAD.top + 8} x2={W - PAD.right - 110} y2={PAD.top + 8} stroke="#16a34a" strokeWidth={2.5} />
-          <text x={W - PAD.right - 106} y={PAD.top + 12} fontSize={10} fill="#64748b">
+          <text x={W - PAD.right - 106} y={PAD.top + 12} fontSize={10} fill="#78716c">
             Upward (IC → CEO)
           </text>
-          <line x1={W - PAD.right - 130} y1={PAD.top + 24} x2={W - PAD.right - 110} y2={PAD.top + 24} stroke="#94a3b8" strokeWidth={1.5} strokeDasharray="6 4" />
-          <text x={W - PAD.right - 106} y={PAD.top + 28} fontSize={10} fill="#64748b">
+          <line x1={W - PAD.right - 130} y1={PAD.top + 24} x2={W - PAD.right - 110} y2={PAD.top + 24} stroke="#a8a29e" strokeWidth={1.5} strokeDasharray="6 4" />
+          <text x={W - PAD.right - 106} y={PAD.top + 28} fontSize={10} fill="#78716c">
             Round-trip
           </text>
         </g>

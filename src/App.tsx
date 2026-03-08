@@ -4,7 +4,7 @@ import { ScrollPage } from './pages/ScrollPage';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-slate-900 selection:text-white relative">
+    <div className="min-h-screen bg-white text-stone-900 font-sans selection:bg-stone-900 selection:text-white relative">
       <ParallaxBackground />
       <div className="relative z-10">
         <SectionNav />

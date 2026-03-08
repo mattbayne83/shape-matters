@@ -22,14 +22,14 @@ interface MetricCardProps {
 
 export function MetricCard({ label, value, unit, sub, accent, infoHref }: MetricCardProps) {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl px-4 py-3.5 min-w-0">
+    <div className="bg-white border border-stone-200 rounded-xl px-4 py-3.5 min-w-0">
       <div className={`${SECTION_LABEL} mb-1.5 flex items-center gap-1`}>
         {label}
         {infoHref && (
           <a
             href={infoHref}
             onClick={scrollToAnchor}
-            className="text-slate-300 hover:text-slate-500 transition-colors"
+            className="text-stone-300 hover:text-stone-500 transition-colors"
             title="View formula"
           >
             <svg className="w-3 h-3" viewBox="0 0 16 16" fill="currentColor">
@@ -38,11 +38,11 @@ export function MetricCard({ label, value, unit, sub, accent, infoHref }: Metric
           </a>
         )}
       </div>
-      <div className="text-2xl font-extrabold leading-none font-mono" style={{ color: accent || '#0f172a' }}>
+      <div className="text-2xl font-extrabold leading-none font-mono" style={{ color: accent || '#1C1917' }}>
         {value}
-        {unit && <span className="text-sm font-normal text-slate-500 ml-1">{unit}</span>}
+        {unit && <span className="text-sm font-normal text-stone-500 ml-1">{unit}</span>}
       </div>
-      {sub && <div className="text-[11px] text-slate-500 mt-1">{sub}</div>}
+      {sub && <div className="text-[11px] text-stone-500 mt-1">{sub}</div>}
     </div>
   );
 }

@@ -3,6 +3,7 @@
 
 @theme {
   --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
   --font-mono: 'DM Mono', monospace;
 
   --color-org-green: #16a34a;
@@ -11,6 +12,11 @@
   --color-org-amber: #d97706;
   --color-org-red: #dc2626;
   --color-org-cyan: #0891b2;
+
+  --color-ember: #E05A1B;
+  --color-ember-light: #F4A261;
+  --color-ember-deep: #B84515;
+  --color-warm-stone: #A8967A;
 }
 
 html {

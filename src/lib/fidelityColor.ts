@@ -1,7 +1,7 @@
 /**
  * Maps a fidelity percentage (0-100) to a color.
  *
- * Default (monochrome): slate-300 → slate-900. Used across the page.
+ * Default (monochrome): stone-300 → stone-900. Used across the page.
  * Semantic mode: red → amber → green. Used in the interactive playground
  * so users *feel* signal degradation as they manipulate sliders.
  */
@@ -10,10 +10,10 @@ export function fidelityColor(pct: number, semantic?: boolean): string {
   const t = clamped / 100;
 
   if (!semantic) {
-    // Monochrome: slate-300 (hsl 212, 33%, 89%) → slate-900 (hsl 222, 47%, 11%)
-    const h = 212 + t * (222 - 212);
-    const s = 33 + t * (47 - 33);
-    const l = 89 + t * (11 - 89);
+    // Monochrome: stone-300 (hsl 24, 6%, 83%) → stone-900 (hsl 24, 10%, 10%)
+    const h = 24;
+    const s = 6 + t * (10 - 6);
+    const l = 83 + t * (10 - 83);
     return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
   }
 

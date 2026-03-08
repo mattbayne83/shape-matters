@@ -14,11 +14,11 @@ export const ARCHETYPE_LABELS: Record<Archetype, string> = {
 };
 
 export const ARCHETYPE_COLORS: Record<Archetype, string> = {
-  flat: '#0f172a',    // slate-900
-  tech: '#1e293b',    // slate-800
-  flattened: '#334155', // slate-700
-  experimental: '#475569', // slate-600
-  energy: '#64748b',   // slate-500
+  flat: '#1C1917',    // stone-900
+  tech: '#292524',    // stone-800
+  flattened: '#44403c', // stone-700
+  experimental: '#57534e', // stone-600
+  energy: '#78716c',   // stone-500
 };
 
 export interface Company {

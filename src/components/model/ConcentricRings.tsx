@@ -113,7 +113,7 @@ export function ConcentricRings({ levels, fidelityRate, semantic, className }: C
             y={CY - d.r - d.ringW / 2 - 5}
             textAnchor="middle"
             fontSize={11}
-            fill="#94a3b8"
+            fill="#a8a29e"
             style={{
               animation: 'cascade-reveal 0.3s ease-out both',
               animationDelay: `${i * 120 + 400}ms`,

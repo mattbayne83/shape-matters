@@ -73,17 +73,17 @@ export function ModelYourOrg() {
       {/* ── LEFT COLUMN: INPUTS ── */}
       <div className="w-full lg:w-1/3 lg:max-w-sm shrink-0">
         <div className="sticky top-8 flex flex-col gap-6">
-          <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col gap-6">
+          <div className="bg-white rounded-xl p-6 border border-stone-200 shadow-sm flex flex-col gap-6">
             {/* Company Preset Dropdown */}
             <div>
-              <label htmlFor="mo-preset" className="text-[11px] font-bold text-slate-700 uppercase block mb-1.5">
+              <label htmlFor="mo-preset" className="text-[11px] font-bold text-stone-700 uppercase block mb-1.5">
                 Start from a Real Company
               </label>
               <select
                 id="mo-preset"
                 value={preset}
                 onChange={(e) => handlePresetChange(e.target.value)}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer"
+                className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-ember/30 cursor-pointer"
               >
                 <option value="custom">Custom</option>
                 {REFERENCE_COMPANIES.map((c) => (
@@ -95,15 +95,15 @@ export function ModelYourOrg() {
             </div>
 
             {/* Primary Slider: Org Levels */}
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-5">
+            <div className="bg-stone-50 border border-stone-200 rounded-lg p-5">
               <div className="flex items-baseline justify-between mb-3 text-center md:text-left">
                 <div>
-                  <label htmlFor="mo-levels" className="text-sm font-bold text-slate-900 uppercase tracking-wide">
+                  <label htmlFor="mo-levels" className="text-sm font-bold text-stone-900 uppercase tracking-wide">
                     Org Levels
                   </label>
-                  <div className="text-xs text-slate-500 mt-1">Adjust depth of hierarchy</div>
+                  <div className="text-xs text-stone-500 mt-1">Adjust depth of hierarchy</div>
                 </div>
-                <span className="text-2xl md:text-3xl font-black font-sans tabular-nums text-slate-900 bg-white px-3 py-1 rounded-md shadow-sm border border-slate-200">
+                <span className="text-2xl md:text-3xl font-black font-sans tabular-nums text-stone-900 bg-white px-3 py-1 rounded-md shadow-sm border border-stone-200">
                   {levels}
                 </span>
               </div>
@@ -114,16 +114,16 @@ export function ModelYourOrg() {
                 max={15}
                 value={levels}
                 onChange={(e) => handleLevels(+e.target.value)}
-                className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
               />
             </div>
 
             <div>
               <div className="flex items-baseline justify-between mb-1.5">
-                <label htmlFor="mo-headcount" className="text-[11px] font-bold text-slate-700 uppercase">
+                <label htmlFor="mo-headcount" className="text-[11px] font-bold text-stone-700 uppercase">
                   Organization Size
                 </label>
-                <span className="text-sm font-bold font-sans tabular-nums text-slate-900 border-b border-slate-200">
+                <span className="text-sm font-bold font-sans tabular-nums text-stone-900 border-b border-stone-200">
                   {headcount.toLocaleString()}
                 </span>
               </div>
@@ -134,16 +134,16 @@ export function ModelYourOrg() {
                 max={100}
                 value={hcSlider}
                 onChange={(e) => handleHeadcount(+e.target.value)}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+                className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
               />
             </div>
 
             <div>
               <div className="flex items-baseline justify-between mb-1.5">
-                <label htmlFor="mo-fidelity" className="text-[11px] font-bold text-slate-700 uppercase">
+                <label htmlFor="mo-fidelity" className="text-[11px] font-bold text-stone-700 uppercase">
                   Per-Layer Fidelity Rate
                 </label>
-                <span className="text-sm font-bold font-sans tabular-nums text-slate-900 border-b border-slate-200">{fidelityRate}%</span>
+                <span className="text-sm font-bold font-sans tabular-nums text-stone-900 border-b border-stone-200">{fidelityRate}%</span>
               </div>
               <input
                 id="mo-fidelity"
@@ -152,9 +152,9 @@ export function ModelYourOrg() {
                 max={98}
                 value={fidelityRate}
                 onChange={(e) => setFidelityRate(+e.target.value)}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-700"
+                className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
               />
-              <div className="text-[9px] text-slate-400 mt-1">
+              <div className="text-[9px] text-stone-400 mt-1">
                 80-85% is a reasonable empirical midpoint based on Bartlett's research.
               </div>
             </div>
@@ -165,7 +165,7 @@ export function ModelYourOrg() {
 
       {/* ── RIGHT COLUMN: OUTPUTS ── */}
       <div className="w-full lg:w-2/3 flex flex-col min-w-0">
-        <div className="bg-white rounded-2xl p-6 md:p-8 mb-6 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
+        <div className="bg-white rounded-2xl p-6 md:p-8 mb-6 border border-stone-100 shadow-sm flex flex-col md:flex-row items-center gap-8 md:gap-12">
           <div className="flex-1 text-center md:text-left">
             <div className={`${SECTION_LABEL} mb-2 justify-center md:justify-start`}>Round-Trip Fidelity</div>
             <div
@@ -174,7 +174,7 @@ export function ModelYourOrg() {
             >
               {tax.roundTripFidelity.toFixed(1)}%
             </div>
-            <div className="text-xs text-slate-500 mt-3 md:max-w-[200px] leading-relaxed">
+            <div className="text-xs text-stone-500 mt-3 md:max-w-[200px] leading-relaxed">
               Signal remaining after {levels - 1} layers up and {levels - 1} layers down ({(levels - 1) * 2} relay hops).
             </div>
           </div>
@@ -271,38 +271,38 @@ export function ModelYourOrg() {
           <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide bg-emerald-100 px-2 py-0.5 rounded-full">What if</span>
-              <span className="text-[11px] text-slate-600">
+              <span className="text-[11px] text-stone-600">
                 You removed a layer ({restructure.currentLevels} → {restructure.proposedLevels}) with the same {headcount.toLocaleString()} employees
               </span>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               <div className="bg-white rounded-lg px-3 py-2.5">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Pivot Speed</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Pivot Speed</div>
                 <div className="text-lg font-black font-mono text-green-600">
                   +{(restructure.agilityDelta * 100).toFixed(1)}%
                 </div>
-                <div className="text-[10px] text-slate-400">faster pivots</div>
+                <div className="text-[10px] text-stone-400">faster pivots</div>
               </div>
               <div className="bg-white rounded-lg px-3 py-2.5">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Inertia</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Inertia</div>
                 <div className="text-lg font-black font-mono text-green-600">
                   -{restructure.inertiaReduction.toFixed(0)}%
                 </div>
-                <div className="text-[10px] text-slate-400">less rigidity</div>
+                <div className="text-[10px] text-stone-400">less rigidity</div>
               </div>
               <div className="bg-white rounded-lg px-3 py-2.5">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Mgmt Tax</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Mgmt Tax</div>
                 <div className="text-lg font-black font-mono" style={{ color: restructure.managerRatioDelta < 0 ? '#16a34a' : '#d97706' }}>
                   {restructure.managerRatioDelta < 0 ? '' : '+'}{restructure.managerRatioDelta.toFixed(1)}pp
                 </div>
-                <div className="text-[10px] text-slate-400">{restructure.managerRatioDelta < 0 ? 'leaner structure' : 'more overhead'}</div>
+                <div className="text-[10px] text-stone-400">{restructure.managerRatioDelta < 0 ? 'leaner structure' : 'more overhead'}</div>
               </div>
               <div className="bg-white rounded-lg px-3 py-2.5">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Signal Fidelity</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Signal Fidelity</div>
                 <div className="text-lg font-black font-mono text-green-600">
                   +{restructure.fidelityGain.toFixed(1)}pp
                 </div>
-                <div className="text-[10px] text-slate-400">better signal to top</div>
+                <div className="text-[10px] text-stone-400">better signal to top</div>
               </div>
             </div>
           </div>
@@ -310,7 +310,7 @@ export function ModelYourOrg() {
 
         {/* ── [G] More Metrics Disclosure ── */}
         <details className="group">
-          <summary className="cursor-pointer list-none flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors py-2">
+          <summary className="cursor-pointer list-none flex items-center justify-center gap-1.5 text-xs text-stone-400 hover:text-stone-600 transition-colors py-2">
             <span>More metrics</span>
             <svg
               className="w-3 h-3 transition-transform group-open:rotate-180"

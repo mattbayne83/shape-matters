@@ -203,7 +203,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
 
   if (levels <= 1) {
     return (
-      <div className="w-full text-center py-12 text-sm text-slate-500">
+      <div className="w-full text-center py-12 text-sm text-stone-500">
         Single-level organizations have no hierarchical depth — no triangle to display.
       </div>
     );
@@ -219,12 +219,12 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
       >
         <defs>
           <linearGradient id="shape-actual-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="#d6d3d1" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#a8a29e" stopOpacity="0.2" />
           </linearGradient>
           <linearGradient id="shape-gap-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#64748b" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#475569" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#78716c" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#57534e" stopOpacity="0.3" />
           </linearGradient>
         </defs>
 
@@ -239,7 +239,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
                 y1={y}
                 x2={W - PAD.right}
                 y2={y}
-                stroke="#e2e8f0"
+                stroke="#e7e5e4"
                 strokeWidth={0.5}
                 strokeDasharray="4 4"
               />
@@ -258,7 +258,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
                 textAnchor="end"
                 fontSize={9}
                 className="font-mono"
-                fill="#94a3b8"
+                fill="#a8a29e"
               >
                 L{levels - 1 - k}
               </text>
@@ -280,7 +280,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
         <path
           d={trianglePath}
           fill="none"
-          stroke="#94a3b8"
+          stroke="#a8a29e"
           strokeWidth={1.5}
           strokeDasharray="8 4"
           strokeLinejoin="round"
@@ -293,7 +293,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
         <path
           d={actualPath}
           fill="url(#shape-actual-fill)"
-          stroke="#334155"
+          stroke="#44403c"
           strokeWidth={1.5}
           strokeLinejoin="round"
           style={{
@@ -330,7 +330,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           y1={idealCentroidY}
           x2={W - PAD.right - 20}
           y2={idealCentroidY}
-          stroke="#94a3b8"
+          stroke="#a8a29e"
           strokeWidth={1}
           strokeDasharray="3 3"
           style={{ animation: 'fade-in 0.4s ease-out 1s both' }}
@@ -339,7 +339,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           x={PAD.left + 22}
           y={idealCentroidY - 5}
           fontSize={8}
-          fill="#94a3b8"
+          fill="#a8a29e"
           style={{ animation: 'fade-in 0.4s ease-out 1s both' }}
         >
           Ideal centroid (h/3)
@@ -351,7 +351,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           y1={actualCentroidY}
           x2={W - PAD.right - 20}
           y2={actualCentroidY}
-          stroke="#0f172a"
+          stroke="#1C1917"
           strokeWidth={1.5}
           className="float-subtle"
           style={{ animation: 'fade-in 0.4s ease-out 1.2s both' }}
@@ -360,7 +360,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           x={PAD.left + 22}
           y={actualCentroidY - 5}
           fontSize={8}
-          fill="#0f172a"
+          fill="#1C1917"
           fontWeight="bold"
           className="float-subtle"
           style={{ animation: 'fade-in 0.4s ease-out 1.2s both' }}
@@ -374,7 +374,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
             cx={CENTER_X}
             cy={actualCentroidY}
             r={7}
-            fill="#0f172a"
+            fill="#1C1917"
             opacity={0.9}
             style={{ animation: 'fade-in 0.5s ease-out 1.3s both' }}
           />
@@ -383,7 +383,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
             cy={actualCentroidY}
             r={12}
             fill="none"
-            stroke="#0f172a"
+            stroke="#1C1917"
             strokeWidth={1.5}
             opacity={0.3}
             className="ring-pulse-1"
@@ -394,7 +394,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
             cy={actualCentroidY}
             r={18}
             fill="none"
-            stroke="#0f172a"
+            stroke="#1C1917"
             strokeWidth={1}
             opacity={0.15}
             className="ring-pulse-2"
@@ -409,7 +409,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
               x={CENTER_X + halfW(layerCounts[maxGapLayer.layer], maxWidth) + 16}
               y={yPos(maxGapLayer.layer, levels) + 4}
               fontSize={9}
-              fill="#0f172a"
+              fill="#1C1917"
               fontWeight="bold"
             >
               Max gap
@@ -419,16 +419,16 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
 
         {/* Legend */}
         <g style={{ animation: 'fade-in 0.4s ease-out 0.8s both' }}>
-          <line x1={PAD.left} y1={H - 16} x2={PAD.left + 20} y2={H - 16} stroke="#94a3b8" strokeWidth={1.5} strokeDasharray="8 4" />
-          <text x={PAD.left + 26} y={H - 12} fontSize={9} fill="#64748b">
+          <line x1={PAD.left} y1={H - 16} x2={PAD.left + 20} y2={H - 16} stroke="#a8a29e" strokeWidth={1.5} strokeDasharray="8 4" />
+          <text x={PAD.left + 26} y={H - 12} fontSize={9} fill="#78716c">
             Idealized triangle (linear)
           </text>
-          <line x1={PAD.left + 190} y1={H - 16} x2={PAD.left + 210} y2={H - 16} stroke="#334155" strokeWidth={2} />
-          <text x={PAD.left + 216} y={H - 12} fontSize={9} fill="#64748b">
+          <line x1={PAD.left + 190} y1={H - 16} x2={PAD.left + 210} y2={H - 16} stroke="#44403c" strokeWidth={2} />
+          <text x={PAD.left + 216} y={H - 12} fontSize={9} fill="#78716c">
             Actual org shape (exponential)
           </text>
-          <rect x={PAD.left + 400} y={H - 22} width={12} height={12} rx={2} fill="#475569" opacity={0.3} />
-          <text x={PAD.left + 418} y={H - 12} fontSize={9} fill="#64748b">
+          <rect x={PAD.left + 400} y={H - 22} width={12} height={12} rx={2} fill="#57534e" opacity={0.3} />
+          <text x={PAD.left + 418} y={H - 12} fontSize={9} fill="#78716c">
             Shape gap
           </text>
         </g>
@@ -438,7 +438,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           x={PAD.left - 6}
           y={PAD.top - 10}
           fontSize={9}
-          fill="#94a3b8"
+          fill="#a8a29e"
           textAnchor="end"
         >
           CEO
@@ -447,7 +447,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           x={PAD.left - 6}
           y={PAD.top + PLOT_H + 12}
           fontSize={9}
-          fill="#94a3b8"
+          fill="#a8a29e"
           textAnchor="end"
         >
           ICs
@@ -456,11 +456,11 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
 
       {/* Shape gap callout */}
       <div className="mt-3 text-center">
-        <span className="text-xs text-slate-500">Shape Gap Index: </span>
+        <span className="text-xs text-stone-500">Shape Gap Index: </span>
         <span className="text-sm font-bold font-mono" style={{ color: geo.totalShapeGap > 0.15 ? '#0f172a' : geo.totalShapeGap > 0.05 ? '#334155' : '#64748b' }}>
           {(geo.totalShapeGap * 100).toFixed(1)}%
         </span>
-        <span className="text-[10px] text-slate-400 ml-2">
+        <span className="text-[10px] text-stone-400 ml-2">
           divergence between idealized triangle and actual org shape
         </span>
       </div>

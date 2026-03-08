@@ -27,7 +27,7 @@ export function LayerDiagram({ levels, fidelityRate, compact }: LayerDiagramProp
 
         return (
           <div key={l.level} className="flex items-center gap-1.5 w-full">
-            <div className="text-[10px] text-slate-500 w-6 text-left shrink-0">
+            <div className="text-[10px] text-stone-500 w-6 text-left shrink-0">
               L{l.level}
             </div>
             <div className="flex-1 flex justify-center">
@@ -39,7 +39,7 @@ export function LayerDiagram({ levels, fidelityRate, compact }: LayerDiagramProp
                 }}
               />
             </div>
-            <div className="text-[10px] text-slate-500 font-mono w-8 text-right shrink-0">
+            <div className="text-[10px] text-stone-500 font-mono w-8 text-right shrink-0">
               {l.fidelity.toFixed(0)}%
             </div>
           </div>

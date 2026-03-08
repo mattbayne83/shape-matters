@@ -78,7 +78,7 @@ export function SignalCascade({ levels, fidelityRate, semantic, compact }: Signa
                 x={centerX + d.bw / 2 + 8}
                 y={d.y + d.blockH / 2 + 4}
                 fontSize={9}
-                fill="#94a3b8"
+                fill="#a8a29e"
                 style={{
                   animation: 'cascade-reveal 0.3s ease-out both',
                   animationDelay: `${i * 80 + 200}ms`,

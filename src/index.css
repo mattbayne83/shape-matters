@@ -154,3 +154,59 @@ body {
     opacity: 1;
   }
 }
+
+/* Shape overlay continuous animations */
+@keyframes gap-breathe {
+
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.gap-breathe {
+  animation: fade-in 0.8s ease-out 0.6s both, gap-breathe 4s ease-in-out infinite 1.4s;
+}
+
+@keyframes float-subtle {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.float-subtle {
+  animation: float-subtle 6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes ring-pulse-slow {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.ring-pulse-1 {
+  animation: ring-pulse-slow 3s ease-out infinite;
+  transform-origin: center;
+}
+
+.ring-pulse-2 {
+  animation: ring-pulse-slow 3s ease-out infinite 1.5s;
+  transform-origin: center;
+}

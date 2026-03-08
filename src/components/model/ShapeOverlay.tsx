@@ -219,12 +219,12 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
       >
         <defs>
           <linearGradient id="shape-actual-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#16a34a" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#2563eb" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.2" />
           </linearGradient>
           <linearGradient id="shape-gap-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#dc2626" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#dc2626" stopOpacity="0.18" />
+            <stop offset="0%" stopColor="#64748b" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#475569" stopOpacity="0.3" />
           </linearGradient>
         </defs>
 
@@ -273,6 +273,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           style={{
             animation: 'fade-in 0.8s ease-out 0.6s both',
           }}
+          className="gap-breathe"
         />
 
         {/* Idealized triangle — dashed outline */}
@@ -292,8 +293,8 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
         <path
           d={actualPath}
           fill="url(#shape-actual-fill)"
-          stroke="#2563eb"
-          strokeWidth={2}
+          stroke="#334155"
+          strokeWidth={1.5}
           strokeLinejoin="round"
           style={{
             animation: 'horn-grow 0.8s ease-out 0.3s both',
@@ -350,50 +351,56 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           y1={actualCentroidY}
           x2={W - PAD.right - 20}
           y2={actualCentroidY}
-          stroke="#7c3aed"
+          stroke="#0f172a"
           strokeWidth={1.5}
+          className="float-subtle"
           style={{ animation: 'fade-in 0.4s ease-out 1.2s both' }}
         />
         <text
           x={PAD.left + 22}
           y={actualCentroidY - 5}
           fontSize={8}
-          fill="#7c3aed"
+          fill="#0f172a"
           fontWeight="bold"
+          className="float-subtle"
           style={{ animation: 'fade-in 0.4s ease-out 1.2s both' }}
         >
           Center of mass
         </text>
 
-        {/* Center of mass dot — weighted position on the actual org shape */}
-        <circle
-          cx={CENTER_X}
-          cy={actualCentroidY}
-          r={7}
-          fill="#7c3aed"
-          opacity={0.9}
-          style={{ animation: 'fade-in 0.5s ease-out 1.3s both' }}
-        />
-        <circle
-          cx={CENTER_X}
-          cy={actualCentroidY}
-          r={12}
-          fill="none"
-          stroke="#7c3aed"
-          strokeWidth={1.5}
-          opacity={0.3}
-          style={{ animation: 'fade-in 0.5s ease-out 1.4s both' }}
-        />
-        <circle
-          cx={CENTER_X}
-          cy={actualCentroidY}
-          r={18}
-          fill="none"
-          stroke="#7c3aed"
-          strokeWidth={1}
-          opacity={0.15}
-          style={{ animation: 'fade-in 0.5s ease-out 1.5s both' }}
-        />
+        <g className="float-subtle">
+          {/* Center of mass dot — weighted position on the actual org shape */}
+          <circle
+            cx={CENTER_X}
+            cy={actualCentroidY}
+            r={7}
+            fill="#0f172a"
+            opacity={0.9}
+            style={{ animation: 'fade-in 0.5s ease-out 1.3s both' }}
+          />
+          <circle
+            cx={CENTER_X}
+            cy={actualCentroidY}
+            r={12}
+            fill="none"
+            stroke="#0f172a"
+            strokeWidth={1.5}
+            opacity={0.3}
+            className="ring-pulse-1"
+            style={{ animation: 'fade-in 0.5s ease-out 1.4s both' }}
+          />
+          <circle
+            cx={CENTER_X}
+            cy={actualCentroidY}
+            r={18}
+            fill="none"
+            stroke="#0f172a"
+            strokeWidth={1}
+            opacity={0.15}
+            className="ring-pulse-2"
+            style={{ animation: 'fade-in 0.5s ease-out 1.5s both' }}
+          />
+        </g>
 
         {/* Max gap annotation */}
         {maxGapLayer.gap > 0 && levels > 2 && (
@@ -402,7 +409,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
               x={CENTER_X + halfW(layerCounts[maxGapLayer.layer], maxWidth) + 16}
               y={yPos(maxGapLayer.layer, levels) + 4}
               fontSize={9}
-              fill="#dc2626"
+              fill="#0f172a"
               fontWeight="bold"
             >
               Max gap
@@ -416,11 +423,11 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
           <text x={PAD.left + 26} y={H - 12} fontSize={9} fill="#64748b">
             Idealized triangle (linear)
           </text>
-          <line x1={PAD.left + 190} y1={H - 16} x2={PAD.left + 210} y2={H - 16} stroke="#2563eb" strokeWidth={2} />
+          <line x1={PAD.left + 190} y1={H - 16} x2={PAD.left + 210} y2={H - 16} stroke="#334155" strokeWidth={2} />
           <text x={PAD.left + 216} y={H - 12} fontSize={9} fill="#64748b">
             Actual org shape (exponential)
           </text>
-          <rect x={PAD.left + 400} y={H - 22} width={12} height={12} rx={2} fill="#dc2626" opacity={0.15} />
+          <rect x={PAD.left + 400} y={H - 22} width={12} height={12} rx={2} fill="#475569" opacity={0.3} />
           <text x={PAD.left + 418} y={H - 12} fontSize={9} fill="#64748b">
             Shape gap
           </text>
@@ -450,7 +457,7 @@ export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: Shap
       {/* Shape gap callout */}
       <div className="mt-3 text-center">
         <span className="text-xs text-slate-500">Shape Gap Index: </span>
-        <span className="text-sm font-bold font-mono" style={{ color: geo.totalShapeGap > 0.15 ? '#dc2626' : geo.totalShapeGap > 0.05 ? '#d97706' : '#16a34a' }}>
+        <span className="text-sm font-bold font-mono" style={{ color: geo.totalShapeGap > 0.15 ? '#0f172a' : geo.totalShapeGap > 0.05 ? '#334155' : '#64748b' }}>
           {(geo.totalShapeGap * 100).toFixed(1)}%
         </span>
         <span className="text-[10px] text-slate-400 ml-2">

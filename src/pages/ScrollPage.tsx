@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Github, ArrowRight } from 'lucide-react';
+import { Github, ArrowRight, MessageCircle, Plus } from 'lucide-react';
 import { InteractiveFidelityDemo } from '../components/model/InteractiveFidelityDemo';
 import { GembaComparison } from '../components/model/GembaComparison';
 import { ComparisonView } from '../components/model/ComparisonView';
@@ -220,7 +220,7 @@ export function ScrollPage() {
       </section>
 
       {/* ─── THE SHAPE (streamlined geometry) ─── */}
-      <ShapeSection fidelityRate={fidelityRate} />
+      <ShapeSection />
 
       {/* ─── THE EVIDENCE ─── */}
       <section id="evidence" className="py-16 md:py-24 px-6 md:px-12">
@@ -379,88 +379,187 @@ export function ScrollPage() {
             </summary>
             <div className="bg-white border border-slate-200 border-t-0 rounded-b-xl px-5 pb-5">
               <Prose>
-                <h3>Core Formulas</h3>
+                <h3>Metric Formulas</h3>
                 <p>
-                  The model uses a small set of formulas derived from information theory and
-                  organizational research to quantify the structural properties of hierarchies.
+                  Each formula below corresponds to a metric card in the Model Your Org section.
+                  Variables: <strong>r</strong> = per-layer fidelity rate (default 0.82),{' '}
+                  <strong>L</strong> = number of levels, <strong>N</strong> = total employees,{' '}
+                  <strong>n<sub>k</sub></strong> = employees at layer k (layer 0 = ICs, layer L-1 = CEO).
                 </p>
               </Prose>
 
-              <div className="my-6 bg-white border border-slate-200 rounded-xl p-5">
-                <div className="font-mono text-sm text-slate-800 leading-loose space-y-1">
-                  <div>
-                    <span className="text-slate-400">Signal Fidelity (up){'   '}</span> = r
-                    <sup>(L-1)</sup>{' '}
-                    <span className="text-slate-400 text-xs">
-                      where r = per-layer retention, L = levels
-                    </span>
+              {/* ── Primary Metrics ── */}
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-6 mb-3">
+                Primary Metrics
+              </div>
+              <div className="space-y-4">
+                <div id="methodology-signal-fidelity" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Signal Fidelity</span>{' = '}
+                    r<sup>(L-1)</sup> × 100%
                   </div>
-                  <div>
-                    <span className="text-slate-400">Round-trip Fidelity{'    '}</span> = r
-                    <sup>2(L-1)</sup>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    The percentage of the original message that survives L-1 relay hops from frontline to CEO.
+                    Based on Bartlett's serial reproduction research (1932): each retelling preserves only a fraction r of the original.
+                    At 82% fidelity and 6 levels, only 37% of the original signal reaches the top.
                   </div>
-                  <div>
-                    <span className="text-slate-400">Avg Span of Control{'   '}</span> = N
-                    <sup>1/L</sup>{' '}
-                    <span className="text-slate-400 text-xs">where N = total employees</span>
+                </div>
+
+                <div id="methodology-decision-quality" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Decision Quality</span>{' = '}
+                    r<sup>(L-1)</sup> × e<sup>(-λ·L·K)</sup>
                   </div>
-                  <div>
-                    <span className="text-slate-400">Flatness Index{'         '}</span> = Span / L{' '}
-                    <span className="text-slate-400 text-xs">— higher is flatter</span>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    Combines signal fidelity with information staleness.
+                    The first term (r<sup>L-1</sup>) captures signal degradation; the second (e<sup>-λLK</sup>)
+                    captures time decay — information loses value as it ages during the decision cycle.
+                    Constants: λ = 0.008 (staleness decay), K = 3 days per layer.
                   </div>
-                  <div>
-                    <span className="text-slate-400">Decision Latency{'       '}</span> = 2(L-1) x
-                    t<sub>relay</sub>
+                </div>
+
+                <div id="methodology-pivot-speed" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Pivot Speed</span>{' = '}
+                    (1/N) × Σ n<sub>k</sub> × r<sup>|L-1-k|</sup>
                   </div>
-                  <div>
-                    <span className="text-slate-400">Manager Estimate{'       '}</span> = Sum(N /
-                    Span<sup>k</sup>){' '}
-                    <span className="text-slate-400 text-xs">for k = 1..L-1</span>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    The CEO's fidelity-weighted reach across all layers (torque model).
+                    For each layer k, the directive's effective weight is n<sub>k</sub> (people at that layer)
+                    discounted by r<sup>|L-1-k|</sup> (signal decay over the distance).
+                    Dividing by N normalizes to [0, 1]. A score of 0.5+ means directives effectively land;
+                    below 0.25, leadership pivots are largely lost in translation.
+                  </div>
+                </div>
+
+                <div id="methodology-decision-latency" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Decision Latency</span>{' = '}
+                    L × K{' '}
+                    <span className="text-slate-400 text-xs">(K = 3 days/layer)</span>
+                  </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    The round-trip time for a decision cycle: information travels up L layers,
+                    gets processed, and the decision travels back down.
+                    K = 3 days/layer is a conservative estimate accounting for scheduling, review, and approval at each level.
+                  </div>
+                </div>
+
+                <div id="methodology-management-tax" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Management Tax</span>{' = '}
+                    (N - n<sub>0</sub>) / N × 100%
+                  </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    The percentage of the organization in management roles (all non-IC layers).
+                    Layer 0 (frontline ICs) does the productive work; layers 1 through L-1 manage.
+                    Layer counts use geometric narrowing: n<sub>k</sub> = N / span<sup>k</sup> (normalized).
+                    Below 15% is lean; above 30% means nearly half the org is managing rather than producing.
+                  </div>
+                </div>
+
+                <div id="methodology-drift-cost" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Drift Cost</span>{' = '}
+                    e<sup>(-α·(L-1)·90)</sup> × 100%
+                  </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    Information accuracy remaining after 90 days.
+                    Each layer adds a drift rate α = 0.005/day — compounding across L-1 layers.
+                    This models how strategic alignment erodes over time: a 6-level org loses accuracy
+                    ~5× faster than a 2-level org because drift compounds at every relay point.
                   </div>
                 </div>
               </div>
 
-              <Prose>
-                <h3>Triangle Geometry Formulas</h3>
-                <p>
-                  The triangle geometry model maps organizational properties to geometric analogs,
-                  revealing structural constraints and hidden costs.
-                </p>
-              </Prose>
-
-              <div className="my-6 bg-white border border-slate-200 rounded-xl p-5">
-                <div className="font-mono text-sm text-slate-800 leading-loose space-y-1">
-                  <div>
-                    <span className="text-slate-400">Area (constraint){'      '}</span> = ½ × base × height{' '}
-                    <span className="text-slate-400 text-xs">where base = avg span, height = levels</span>
+              {/* ── Secondary Metrics ── */}
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-8 mb-3">
+                Secondary Metrics
+              </div>
+              <div className="space-y-4">
+                <div id="methodology-span-of-control" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Span of Control</span>{' = '}
+                    N<sup>1/L</sup>
                   </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    Average number of direct reports per manager, assuming uniform geometric narrowing.
+                    Below 4 indicates excessive management layers; above 7 suggests a lean, empowered structure.
+                  </div>
+                </div>
+
+                <div id="methodology-shape-gap" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Shape Gap</span>{' = '}
+                    Σ|w<sub>ideal</sub> - w<sub>actual</sub>| / 2N
+                  </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    How much the actual org shape deviates from an idealized linear triangle.
+                    The idealized triangle narrows linearly; real orgs narrow exponentially (creating a horn shape).
+                    Higher values indicate a more pronounced middle-management bulge.
+                  </div>
+                </div>
+
+                <div id="methodology-throughput" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Throughput</span>{' = '}
+                    5 × N<sup>0.6</sup>{' '}
+                    <span className="text-slate-400 text-xs">decisions/month</span>
+                  </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    Estimated organizational decision throughput using a sub-linear scaling model.
+                    Larger orgs make more decisions, but not proportionally — coordination overhead grows.
+                    The 0.6 exponent reflects diminishing returns from organizational complexity.
+                  </div>
+                </div>
+
+                <div id="methodology-flatness-index" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Flatness Index</span>{' = '}
+                    Span / L
+                  </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    A composite measure of structural flatness: the ratio of average span of control to org depth.
+                    Higher values indicate flatter organizations. An index of 1.0 means span equals depth;
+                    values above 2.0 indicate meaningfully flat structures.
+                  </div>
+                </div>
+
+                <div id="methodology-annual-comm-loss" className="border border-slate-200 rounded-lg p-4 scroll-mt-24">
+                  <div className="font-mono text-sm text-slate-800 mb-1.5">
+                    <span className="font-bold">Annual Comm Loss</span>{' = '}
+                    N × $10,140 × (1 - r<sup>2(L-1)</sup>)
+                  </div>
+                  <div className="text-xs text-slate-500 leading-relaxed">
+                    Estimated annual cost of ineffective communication, based on the Axios HQ 2025
+                    State of Internal Communications finding of $10,140/employee/year average loss.
+                    Scaled by the organization's round-trip signal degradation — deeper orgs waste more
+                    because messages lose fidelity on every round trip.
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Geometry Internals ── */}
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-8 mb-3">
+                Geometry Internals
+              </div>
+              <div className="my-2 border border-slate-200 rounded-lg p-4">
+                <div className="font-mono text-sm text-slate-800 leading-loose space-y-1">
                   <div>
                     <span className="text-slate-400">Slope Angle{'            '}</span> = arctan(2L / span){' '}
                     <span className="text-slate-400 text-xs">in degrees — steep = narrow span</span>
                   </div>
                   <div>
-                    <span className="text-slate-400">Slant Height{'           '}</span> = sqrt(L<sup>2</sup> + (span/2)<sup>2</sup>){' '}
-                    <span className="text-slate-400 text-xs">longest communication path</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400">Shape Gap{'              '}</span> = Sum|w<sub>ideal</sub> - w<sub>actual</sub>| / 2N{' '}
-                    <span className="text-slate-400 text-xs">normalized 0-1</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400">Decision Gravity{'       '}</span> = Sum(k·n<sub>k</sub>) / (L·N){' '}
-                    <span className="text-slate-400 text-xs">centroid ratio, lower = decentralized</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400">Moment of Inertia{'      '}</span> = Sum(n<sub>k</sub>·(k - centroid)<sup>2</sup>){' '}
+                    <span className="text-slate-400">Moment of Inertia{'      '}</span> = Σ n<sub>k</sub>·(k - centroid)<sup>2</sup>{' '}
                     <span className="text-slate-400 text-xs">organizational rigidity proxy</span>
                   </div>
                   <div>
-                    <span className="text-slate-400">Pivot Speed (Agility){'  '}</span> = 1 - I / I<sub>max</sub>{' '}
-                    <span className="text-slate-400 text-xs">where I<sub>max</sub> = N × L²</span>
+                    <span className="text-slate-400">Center of Mass{'         '}</span> = Σ(k·n<sub>k</sub>) / N{' '}
+                    <span className="text-slate-400 text-xs">weighted average layer position</span>
                   </div>
                   <div>
-                    <span className="text-slate-400">Layer Inertia{'          '}</span> = n<sub>k</sub> × (k - centroid)<sup>2</sup>{' '}
-                    <span className="text-slate-400 text-xs">per-layer rigidity contribution</span>
+                    <span className="text-slate-400">Round-trip Fidelity{'    '}</span> = r<sup>2(L-1)</sup>{' '}
+                    <span className="text-slate-400 text-xs">signal up + decision back down</span>
                   </div>
                 </div>
               </div>
@@ -472,7 +571,7 @@ export function ScrollPage() {
                 </p>
               </Prose>
 
-              <div className="my-6 bg-white border border-slate-200 rounded-xl p-5">
+              <div className="my-6 border border-slate-200 rounded-lg p-4">
                 <div className="font-mono text-sm text-slate-800 leading-loose space-y-1">
                   <div>
                     <span className="text-slate-400">Mesa{'                   '}</span> slope &lt; 30° or levels ≤ 2{' '}
@@ -593,17 +692,37 @@ export function ScrollPage() {
             serial reproduction research (1932), Deming's quality framework, and Toyota's Gemba Walk
             methodology.
           </div>
-          <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-400">
             <span>MIT License</span>
             <span>·</span>
             <a
-              href="https://github.com"
+              href="https://github.com/mattbayne/shape-matters"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
             >
               <Github className="w-3.5 h-3.5" />
               GitHub
+            </a>
+            <span>·</span>
+            <a
+              href="https://github.com/mattbayne/shape-matters/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              Discussions
+            </a>
+            <span>·</span>
+            <a
+              href="https://github.com/mattbayne/shape-matters/issues/new?template=company-suggestion.yml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Suggest a Company
             </a>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 An interactive research tool exploring how organizational depth degrades information fidelity, increases communication costs, and impacts effectiveness.
 
-**Live site:** Deployed on Cloudflare Pages
+**Live site:** [https://mattbayne83.github.io/shape-matters/](https://mattbayne83.github.io/shape-matters/)
 
 ## The Thesis
 

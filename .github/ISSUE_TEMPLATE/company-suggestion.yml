@@ -1,0 +1,60 @@
+name: Suggest a Company
+description: Suggest a real company to add to the Shape Matters reference dataset.
+labels: ["company-suggestion"]
+body:
+  - type: input
+    id: company-name
+    attributes:
+      label: Company Name
+      placeholder: e.g. Toyota
+    validations:
+      required: true
+  - type: input
+    id: industry
+    attributes:
+      label: Industry
+      placeholder: e.g. Automotive / Manufacturing
+    validations:
+      required: true
+  - type: input
+    id: levels
+    attributes:
+      label: Number of Org Levels
+      description: Levels from frontline IC to CEO.
+      placeholder: e.g. 7
+    validations:
+      required: true
+  - type: input
+    id: employees
+    attributes:
+      label: Total Employees
+      placeholder: e.g. 375,000
+    validations:
+      required: true
+  - type: dropdown
+    id: archetype
+    attributes:
+      label: Archetype
+      options:
+        - Flat by Design
+        - Tech Giant
+        - Recently Flattened
+        - Experimental
+        - Energy
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source / Citation
+      description: Where did you find the level count and employee data?
+      placeholder: e.g. SEC 10-K (2024), levels.fyi, company annual report
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Any context about the org structure, recent restructurings, etc.
+    validations:
+      required: false

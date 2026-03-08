@@ -1,0 +1,115 @@
+import { useMemo } from 'react';
+import { calcDepthTax } from '../../lib/depthTax';
+import { fidelityColor } from '../../lib/fidelityColor';
+
+const STEPS = 25;
+const MIN_RATE = 50;
+const MAX_RATE = 98;
+const TYPICAL_MIN = 70;
+const TYPICAL_MAX = 90;
+
+// SVG dimensions
+const W = 280;
+const H = 120;
+const PAD = { top: 8, right: 12, bottom: 22, left: 32 };
+const plotW = W - PAD.left - PAD.right;
+const plotH = H - PAD.top - PAD.bottom;
+
+function xFor(rate: number) {
+  return PAD.left + ((rate - MIN_RATE) / (MAX_RATE - MIN_RATE)) * plotW;
+}
+function yFor(val: number) {
+  return PAD.top + plotH - (val / 100) * plotH;
+}
+
+interface Props {
+  levels: number;
+  headcount: number;
+  currentFidelityRate: number;
+}
+
+export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Props) {
+  const data = useMemo(() => {
+    const points: { rate: number; rt: number }[] = [];
+    for (let i = 0; i <= STEPS; i++) {
+      const rate = MIN_RATE + (i / STEPS) * (MAX_RATE - MIN_RATE);
+      const tax = calcDepthTax(levels, headcount, rate);
+      points.push({ rate, rt: tax.roundTripFidelity });
+    }
+    return points;
+  }, [levels, headcount]);
+
+  const currentTax = calcDepthTax(levels, headcount, currentFidelityRate);
+  const currentRT = currentTax.roundTripFidelity;
+  const cx = xFor(currentFidelityRate);
+  const cy = yFor(currentRT);
+
+  const polyline = data.map((d) => `${xFor(d.rate)},${yFor(d.rt)}`).join(' ');
+
+  // Typical range shading coordinates
+  const txMin = xFor(TYPICAL_MIN);
+  const txMax = xFor(TYPICAL_MAX);
+
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 mb-2">
+        Sensitivity — Round-Trip Fidelity vs. Per-Layer Rate
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
+        {/* Typical range shading */}
+        <rect
+          x={txMin} y={PAD.top}
+          width={txMax - txMin} height={plotH}
+          fill="#e2e8f0" opacity={0.4} rx={2}
+        />
+        <text x={(txMin + txMax) / 2} y={PAD.top + 8} textAnchor="middle" className="fill-slate-400" fontSize={7} fontWeight={600}>
+          typical range
+        </text>
+
+        {/* Curve */}
+        <polyline
+          points={polyline}
+          fill="none"
+          stroke="#334155"
+          strokeWidth={1.5}
+          strokeLinejoin="round"
+        />
+
+        {/* Current position vertical line */}
+        <line
+          x1={cx} y1={PAD.top} x2={cx} y2={PAD.top + plotH}
+          stroke={fidelityColor(currentRT, true)}
+          strokeWidth={1}
+          strokeDasharray="3 2"
+          opacity={0.6}
+        />
+
+        {/* Current position dot */}
+        <circle
+          cx={cx} cy={cy} r={4}
+          fill={fidelityColor(currentRT, true)}
+          stroke="white" strokeWidth={1.5}
+        />
+
+        {/* Current value label */}
+        <text
+          x={cx} y={cy - 8}
+          textAnchor="middle"
+          fontSize={8} fontWeight={700} fontFamily="monospace"
+          fill={fidelityColor(currentRT, true)}
+        >
+          {currentRT.toFixed(1)}%
+        </text>
+
+        {/* X axis labels */}
+        <text x={PAD.left} y={H - 4} fontSize={7} fill="#94a3b8" textAnchor="start">50%</text>
+        <text x={PAD.left + plotW} y={H - 4} fontSize={7} fill="#94a3b8" textAnchor="end">98%</text>
+        <text x={PAD.left + plotW / 2} y={H - 4} fontSize={7} fill="#94a3b8" textAnchor="middle">per-layer rate</text>
+
+        {/* Y axis labels */}
+        <text x={PAD.left - 4} y={PAD.top + 5} fontSize={7} fill="#94a3b8" textAnchor="end">100%</text>
+        <text x={PAD.left - 4} y={PAD.top + plotH} fontSize={7} fill="#94a3b8" textAnchor="end">0%</text>
+      </svg>
+    </div>
+  );
+}

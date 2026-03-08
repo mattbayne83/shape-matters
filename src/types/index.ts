@@ -80,7 +80,7 @@ export interface RestructuringImpact {
   proposedLevels: number;
   agilityDelta: number;       // positive = improvement
   inertiaReduction: number;   // percentage reduction
-  gravityDelta: number;       // negative = more decentralized
+  managerRatioDelta: number;  // negative = fewer managers (leaner)
   fidelityGain: number;       // percentage points gained at top
 }
 
@@ -96,6 +96,7 @@ export interface TriangleGeometry {
   decisionGravityRatio: number;
   momentOfInertia: number;
   agilityScore: number;
+  torqueProfile: number[];   // per-layer pivot efficiency (index = origin layer)
   perimeter: number;
   perimeterToArea: number;
   // New: per-layer decomposition

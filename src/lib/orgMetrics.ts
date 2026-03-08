@@ -17,7 +17,12 @@ export function calcOrgMetrics(
 
   const managerRatio = (managersEstimate / employees) * 100;
   const icCount = employees - managersEstimate;
-  const annualCommLoss = employees * 10140;
+
+  // Axios HQ reported ~$10k/employee loss on average.
+  // We model this as a function of the organization's signal degradation.
+  // The deeper the org, the more of that $10,140 gets wasted.
+  const signalLossPct = 1 - (roundTripFidelity / 100);
+  const annualCommLoss = employees * 10140 * signalLossPct;
 
   return {
     avgSpan,

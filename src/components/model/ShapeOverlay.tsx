@@ -32,8 +32,8 @@ const CENTER_X = PAD.left + PLOT_W / 2;
 
 export function ShapeOverlay({ levels, employees, fidelityRate, semantic }: ShapeOverlayProps) {
   const geo = useMemo(
-    () => calcTriangleGeometry(levels, employees),
-    [levels, employees]
+    () => calcTriangleGeometry(levels, employees, fidelityRate),
+    [levels, employees, fidelityRate]
   );
 
   const layerCounts = useMemo(

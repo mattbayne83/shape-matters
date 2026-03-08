@@ -1,4 +1,5 @@
 import type { TriangleGeometry, LayerInertia, ShapeClassification, RestructuringImpact } from '../types';
+import { calcOrgMetrics } from './orgMetrics';
 
 /**
  * Compute the employee count at each layer of the org hierarchy.
@@ -54,7 +55,8 @@ function classifyShape(slopeAngle: number, totalShapeGap: number, levels: number
  */
 export function calcTriangleGeometry(
   levels: number,
-  employees: number
+  employees: number,
+  fidelityRate: number = 82
 ): TriangleGeometry {
   const span = Math.pow(employees, 1 / levels);
   const height = levels;
@@ -97,12 +99,19 @@ export function calcTriangleGeometry(
     (acc, count, k) => acc + count * Math.pow(k - actualCentroidHeight, 2),
     0
   );
-  // Normalize agility score: compare to a maximally rigid org (single person at each extreme)
-  // Use inverse exponential for a 0-1 scale where 1 = most agile
-  const maxInertia = employees * Math.pow(height, 2);
-  const agilityScore = maxInertia > 0
-    ? 1 - momentOfInertia / maxInertia
-    : 1;
+
+  // Torque-based agility: what fraction of the org effectively receives a directive
+  // from each layer? torqueProfile[origin] = (1/N) × Σ n_k × r^|origin-k|
+  // See docs/TORQUE_MODEL.md for full derivation.
+  const r = fidelityRate / 100;
+  const torqueProfile = layerCounts.map((_, origin) => {
+    let torque = 0;
+    for (let k = 0; k < levels; k++) {
+      torque += layerCounts[k] * Math.pow(r, Math.abs(origin - k));
+    }
+    return employees > 0 ? torque / employees : 1;
+  });
+  const agilityScore = torqueProfile[levels - 1]; // CEO's pivot efficiency
 
   // Per-layer inertia decomposition
   const layerInertia: LayerInertia[] = layerCounts.map((count, k) => {
@@ -143,6 +152,7 @@ export function calcTriangleGeometry(
     decisionGravityRatio,
     momentOfInertia,
     agilityScore,
+    torqueProfile,
     perimeter,
     perimeterToArea,
     layerInertia,
@@ -163,8 +173,8 @@ export function calcRestructuringImpact(
 ): RestructuringImpact | null {
   if (levels <= 2) return null; // Can't meaningfully flatten further
 
-  const current = calcTriangleGeometry(levels, employees);
-  const proposed = calcTriangleGeometry(levels - 1, employees);
+  const current = calcTriangleGeometry(levels, employees, fidelityRate);
+  const proposed = calcTriangleGeometry(levels - 1, employees, fidelityRate);
 
   const currentFidelity = Math.pow(fidelityRate / 100, levels - 1) * 100;
   const proposedFidelity = Math.pow(fidelityRate / 100, levels - 2) * 100;
@@ -176,7 +186,8 @@ export function calcRestructuringImpact(
     inertiaReduction: current.momentOfInertia > 0
       ? ((current.momentOfInertia - proposed.momentOfInertia) / current.momentOfInertia) * 100
       : 0,
-    gravityDelta: proposed.decisionGravityRatio - current.decisionGravityRatio,
+    managerRatioDelta: calcOrgMetrics(levels - 1, employees, fidelityRate).managerRatio
+      - calcOrgMetrics(levels, employees, fidelityRate).managerRatio,
     fidelityGain: proposedFidelity - currentFidelity,
   };
 }

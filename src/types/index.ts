@@ -96,6 +96,7 @@ export interface TriangleGeometry {
   decisionGravityRatio: number;
   momentOfInertia: number;
   agilityScore: number;
+  torqueProfile: number[];   // per-layer pivot efficiency (index = origin layer)
   perimeter: number;
   perimeterToArea: number;
   // New: per-layer decomposition

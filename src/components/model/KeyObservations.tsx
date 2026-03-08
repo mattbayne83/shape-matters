@@ -14,7 +14,7 @@ export function KeyObservations({ companies, fidelityRate }: KeyObservationsProp
     const metrics = companies.map((c) => ({
       ...c,
       metrics: calcOrgMetrics(c.levels, c.employees, fidelityRate),
-      geo: calcTriangleGeometry(c.levels, c.employees),
+      geo: calcTriangleGeometry(c.levels, c.employees, fidelityRate),
     }));
     const flattest = metrics.reduce((a, b) =>
       a.metrics.flatnessIndex > b.metrics.flatnessIndex ? a : b

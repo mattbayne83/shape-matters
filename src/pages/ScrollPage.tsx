@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Github, ArrowRight } from 'lucide-react';
+import { Github, ArrowRight, MessageCircle, Plus } from 'lucide-react';
 import { InteractiveFidelityDemo } from '../components/model/InteractiveFidelityDemo';
 import { GembaComparison } from '../components/model/GembaComparison';
 import { ComparisonView } from '../components/model/ComparisonView';
@@ -455,8 +455,8 @@ export function ScrollPage() {
                     <span className="text-slate-400 text-xs">organizational rigidity proxy</span>
                   </div>
                   <div>
-                    <span className="text-slate-400">Pivot Speed (Agility){'  '}</span> = 1 - I / I<sub>max</sub>{' '}
-                    <span className="text-slate-400 text-xs">where I<sub>max</sub> = N × L²</span>
+                    <span className="text-slate-400">Pivot Speed (Torque){'   '}</span> = (1/N) × Sum(n<sub>k</sub> × r<sup>|L-1-k|</sup>){' '}
+                    <span className="text-slate-400 text-xs">CEO's fidelity-weighted reach across all layers</span>
                   </div>
                   <div>
                     <span className="text-slate-400">Layer Inertia{'          '}</span> = n<sub>k</sub> × (k - centroid)<sup>2</sup>{' '}
@@ -593,17 +593,37 @@ export function ScrollPage() {
             serial reproduction research (1932), Deming's quality framework, and Toyota's Gemba Walk
             methodology.
           </div>
-          <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-400">
             <span>MIT License</span>
             <span>·</span>
             <a
-              href="https://github.com"
+              href="https://github.com/mattbayne/shape-matters"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
             >
               <Github className="w-3.5 h-3.5" />
               GitHub
+            </a>
+            <span>·</span>
+            <a
+              href="https://github.com/mattbayne/shape-matters/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              Discussions
+            </a>
+            <span>·</span>
+            <a
+              href="https://github.com/mattbayne/shape-matters/issues/new?template=company-suggestion.yml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Suggest a Company
             </a>
           </div>
         </div>

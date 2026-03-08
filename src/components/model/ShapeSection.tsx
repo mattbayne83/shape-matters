@@ -15,7 +15,10 @@ const SHAPE_ICONS: Record<string, string> = {
 export function ShapeSection({ fidelityRate }: { fidelityRate: number }) {
   const [geoLevels, setGeoLevels] = useState(6);
   const [geoEmployees, setGeoEmployees] = useState(3000);
-  const geo = calcTriangleGeometry(geoLevels, geoEmployees);
+  const geo = useMemo(
+    () => calcTriangleGeometry(geoLevels, geoEmployees, fidelityRate),
+    [geoLevels, geoEmployees, fidelityRate]
+  );
   const restructure = useMemo(
     () => calcRestructuringImpact(geoLevels, geoEmployees, fidelityRate),
     [geoLevels, geoEmployees, fidelityRate]
@@ -128,8 +131,8 @@ export function ShapeSection({ fidelityRate }: { fidelityRate: number }) {
           <MetricCard
             label="Pivot Speed"
             value={geo.agilityScore.toFixed(3)}
-            sub={geo.agilityScore > 0.9 ? 'Fast — low inertia' : geo.agilityScore > 0.7 ? 'Moderate resistance' : 'Slow — high inertia'}
-            accent={geo.agilityScore > 0.9 ? '#16a34a' : geo.agilityScore > 0.7 ? '#d97706' : '#dc2626'}
+            sub={geo.agilityScore > 0.5 ? 'Strong reach — directives land' : geo.agilityScore > 0.25 ? 'Moderate reach — signal fades' : 'Weak reach — directives lost'}
+            accent={geo.agilityScore > 0.5 ? '#16a34a' : geo.agilityScore > 0.25 ? '#d97706' : '#dc2626'}
           />
           <MetricCard
             label="Shape Gap"

@@ -36,6 +36,9 @@ Single-page scroll layout in `src/pages/ScrollPage.tsx`. Navigation via anchor l
 ### Data Model
 - 13 reference companies across 5 archetypes: `flat`, `tech`, `flattened`, `experimental`, `energy`
 - `Company` type includes `archetype`, `source`, `sourceUrl` fields
+- `ShapeClassification`: `mesa` | `pyramid` | `diamond` | `obelisk` — classified by slope angle + shape gap
+- `LayerInertia`: Per-layer inertia decomposition (count, distance from centroid, contribution %)
+- `RestructuringImpact`: Delta metrics for removing one level
 - `ARCHETYPE_LABELS` and `ARCHETYPE_COLORS` lookup tables in `src/types/index.ts`
 - ComparisonView has archetype filter pills
 
@@ -49,7 +52,8 @@ Single-page scroll layout in `src/pages/ScrollPage.tsx`. Navigation via anchor l
 ### Core Calculations
 - `calcOrgMetrics(levels, employees, fidelityRate)` — span, flatness, fidelity %, managers
 - `calcDepthTax(levels, headcount, fidelityRate)` — signal cost, drift cost, decision cost
-- `calcTriangleGeometry(levels, employees)` — slope, shape gap, decision gravity, agility, inertia
+- `calcTriangleGeometry(levels, employees)` — slope, shape gap, decision gravity, agility, inertia, per-layer decomposition, shape classification
+- `calcRestructuringImpact(levels, employees, fidelityRate)` — "what if -1 level?" deltas for agility, inertia, gravity, fidelity
 - `fidelityColor(percentage)` — Maps 0-100% to green → amber → red (HSL interpolation)
 
 ### Gotchas

@@ -1,4 +1,4 @@
-import type { TriangleGeometry } from '../types';
+import type { TriangleGeometry, LayerInertia, ShapeClassification, RestructuringImpact } from '../types';
 
 /**
  * Compute the employee count at each layer of the org hierarchy.
@@ -30,6 +30,22 @@ export function idealizedWidthAtLayer(layer: number, levels: number, base: numbe
  */
 export function actualWidthAtLayer(layer: number, employees: number, span: number): number {
   return employees / Math.pow(span, layer);
+}
+
+/**
+ * Classify the org shape based on geometry metrics.
+ *
+ * Mesa: Very flat, wide span, few levels (slope < 30°)
+ * Pyramid: Balanced, moderate slope, linear-ish distribution (slope 30-55°, low gap)
+ * Diamond: Bloated middle layers, high shape gap (gap > 8%)
+ * Obelisk: Steep and deep, narrow span (slope > 55°)
+ */
+function classifyShape(slopeAngle: number, totalShapeGap: number, levels: number): { class: ShapeClassification; label: string } {
+  if (levels <= 2) return { class: 'mesa', label: 'Mesa — Flat & Wide' };
+  if (slopeAngle < 30) return { class: 'mesa', label: 'Mesa — Flat & Wide' };
+  if (totalShapeGap > 0.08 && slopeAngle > 40) return { class: 'diamond', label: 'Diamond — Bloated Middle' };
+  if (slopeAngle > 55) return { class: 'obelisk', label: 'Obelisk — Steep & Deep' };
+  return { class: 'pyramid', label: 'Pyramid — Balanced' };
 }
 
 /**
@@ -88,6 +104,33 @@ export function calcTriangleGeometry(
     ? 1 - momentOfInertia / maxInertia
     : 1;
 
+  // Per-layer inertia decomposition
+  const layerInertia: LayerInertia[] = layerCounts.map((count, k) => {
+    const distance = k - actualCentroidHeight;
+    const contribution = count * Math.pow(distance, 2);
+    return {
+      layer: k,
+      count,
+      distance,
+      contribution,
+      contributionPct: momentOfInertia > 0 ? (contribution / momentOfInertia) * 100 : 0,
+      gapFromIdeal: count - (normalizedIdeal[k] ?? 0),
+    };
+  });
+
+  // Find peak inertia layer
+  let peakInertiaLayer = 0;
+  let peakContribution = 0;
+  for (const li of layerInertia) {
+    if (li.contribution > peakContribution) {
+      peakContribution = li.contribution;
+      peakInertiaLayer = li.layer;
+    }
+  }
+
+  // Shape classification
+  const { class: shapeClass, label: shapeClassLabel } = classifyShape(slopeAngle, totalShapeGap, levels);
+
   return {
     height,
     base,
@@ -102,5 +145,38 @@ export function calcTriangleGeometry(
     agilityScore,
     perimeter,
     perimeterToArea,
+    layerInertia,
+    peakInertiaLayer,
+    shapeClass,
+    shapeClassLabel,
+  };
+}
+
+/**
+ * Compute the impact of removing one level from the org.
+ * Compares current geometry to a proposed flattened version.
+ */
+export function calcRestructuringImpact(
+  levels: number,
+  employees: number,
+  fidelityRate: number
+): RestructuringImpact | null {
+  if (levels <= 2) return null; // Can't meaningfully flatten further
+
+  const current = calcTriangleGeometry(levels, employees);
+  const proposed = calcTriangleGeometry(levels - 1, employees);
+
+  const currentFidelity = Math.pow(fidelityRate / 100, levels - 1) * 100;
+  const proposedFidelity = Math.pow(fidelityRate / 100, levels - 2) * 100;
+
+  return {
+    currentLevels: levels,
+    proposedLevels: levels - 1,
+    agilityDelta: proposed.agilityScore - current.agilityScore,
+    inertiaReduction: current.momentOfInertia > 0
+      ? ((current.momentOfInertia - proposed.momentOfInertia) / current.momentOfInertia) * 100
+      : 0,
+    gravityDelta: proposed.decisionGravityRatio - current.decisionGravityRatio,
+    fidelityGain: proposedFidelity - currentFidelity,
   };
 }

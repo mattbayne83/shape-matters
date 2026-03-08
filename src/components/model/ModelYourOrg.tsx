@@ -138,7 +138,7 @@ export function ModelYourOrg() {
       </div>
 
       {/* ── [E] Key Metrics Row ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
         <FlippableMetricCard
           label="Signal Fidelity"
           value={`${tax.signalFidelity.toFixed(1)}%`}
@@ -147,7 +147,7 @@ export function ModelYourOrg() {
           minOut={0}
           maxOut={100}
           currentOut={tax.signalFidelity}
-          inverseBest={false} // higher is better (100% is best)
+          inverseBest={false}
           bestLabel="Preserved"
           worstLabel="Distorted"
         />
@@ -157,22 +157,34 @@ export function ModelYourOrg() {
           unit=" days"
           sub={`Quality: ${(tax.decisionQuality * 100).toFixed(0)}%`}
           color="#dc2626"
-          minOut={0}      // 0 days implies no structural latency cost (e.g. flat org)
-          maxOut={60}     // arbitrary practical worst-case for scale
+          minOut={0}
+          maxOut={60}
           currentOut={tax.decisionLatency}
-          inverseBest={true} // lower latency is better
+          inverseBest={true}
           bestLabel="Instant"
           worstLabel="Delayed"
+        />
+        <FlippableMetricCard
+          label="Pivot Speed"
+          value={geo.agilityScore.toFixed(2)}
+          sub={geo.agilityScore > 0.9 ? 'Fast — low inertia' : geo.agilityScore > 0.7 ? 'Moderate resistance' : 'Slow — high inertia'}
+          color={geo.agilityScore > 0.9 ? '#16a34a' : geo.agilityScore > 0.7 ? '#d97706' : '#dc2626'}
+          minOut={0}
+          maxOut={1}
+          currentOut={geo.agilityScore}
+          inverseBest={false}
+          bestLabel="Agile"
+          worstLabel="Rigid"
         />
         <FlippableMetricCard
           label="Span of Control"
           value={m.avgSpan.toFixed(1)}
           sub="avg reports per manager"
           color="#16a34a"
-          minOut={1}      // Too micromanaged
-          maxOut={15}     // Too stretched
+          minOut={1}
+          maxOut={15}
           currentOut={m.avgSpan}
-          inverseBest={false} // It's nuanced, but let's say higher width implies flatter (so higher is "best" on a structural basis for removing layers). 15 is extremely wide. Best to default to higher=better on the scale.
+          inverseBest={false}
           bestLabel="Flat / Wide"
           worstLabel="Deep / Micro"
         />
@@ -181,10 +193,10 @@ export function ModelYourOrg() {
           value={`${(geo.totalShapeGap * 100).toFixed(1)}%`}
           sub="triangle vs. actual"
           color={geo.totalShapeGap > 0.15 ? '#dc2626' : geo.totalShapeGap > 0.05 ? '#d97706' : '#16a34a'}
-          minOut={0}      // 0 gap is perfect triangle fit
-          maxOut={0.4}    // 40% gap is huge structural weirdness
+          minOut={0}
+          maxOut={0.4}
           currentOut={geo.totalShapeGap}
-          inverseBest={true}  // lower gap is better structure
+          inverseBest={true}
           bestLabel="Uniform"
           worstLabel="Distorted"
         />
@@ -238,10 +250,10 @@ export function ModelYourOrg() {
             accent="#dc2626"
           />
           <MetricCard
-            label="Agility"
-            value={geo.agilityScore.toFixed(3)}
-            sub={geo.agilityScore > 0.9 ? 'Highly agile' : 'Higher inertia'}
-            accent={geo.agilityScore > 0.9 ? '#16a34a' : '#d97706'}
+            label="Shape Class"
+            value={geo.shapeClassLabel.split(' — ')[0]}
+            sub={geo.shapeClassLabel.split(' — ')[1] ?? ''}
+            accent="#7c3aed"
           />
         </div>
       </details>

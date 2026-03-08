@@ -696,7 +696,7 @@ export function ScrollPage() {
             <span>MIT License</span>
             <span>·</span>
             <a
-              href="https://github.com/mattbayne/shape-matters"
+              href="https://github.com/mattbayne83/shape-matters"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
@@ -706,7 +706,7 @@ export function ScrollPage() {
             </a>
             <span>·</span>
             <a
-              href="https://github.com/mattbayne/shape-matters/discussions"
+              href="https://github.com/mattbayne83/shape-matters/discussions"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"
@@ -716,7 +716,7 @@ export function ScrollPage() {
             </a>
             <span>·</span>
             <a
-              href="https://github.com/mattbayne/shape-matters/issues/new?template=company-suggestion.yml"
+              href="https://github.com/mattbayne83/shape-matters/issues/new?template=company-suggestion.yml"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 hover:text-slate-600 transition-colors"

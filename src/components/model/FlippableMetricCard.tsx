@@ -1,14 +1,27 @@
+function scrollToAnchor(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    const href = e.currentTarget.getAttribute('href');
+    if (!href) return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    const details = target.closest('details');
+    if (details && !details.open) details.open = true;
+    setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+
 interface FlippableMetricCardProps {
     label: string;
     value: string | number;
     unit?: string;
     sub?: string;
     color?: string;
-    // Range props for the back
+    infoHref?: string;
+    // Range props
     minOut: number;
     maxOut: number;
     currentOut: number;
-    inverseBest?: boolean; // If true, lower is better (left side of gradient is good)
+    inverseBest?: boolean;
     bestLabel?: string;
     worstLabel?: string;
 }
@@ -19,6 +32,7 @@ export function FlippableMetricCard({
     unit,
     sub,
     color = '#0f172a',
+    infoHref,
     minOut,
     maxOut,
     currentOut,
@@ -26,78 +40,62 @@ export function FlippableMetricCard({
     bestLabel = 'Best',
     worstLabel = 'Worst',
 }: FlippableMetricCardProps) {
-    // Calculate percentage placement of the triangle
-    // Clamp between 0 and 100
-    let rangePct = ((currentOut - minOut) / (maxOut - minOut)) * 100;
-    if (rangePct < 0) rangePct = 0;
-    if (rangePct > 100) rangePct = 100;
-
-
-    // The prompt requested: "show a range of outcomes (best on left, worst on right)"
-    // So best is ALWAYS on the left.
-    const gradientToUse = 'linear-gradient(to right, #16a34a, #fbbf24, #ef4444)';
-
-    // We need to map the currentOut to the physical left-to-right axis.
-    // Physical Left = Best. Physical Right = Worst.
-
-    // If `inverseBest` is true, a LOWER number means BETTER. So lower number goes on the left (0%).
-    // If `inverseBest` is false, a HIGHER number means BETTER. So higher number goes on the left (0%).
-
+    // Map currentOut to the physical left-to-right axis.
+    // Left = Best, Right = Worst.
     let markerLeftPct = 0;
     if (inverseBest) {
         // Lower = Better = Left side
         markerLeftPct = ((currentOut - minOut) / (maxOut - minOut)) * 100;
     } else {
         // Higher = Better = Left side
-        // Reverse the percentage so maxOut is at 0% and minOut is at 100%
         markerLeftPct = 100 - (((currentOut - minOut) / (maxOut - minOut)) * 100);
     }
-
-    // Clamp marker
     markerLeftPct = Math.max(0, Math.min(100, markerLeftPct));
 
     return (
-        <div className="relative w-full h-32 perspective-[1000px] z-10 hover:z-20">
-            <div className="relative group w-full h-full transition-transform duration-500 preserve-3d">
-
-                {/* FRONT FACE */}
-                <div className="absolute inset-0 backface-hidden bg-white border border-slate-200 rounded-xl flex flex-col items-center justify-center p-4 shadow-sm group-hover:-rotate-y-180 transition-transform duration-500 preserve-3d">
-                    <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">
-                        {label}
-                    </div>
-                    <div
-                        className="text-2xl md:text-3xl font-bold font-sans tabular-nums tracking-tight leading-none transition-colors duration-300"
-                        style={{ color: color }}
+        <div className="bg-white border border-slate-200 rounded-xl flex flex-col items-center justify-center px-4 pt-4 pb-3 shadow-sm">
+            <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1 flex items-center gap-1">
+                {label}
+                {infoHref && (
+                    <a
+                        href={infoHref}
+                        onClick={scrollToAnchor}
+                        className="text-slate-300 hover:text-slate-500 transition-colors"
+                        title="View formula"
                     >
-                        {value}
-                        {unit && <span className="text-sm font-normal text-slate-400 ml-0.5">{unit}</span>}
-                    </div>
-                    {sub && <div className="text-[10px] text-slate-400 mt-1.5">{sub}</div>}
+                        <svg className="w-3 h-3" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a1 1 0 110 2 1 1 0 010-2zM6.5 7h2v4.5h-2V7z" />
+                        </svg>
+                    </a>
+                )}
+            </div>
+            <div
+                className="text-2xl md:text-3xl font-bold font-sans tabular-nums tracking-tight leading-none transition-colors duration-300"
+                style={{ color }}
+            >
+                {value}
+                {unit && <span className="text-sm font-normal text-slate-400 ml-0.5">{unit}</span>}
+            </div>
+            {sub && <div className="text-[10px] text-slate-400 mt-1.5">{sub}</div>}
+
+            {/* Outcome range bar */}
+            <div className="w-full mt-3 pt-2 border-t border-slate-100">
+                <div
+                    className="relative w-full h-1.5 rounded-full"
+                    style={{ background: 'linear-gradient(to right, #16a34a, #fbbf24, #ef4444)' }}
+                >
+                    <div
+                        className="absolute top-[-7px] w-0 h-0 border-l-[5px] border-r-[5px] border-t-[6px] border-transparent transition-all duration-300"
+                        style={{
+                            left: `calc(${markerLeftPct}% - 5px)`,
+                            borderTopColor: '#0f172a',
+                        }}
+                    />
                 </div>
-
-                {/* BACK FACE */}
-                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-center px-4 py-3 shadow-md group-hover:rotate-y-0 transition-transform duration-500 preserve-3d">
-                    <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-3 text-center">
-                        {label} Outcome Range
-                    </div>
-
-                    <div className="relative w-full h-2 rounded-full mb-1" style={{ background: gradientToUse }}>
-                        <div
-                            className="absolute top-[-10px] w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-transparent transition-all duration-300"
-                            style={{
-                                left: `calc(${markerLeftPct}% - 6px)`,
-                                borderTopColor: '#0f172a'
-                            }}
-                        />
-                    </div>
-
-                    <div className="flex justify-between text-[9px] font-medium text-slate-400">
-                        <span className="text-green-600">{bestLabel}</span>
-                        <span className="text-red-600">{worstLabel}</span>
-                    </div>
-
+                <div className="flex justify-between text-[9px] font-medium text-slate-400 mt-0.5">
+                    <span className="text-green-600">{bestLabel}</span>
+                    <span className="text-red-600">{worstLabel}</span>
                 </div>
-
             </div>
         </div>
     );

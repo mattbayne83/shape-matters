@@ -30,10 +30,7 @@ export function KeyObservations({ companies, fidelityRate }: KeyObservationsProp
     const mostAgile = multiLevel.length > 0
       ? multiLevel.reduce((a, b) => a.geo.agilityScore > b.geo.agilityScore ? a : b)
       : null;
-    const mostDecentralized = multiLevel.length > 0
-      ? multiLevel.reduce((a, b) => a.geo.decisionGravityRatio < b.geo.decisionGravityRatio ? a : b)
-      : null;
-    return { flattest, bestSignal, lowestManagerRatio, mostAgile, mostDecentralized };
+    return { flattest, bestSignal, lowestManagerRatio, mostAgile };
   }, [companies, fidelityRate]);
 
   return (
@@ -77,17 +74,6 @@ export function KeyObservations({ companies, fidelityRate }: KeyObservationsProp
             </div>
             <div className="text-[11px] text-slate-500">
               Score: {analysis.mostAgile.geo.agilityScore.toFixed(3)}
-            </div>
-          </div>
-        )}
-        {analysis.mostDecentralized && (
-          <div>
-            <div className="text-[11px] text-slate-500 mb-1">Most Decentralized</div>
-            <div className="text-base font-extrabold" style={{ color: analysis.mostDecentralized.color }}>
-              {analysis.mostDecentralized.name}
-            </div>
-            <div className="text-[11px] text-slate-500">
-              Gravity: {analysis.mostDecentralized.geo.decisionGravityRatio.toFixed(3)}
             </div>
           </div>
         )}

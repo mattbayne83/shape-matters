@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useCompanyStore } from '../../store/useCompanyStore';
 import { calcDepthTax } from '../../lib/depthTax';
 import { calcOrgMetrics } from '../../lib/orgMetrics';
-import { calcTriangleGeometry } from '../../lib/triangleGeometry';
+import { calcTriangleGeometry, calcRestructuringImpact } from '../../lib/triangleGeometry';
 import { fidelityColor } from '../../lib/fidelityColor';
 import { SECTION_LABEL } from '../../lib/styles';
 import { MetricCard } from './MetricCard';
@@ -27,8 +27,11 @@ function headcountToSlider(n: number): number {
 export function ModelYourOrg() {
   const fidelityRate = useCompanyStore((s) => s.fidelityRate);
   const setFidelityRate = useCompanyStore((s) => s.setFidelityRate);
-  const [levels, setLevels] = useState(6);
-  const [hcSlider, setHcSlider] = useState(() => Math.round(headcountToSlider(5000)));
+  const levels = useCompanyStore((s) => s.levels);
+  const storeLevels = useCompanyStore((s) => s.setLevels);
+  const headcount = useCompanyStore((s) => s.headcount);
+  const storeHeadcount = useCompanyStore((s) => s.setHeadcount);
+  const [hcSlider, setHcSlider] = useState(() => Math.round(headcountToSlider(headcount)));
   const [preset, setPreset] = useState('custom');
 
   const handlePresetChange = (id: string) => {
@@ -36,14 +39,18 @@ export function ModelYourOrg() {
     if (id === 'custom') return;
     const company = REFERENCE_COMPANIES.find((c) => c.id === id);
     if (!company) return;
-    setLevels(company.levels);
-    setHcSlider(Math.round(headcountToSlider(company.employees)));
+    storeLevels(company.levels);
+    const pos = Math.round(headcountToSlider(company.employees));
+    setHcSlider(pos);
+    storeHeadcount(sliderToHeadcount(pos));
   };
 
-  const handleLevels = (v: number) => { setPreset('custom'); setLevels(v); };
-  const handleHeadcount = (v: number) => { setPreset('custom'); setHcSlider(v); };
-
-  const headcount = useMemo(() => sliderToHeadcount(hcSlider), [hcSlider]);
+  const handleLevels = (v: number) => { setPreset('custom'); storeLevels(v); };
+  const handleHeadcount = (v: number) => {
+    setPreset('custom');
+    setHcSlider(v);
+    storeHeadcount(sliderToHeadcount(v));
+  };
   const tax = useMemo(
     () => calcDepthTax(levels, headcount, fidelityRate),
     [levels, headcount, fidelityRate]
@@ -54,6 +61,10 @@ export function ModelYourOrg() {
   );
   const geo = useMemo(
     () => calcTriangleGeometry(levels, headcount, fidelityRate),
+    [levels, headcount, fidelityRate]
+  );
+  const restructure = useMemo(
+    () => calcRestructuringImpact(levels, headcount, fidelityRate),
     [levels, headcount, fidelityRate]
   );
 
@@ -172,13 +183,14 @@ export function ModelYourOrg() {
           </div>
         </div>
 
-        {/* ── [E] Key Metrics Grid ── */}
+        {/* ── [E] Key Metrics Grid (6 primary) ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
           <FlippableMetricCard
             label="Signal Fidelity"
             value={`${tax.signalFidelity.toFixed(1)}%`}
             sub="one-way to top"
             color={fidelityColor(tax.signalFidelity, true)}
+            infoHref="#methodology-signal-fidelity"
             minOut={0}
             maxOut={100}
             currentOut={tax.signalFidelity}
@@ -187,23 +199,24 @@ export function ModelYourOrg() {
             worstLabel="Distorted"
           />
           <FlippableMetricCard
-            label="Decision Latency"
-            value={tax.decisionLatency}
-            unit=" days"
-            sub={`Quality: ${(tax.decisionQuality * 100).toFixed(0)}%`}
-            color="#dc2626"
+            label="Decision Quality"
+            value={`${(tax.decisionQuality * 100).toFixed(1)}%`}
+            sub="compound fidelity × latency"
+            color={tax.decisionQuality > 0.5 ? '#16a34a' : tax.decisionQuality > 0.25 ? '#d97706' : '#dc2626'}
+            infoHref="#methodology-decision-quality"
             minOut={0}
-            maxOut={60}
-            currentOut={tax.decisionLatency}
-            inverseBest={true}
-            bestLabel="Instant"
-            worstLabel="Delayed"
+            maxOut={100}
+            currentOut={tax.decisionQuality * 100}
+            inverseBest={false}
+            bestLabel="High quality"
+            worstLabel="Degraded"
           />
           <FlippableMetricCard
             label="Pivot Speed"
             value={geo.agilityScore.toFixed(2)}
             sub={geo.agilityScore > 0.5 ? 'Strong reach — directives land' : geo.agilityScore > 0.25 ? 'Moderate reach — signal fades' : 'Weak reach — directives lost'}
             color={geo.agilityScore > 0.5 ? '#16a34a' : geo.agilityScore > 0.25 ? '#d97706' : '#dc2626'}
+            infoHref="#methodology-pivot-speed"
             minOut={0}
             maxOut={1}
             currentOut={geo.agilityScore}
@@ -212,32 +225,90 @@ export function ModelYourOrg() {
             worstLabel="Rigid"
           />
           <FlippableMetricCard
-            label="Span of Control"
-            value={m.avgSpan.toFixed(1)}
-            sub="avg reports per manager"
-            color="#16a34a"
-            minOut={1}
-            maxOut={15}
-            currentOut={m.avgSpan}
-            inverseBest={false}
-            bestLabel="Flat / Wide"
-            worstLabel="Deep / Micro"
+            label="Decision Latency"
+            value={tax.decisionLatency}
+            unit=" days"
+            sub={`${Math.round(tax.decisionsPerMonth).toLocaleString()} decisions/month`}
+            color="#dc2626"
+            infoHref="#methodology-decision-latency"
+            minOut={0}
+            maxOut={60}
+            currentOut={tax.decisionLatency}
+            inverseBest={true}
+            bestLabel="Instant"
+            worstLabel="Delayed"
           />
           <FlippableMetricCard
-            label="Shape Gap"
-            value={`${(geo.totalShapeGap * 100).toFixed(1)}%`}
-            sub="triangle vs. actual"
-            color={geo.totalShapeGap > 0.15 ? '#dc2626' : geo.totalShapeGap > 0.05 ? '#d97706' : '#16a34a'}
+            label="Management Tax"
+            value={`${m.managerRatio.toFixed(1)}%`}
+            sub={m.managerRatio < 15 ? 'Lean — minimal overhead' : m.managerRatio < 30 ? 'Moderate layers of management' : 'Heavy — half the org manages'}
+            color={m.managerRatio < 15 ? '#16a34a' : m.managerRatio < 30 ? '#d97706' : '#dc2626'}
+            infoHref="#methodology-management-tax"
             minOut={0}
-            maxOut={0.4}
-            currentOut={geo.totalShapeGap}
+            maxOut={50}
+            currentOut={m.managerRatio}
             inverseBest={true}
-            bestLabel="Uniform"
-            worstLabel="Distorted"
+            bestLabel="Lean"
+            worstLabel="Top-heavy"
+          />
+          <FlippableMetricCard
+            label="Drift Cost"
+            value={`${tax.ninetyDayAccuracy.toFixed(1)}%`}
+            sub="90-day accuracy"
+            color={tax.ninetyDayAccuracy > 80 ? '#16a34a' : tax.ninetyDayAccuracy > 50 ? '#d97706' : '#dc2626'}
+            infoHref="#methodology-drift-cost"
+            minOut={0}
+            maxOut={100}
+            currentOut={tax.ninetyDayAccuracy}
+            inverseBest={false}
+            bestLabel="Accurate"
+            worstLabel="Drifted"
           />
         </div>
 
-        {/* ── [F] More Metrics Disclosure ── */}
+        {/* ── [F] Restructuring Impact — always visible ── */}
+        {restructure && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide bg-emerald-100 px-2 py-0.5 rounded-full">What if</span>
+              <span className="text-[11px] text-slate-600">
+                You removed a layer ({restructure.currentLevels} → {restructure.proposedLevels}) with the same {headcount.toLocaleString()} employees
+              </span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+              <div className="bg-white rounded-lg px-3 py-2.5">
+                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Pivot Speed</div>
+                <div className="text-lg font-black font-mono text-green-600">
+                  +{(restructure.agilityDelta * 100).toFixed(1)}%
+                </div>
+                <div className="text-[10px] text-slate-400">faster pivots</div>
+              </div>
+              <div className="bg-white rounded-lg px-3 py-2.5">
+                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Inertia</div>
+                <div className="text-lg font-black font-mono text-green-600">
+                  -{restructure.inertiaReduction.toFixed(0)}%
+                </div>
+                <div className="text-[10px] text-slate-400">less rigidity</div>
+              </div>
+              <div className="bg-white rounded-lg px-3 py-2.5">
+                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Mgmt Tax</div>
+                <div className="text-lg font-black font-mono" style={{ color: restructure.managerRatioDelta < 0 ? '#16a34a' : '#d97706' }}>
+                  {restructure.managerRatioDelta < 0 ? '' : '+'}{restructure.managerRatioDelta.toFixed(1)}pp
+                </div>
+                <div className="text-[10px] text-slate-400">{restructure.managerRatioDelta < 0 ? 'leaner structure' : 'more overhead'}</div>
+              </div>
+              <div className="bg-white rounded-lg px-3 py-2.5">
+                <div className="text-[10px] text-slate-500 uppercase font-semibold mb-1">Signal Fidelity</div>
+                <div className="text-lg font-black font-mono text-green-600">
+                  +{restructure.fidelityGain.toFixed(1)}pp
+                </div>
+                <div className="text-[10px] text-slate-400">better signal to top</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── [G] More Metrics Disclosure ── */}
         <details className="group">
           <summary className="cursor-pointer list-none flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors py-2">
             <span>More metrics</span>
@@ -253,16 +324,18 @@ export function ModelYourOrg() {
           </summary>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
             <MetricCard
-              label="Drift Cost"
-              value={`${tax.ninetyDayAccuracy.toFixed(1)}%`}
-              sub="90-day accuracy"
-              accent="#d97706"
+              label="Span of Control"
+              value={m.avgSpan.toFixed(1)}
+              sub="avg reports per manager"
+              accent={m.avgSpan >= 7 ? '#16a34a' : m.avgSpan >= 4 ? '#d97706' : '#dc2626'}
+              infoHref="#methodology-span-of-control"
             />
             <MetricCard
-              label="Decision Quality"
-              value={`${(tax.decisionQuality * 100).toFixed(1)}%`}
-              sub="compound fidelity × latency"
-              accent="#dc2626"
+              label="Shape Gap"
+              value={`${(geo.totalShapeGap * 100).toFixed(1)}%`}
+              sub="triangle vs. actual"
+              accent={geo.totalShapeGap > 0.15 ? '#dc2626' : geo.totalShapeGap > 0.05 ? '#d97706' : '#16a34a'}
+              infoHref="#methodology-shape-gap"
             />
             <MetricCard
               label="Throughput"
@@ -270,12 +343,14 @@ export function ModelYourOrg() {
               unit="/month"
               sub="at this org size"
               accent="#0891b2"
+              infoHref="#methodology-throughput"
             />
             <MetricCard
               label="Flatness Index"
               value={m.flatnessIndex.toFixed(2)}
               sub="Higher = flatter"
               accent="#2563eb"
+              infoHref="#methodology-flatness-index"
             />
             <MetricCard
               label="Annual Comm Loss"
@@ -283,12 +358,7 @@ export function ModelYourOrg() {
               unit="M"
               sub="Ineffective comms cost"
               accent="#dc2626"
-            />
-            <MetricCard
-              label="Shape Class"
-              value={geo.shapeClassLabel.split(' — ')[0]}
-              sub={geo.shapeClassLabel.split(' — ')[1] ?? ''}
-              accent="#7c3aed"
+              infoHref="#methodology-annual-comm-loss"
             />
           </div>
         </details>

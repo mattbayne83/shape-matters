@@ -80,7 +80,7 @@ export interface RestructuringImpact {
   proposedLevels: number;
   agilityDelta: number;       // positive = improvement
   inertiaReduction: number;   // percentage reduction
-  gravityDelta: number;       // negative = more decentralized
+  managerRatioDelta: number;  // negative = fewer managers (leaner)
   fidelityGain: number;       // percentage points gained at top
 }
 

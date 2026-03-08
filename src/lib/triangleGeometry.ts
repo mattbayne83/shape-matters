@@ -1,4 +1,5 @@
 import type { TriangleGeometry, LayerInertia, ShapeClassification, RestructuringImpact } from '../types';
+import { calcOrgMetrics } from './orgMetrics';
 
 /**
  * Compute the employee count at each layer of the org hierarchy.
@@ -185,7 +186,8 @@ export function calcRestructuringImpact(
     inertiaReduction: current.momentOfInertia > 0
       ? ((current.momentOfInertia - proposed.momentOfInertia) / current.momentOfInertia) * 100
       : 0,
-    gravityDelta: proposed.decisionGravityRatio - current.decisionGravityRatio,
+    managerRatioDelta: calcOrgMetrics(levels - 1, employees, fidelityRate).managerRatio
+      - calcOrgMetrics(levels, employees, fidelityRate).managerRatio,
     fidelityGain: proposedFidelity - currentFidelity,
   };
 }

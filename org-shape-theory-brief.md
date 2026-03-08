@@ -1,5 +1,7 @@
 # Org Shape Theory — Project Brief & Conversation Context
 
+**Live Interactive Demo:** [https://mattbayne83.github.io/shape-matters/](https://mattbayne83.github.io/shape-matters/)
+
 ## The Theory
 
 The shape of an organization (height, width, span of control, overall size) directly and materially affects its effectiveness. If all other variables are held constant, a flatter team is more effective than a tall (many-level) team. This is testable through both first-principles modeling and empirical productivity proxies like revenue per employee.

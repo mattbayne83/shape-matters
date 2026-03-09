@@ -6,7 +6,7 @@ export function MethodologyCard({ id, title, formula, description, constants, ca
   return (
     <div
       id={id}
-      className="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden scroll-mt-24 flex flex-col"
+      className="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden scroll-mt-24 flex flex-col hover:shadow-lg hover:shadow-stone-200/50 hover:-translate-y-1 transition-all duration-300"
     >
       {/* Category stripe */}
       <div className={`h-1 ${isPrimary ? 'bg-ember' : 'bg-warm-stone'}`} />
@@ -18,11 +18,10 @@ export function MethodologyCard({ id, title, formula, description, constants, ca
             {title}
           </h4>
           <span
-            className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full whitespace-nowrap ml-2 ${
-              isPrimary
+            className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full whitespace-nowrap ml-2 ${isPrimary
                 ? 'bg-ember/10 text-ember'
                 : 'bg-stone-100 text-stone-400'
-            }`}
+              }`}
           >
             {isPrimary ? 'Primary' : 'Secondary'}
           </span>

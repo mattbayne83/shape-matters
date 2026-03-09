@@ -20,9 +20,10 @@ Prioritized by impact on the research tool's credibility, usability, and reach.
 ## P1 — Medium Impact
 
 ### Testing
-- [ ] Add Vitest for unit tests
-- [ ] Test `calcOrgMetrics()` and `calcDepthTax()` with known inputs/outputs
-- [ ] Test edge cases: 1 level, 1 employee, extreme fidelity rates (1%, 99%)
+- [x] Add Vitest for unit tests
+- [x] Test `calcOrgMetrics()` and `calcDepthTax()` with known inputs/outputs
+- [x] Test edge cases: 1 level, 1 employee, extreme fidelity rates (50%, 98%)
+- [x] Test `calcTriangleGeometry()`, `calcRestructuringImpact()`, `fidelityColor()`, `metricColor()`
 - [ ] Snapshot tests for key visualization components
 
 ### Data Export
@@ -65,6 +66,14 @@ Prioritized by impact on the research tool's credibility, usability, and reach.
 ---
 
 ## Completed
+
+### Dead Code Cleanup + Testing + Terminology
+- [x] Deleted `InertiaProfile.tsx` (151 lines dead code)
+- [x] Deleted `TheoryView.tsx` (196 lines dead code)
+- [x] Set up Vitest 4 with 95 unit tests across 4 calc modules
+- [x] Established terminology rule: "levels" = structural count, "layer" = relay/process
+- [x] Renamed "Org Levels" → "Levels" in all interactive controls
+- [x] Made Levels the hero control (top position) in both Problem and Model sections
 
 ### Narrative Restructuring (8 → 6 sections)
 - [x] Reordered sections for TED-talk persuasion flow (hook → proof → theory → tool)

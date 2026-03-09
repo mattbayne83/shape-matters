@@ -62,7 +62,7 @@ Single-page scroll layout in `src/pages/ScrollPage.tsx`. Navigation via anchor l
 ### Zustand Store (`useCompanyStore`)
 Shared inputs across Model and Shape sections:
 - `fidelityRate: number` (default 82), `levels: number` (default 6), `headcount: number` (default 5000)
-- Only ModelYourOrg writes; ShapeSection and others read only
+- ModelYourOrg + InteractiveFidelityDemo write `levels`; other components read only
 - Persist key: `org-shape-storage`
 
 ### Data Model
@@ -76,7 +76,7 @@ Shared inputs across Model and Shape sections:
 - `SignalCascade` — Funnel visualization: shrinking bars + trapezoid connectors with cascading highlight sweep. Dynamic `@keyframes` via inline `<style>` tag, `useId()` for multi-instance safety. Keyframe names include input values so animations restart on slider change. Bars anchored to top (not vertically centered). `barScale = usable - labelSpace` reserves 48px for label text.
 - `GembaComparison` — Side-by-side Evidence cards: "Without Gemba Walk" (light, 9 levels, 82% fidelity) vs "With Gemba Walk" (dark bg-stone-900, 9 levels, 100%). Both use `bottomUp` prop for org-chart orientation (L0 at bottom, L8 at top). Hover pulse animation via `group`/`group-hover`.
 - `LayerDiagram` — Horizontal bar chart per org level. Props: `inverted` (warm amber bars for dark bg), `hoverPulse` (cascading `gemba-pulse` animation), `bottomUp` (L0 at bottom). `invertedBarColor()` blends stone→amber/ember.
-- `InteractiveFidelityDemo` — Interactive playground in Problem section: fidelity + levels sliders → SignalCascade + metrics
+- `InteractiveFidelityDemo` — Interactive playground in Problem section: levels (hero, writes to store) + fidelity (local state) sliders → SignalCascade + 2 metrics
 - `AnimatedCounter` — Smoothly animated number transitions (framer-motion `useMotionValue`)
 - `FlippableMetricCard` — Primary metric card with value, sub-text, outcome range bar, `infoHref` link to methodology
 - `MetricCard` — Secondary metric card with `infoHref` link
@@ -107,11 +107,10 @@ Shared inputs across Model and Shape sections:
 
 ### Gotchas
 - **Formulas live ONLY in Methodology** — no formula boxes in other sections
-- **Only ModelYourOrg writes** to Zustand — all other components read only
+- **ModelYourOrg + InteractiveFidelityDemo write** to Zustand (levels) — other components read only
 - **Torque model replaced old variance-based agility** — see docs/TORQUE_MODEL.md
 - **`decisionGravityRatio` still computed** but NOT displayed — replaced by Management Tax (`managerRatio`)
-- **`InertiaProfile.tsx` is dead code** — unused since Shape section streamlining
-- **`TheoryView.tsx` is dead code** — unused legacy
+- **`InertiaProfile.tsx` + `TheoryView.tsx` deleted** — were dead code, now removed
 - **`scrollToAnchor` is shared** (`src/lib/scrollToAnchor.ts`) — used by FlippableMetricCard, MetricCard. No `<details>` logic (methodology is no longer collapsible).
 - **Background alternation**: white → stone-50 → white → stone-50... (methodology section is white)
 - **Product name**: "Shape Matters" (footer + nav logo)
@@ -123,6 +122,8 @@ Shared inputs across Model and Shape sections:
 - **fidelityColor.ts monochrome mode** uses stone HSL (h:24, s:6-10), not slate
 - **SignalCascade dynamic keyframes** — keyframe names MUST include input values (levels + fidelityRate) so browsers restart animations on slider change. Plain `useId()` names are stable across renders and won't trigger restarts.
 - **SignalCascade `barScale`** — reserves `labelSpace` (48px non-compact) so "100%" text doesn't clip at 1 level
+- **Terminology rule**: "Levels" = structural count (sliders, data), "Layer" = relay/process ("per-layer fidelity", "each layer retains"). Use "relays" when combined with the `levels` variable to avoid confusion.
+- **Input order** in both ModelYourOrg and InteractiveFidelityDemo: Levels (hero control) → secondary inputs. Levels is always the primary slider with accent-ember styling.
 - **ModelYourOrg is CSS grid** — don't add flex wrappers around columns; items use `lg:col-start-*` / `lg:row-start-*` placement. Sensitivity + metrics share row 2 for automatic height alignment.
 - **LayerDiagram `bottomUp`** — reverses render order (L0 at bottom). Used by GembaComparison only; CompanyCard uses default top-down.
 - **LayerDiagram `invertedBarColor()`** — warm amber for dark backgrounds (stone→ember hue blend). Don't use `fidelityColor()` on dark bg — it returns near-black at 100%.
@@ -132,10 +133,20 @@ Shared inputs across Model and Shape sections:
 - `public/_redirects` — SPA fallback (`/* /index.html 200`)
 - `public/_headers` — Security headers (X-Frame-Options, etc.)
 
+## Testing
+- **Vitest 4** with separate `vitest.config.ts`
+- 95 unit tests across 4 files in `src/lib/__tests__/`:
+  - `orgMetrics.test.ts` — span, flatness, fidelity, managers, edge cases
+  - `depthTax.test.ts` — signal, drift, latency, decision quality, formula verification
+  - `triangleGeometry.test.ts` — layer distribution, shape gap, torque/agility, classification, restructuring
+  - `fidelityColor.test.ts` — monochrome/semantic modes, clamping, HSL output
+
 ## Commands
 ```bash
-npm run dev      # Vite dev server (HMR)
-npm run build    # TypeScript check + Vite build
-npm run lint     # ESLint
-npm run preview  # Preview production build
+npm run dev        # Vite dev server (HMR)
+npm run build      # TypeScript check + Vite build
+npm run lint       # ESLint
+npm run test       # Vitest (single run)
+npm run test:watch # Vitest (watch mode)
+npm run preview    # Preview production build
 ```

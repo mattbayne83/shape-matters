@@ -17,7 +17,7 @@ export function CompanyCard({ company, fidelityRate }: CompanyCardProps) {
     [company.levels, company.employees, fidelityRate]
   );
   return (
-    <div className="bg-white border border-stone-200 rounded-xl p-5 flex-1 min-w-[220px]">
+    <div className="bg-white border border-stone-200 rounded-xl p-5 flex-1 min-w-[220px] hover:shadow-lg hover:shadow-stone-200/50 hover:-translate-y-1 transition-all duration-300">
       <div className="flex items-start justify-between mb-1">
         <div className="text-sm font-bold text-stone-900">
           {company.name}

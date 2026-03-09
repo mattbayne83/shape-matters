@@ -30,11 +30,8 @@ Shape (#shape) and Evidence (#evidence) sit back-to-back as two theory-heavy sec
 
 ## P1 — Medium Impact
 
-### Shareable Calculator URL (/elon Step 4)
-Encode calculator inputs (levels, headcount, fidelityRate) in the URL hash so users can share "here's what YOUR org looks like" links. Single highest-leverage feature for organic reach.
-- [x] Encode calculator params in URL hash (e.g., `#model?l=9&h=150000&f=82`)
-- [x] Read hash on load → hydrate Zustand store
-- [x] Add "Copy link" button to ModelYourOrg
+### ~~Shareable Calculator URL~~ (/elon Step 4) — DONE
+Moved to Completed section.
 
 ### Testing
 - [x] Add Vitest for unit tests
@@ -70,9 +67,8 @@ Encode calculator inputs (levels, headcount, fidelityRate) in the URL hash so us
 - [ ] "What if" simulator: take a real company, flatten by N levels, show projected metric changes
 - [ ] Monte Carlo simulation on fidelity rate ranges to show confidence intervals
 
-### Community Features
-- [ ] GitHub Discussions integration for company data debate
-- [ ] "Suggest a company" form that opens a pre-filled GitHub issue
+### ~~Community Features~~ — DONE
+Moved to Completed section.
 
 ### Academic Rigor
 - [ ] Formal paper writeup of the unified model (Bartlett + Deming + Toyota → Shape Theory)
@@ -113,3 +109,15 @@ Encode calculator inputs (levels, headcount, fidelityRate) in the URL hash so us
 - [x] Deleted InertiaComparison, Triangle Area, Coord. Overhead
 - [x] Consolidated formulas to Methodology section only (removed 3 duplicate formula boxes)
 - [x] Updated hero stats for visceral contrast (17% red → 100% green → 13 blue)
+
+### Community Features
+- [x] GitHub Discussions integration for company data debate
+- [x] "Suggest a company" form that opens a pre-filled GitHub issue
+
+### Cross-Platform Font Rendering Fix
+- [x] `font-black` (900) → `font-bold` (700) on all `font-mono` elements (DM Mono only ships 300/400/500)
+- [x] `font-extrabold` (800) → `font-bold` (700) on CompanyCard + MetricCard
+- [x] `tracking-tighter` → `tracking-tight` on hero metric numbers (prevents clipping on Windows fallback fonts)
+- [x] Added `tabular-nums` to all numeric `font-mono` displays (safety net for proportional fallback fonts)
+- [x] Added `-webkit-font-smoothing: antialiased` + `-moz-osx-font-smoothing: grayscale` to body
+- [x] Files fixed: index.css, HeroSection, ModelYourOrg, InteractiveFidelityDemo, GembaComparison, CompanyCard, MetricCard

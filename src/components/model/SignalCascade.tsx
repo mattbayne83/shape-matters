@@ -19,8 +19,14 @@ interface SignalCascadeProps {
  */
 export function SignalCascade({ levels, fidelityRate, semantic, compact }: SignalCascadeProps) {
   const W = 300;
-  const PAD = compact ? 20 : 30;
-  const usable = W - PAD * 2;
+  const H = 220;
+  const PAD_X = compact ? 16 : 24;
+  const PAD_TOP = compact ? 16 : 24;
+  const PAD_BOTTOM = 8;
+  const usableW = W - PAD_X * 2;
+  const usableH = H - PAD_TOP - PAD_BOTTOM;
+  const labelSpace = compact ? 0 : 48; // reserve right margin for "100%" text
+  const barScale = usableW - labelSpace;
   const centerX = W / 2;
   const uid = useId().replace(/:/g, '');
   // Include inputs in keyframe name so browsers restart on slider change
@@ -33,18 +39,21 @@ export function SignalCascade({ levels, fidelityRate, semantic, compact }: Signa
 
   const data = useMemo(() => {
     const maxBlockH = compact ? 16 : 20;
-    const blockH = Math.min(maxBlockH, usable / (levels * 1.5));
+    const blockH = Math.min(maxBlockH, usableH / (levels * 1.35));
     const gap = blockH * 0.35;
     const totalH = levels * blockH + (levels - 1) * gap;
-    const topY = PAD + (usable - totalH) / 2;
+    const bottomY = H - PAD_BOTTOM;
+    const topY = bottomY - totalH;
 
     return Array.from({ length: levels }, (_, i) => {
+      // Reversing the index for Y-positioning so wider base is at the bottom.
+      const invertedIndex = levels - 1 - i;
       const f = Math.pow(fidelityRate / 100, i) * 100;
-      const bw = Math.max(8, (f / 100) * usable);
-      const y = topY + i * (blockH + gap);
+      const bw = Math.max(8, (f / 100) * barScale);
+      const y = topY + invertedIndex * (blockH + gap);
       return { f, bw, y, blockH };
     });
-  }, [levels, fidelityRate, usable, compact, PAD]);
+  }, [levels, fidelityRate, usableH, barScale, compact, H, PAD_BOTTOM]);
 
   // Cascading flow animation: one keyframe, staggered delays
   const flow = useMemo(() => {
@@ -68,7 +77,7 @@ export function SignalCascade({ levels, fidelityRate, semantic, compact }: Signa
   const showFlow = !!flow && !prefersReducedMotion;
 
   return (
-    <svg viewBox="0 0 300 300" className="w-full h-auto">
+    <svg viewBox="0 0 300 220" className="w-full h-auto">
       {showFlow && <style>{flow.css}</style>}
 
       {/* ── Bars + Trapezoids ── */}
@@ -78,13 +87,13 @@ export function SignalCascade({ levels, fidelityRate, semantic, compact }: Signa
           <g key={i}>
             {next && (
               <path
-                d={`M${centerX - d.bw / 2},${d.y + d.blockH} L${centerX + d.bw / 2},${d.y + d.blockH} L${centerX + next.bw / 2},${next.y} L${centerX - next.bw / 2},${next.y} Z`}
+                d={`M${centerX - d.bw / 2},${d.y} L${centerX + d.bw / 2},${d.y} L${centerX + next.bw / 2},${next.y + next.blockH} L${centerX - next.bw / 2},${next.y + next.blockH} Z`}
                 fill={fidelityColor(d.f, semantic)}
                 opacity={0.2}
                 style={{
                   animation: 'cascade-reveal 0.4s ease-out both',
                   animationDelay: `${i * 80 + 40}ms`,
-                  transformOrigin: `${centerX}px ${d.y + d.blockH}px`,
+                  transformOrigin: `${centerX}px ${next.y + next.blockH}px`,
                 }}
               />
             )}
@@ -148,7 +157,7 @@ export function SignalCascade({ levels, fidelityRate, semantic, compact }: Signa
             return (
               <path
                 key={`cflow-${i}`}
-                d={`M${centerX - d.bw / 2},${d.y + d.blockH} L${centerX + d.bw / 2},${d.y + d.blockH} L${centerX + next.bw / 2},${next.y} L${centerX - next.bw / 2},${next.y} Z`}
+                d={`M${centerX - d.bw / 2},${d.y} L${centerX + d.bw / 2},${d.y} L${centerX + next.bw / 2},${next.y + next.blockH} L${centerX - next.bw / 2},${next.y + next.blockH} Z`}
                 fill="white"
                 fillOpacity={0.12}
                 style={{

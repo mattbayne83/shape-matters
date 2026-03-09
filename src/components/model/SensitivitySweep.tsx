@@ -10,8 +10,8 @@ const TYPICAL_MAX = 90;
 
 // SVG dimensions
 const W = 280;
-const H = 120;
-const PAD = { top: 8, right: 12, bottom: 22, left: 32 };
+const H = 160;
+const PAD = { top: 14, right: 16, bottom: 28, left: 38 };
 const plotW = W - PAD.left - PAD.right;
 const plotH = H - PAD.top - PAD.bottom;
 
@@ -51,18 +51,18 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
   const txMax = xFor(TYPICAL_MAX);
 
   return (
-    <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-sm">
+    <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-sm flex flex-col">
       <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-2">
         Sensitivity — Round-Trip Fidelity vs. Per-Layer Rate
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full flex-1" preserveAspectRatio="xMidYMid meet">
         {/* Typical range shading */}
         <rect
           x={txMin} y={PAD.top}
           width={txMax - txMin} height={plotH}
           fill="#e7e5e4" opacity={0.4} rx={2}
         />
-        <text x={(txMin + txMax) / 2} y={PAD.top + 8} textAnchor="middle" className="fill-stone-400" fontSize={7} fontWeight={600}>
+        <text x={(txMin + txMax) / 2} y={PAD.top + 12} textAnchor="middle" className="fill-stone-400" fontSize={9} fontWeight={600}>
           typical range
         </text>
 
@@ -71,7 +71,7 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
           points={polyline}
           fill="none"
           stroke="#44403c"
-          strokeWidth={1.5}
+          strokeWidth={2}
           strokeLinejoin="round"
         />
 
@@ -79,36 +79,36 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
         <line
           x1={cx} y1={PAD.top} x2={cx} y2={PAD.top + plotH}
           stroke={fidelityColor(currentRT, true)}
-          strokeWidth={1}
-          strokeDasharray="3 2"
+          strokeWidth={1.5}
+          strokeDasharray="4 3"
           opacity={0.6}
         />
 
         {/* Current position dot */}
         <circle
-          cx={cx} cy={cy} r={4}
+          cx={cx} cy={cy} r={5}
           fill={fidelityColor(currentRT, true)}
           stroke="white" strokeWidth={1.5}
         />
 
         {/* Current value label */}
         <text
-          x={cx} y={cy - 8}
+          x={cx} y={cy - 10}
           textAnchor="middle"
-          fontSize={8} fontWeight={700} fontFamily="monospace"
+          fontSize={11} fontWeight={700} fontFamily="monospace"
           fill={fidelityColor(currentRT, true)}
         >
           {currentRT.toFixed(1)}%
         </text>
 
         {/* X axis labels */}
-        <text x={PAD.left} y={H - 4} fontSize={7} fill="#a8a29e" textAnchor="start">50%</text>
-        <text x={PAD.left + plotW} y={H - 4} fontSize={7} fill="#a8a29e" textAnchor="end">98%</text>
-        <text x={PAD.left + plotW / 2} y={H - 4} fontSize={7} fill="#a8a29e" textAnchor="middle">per-layer rate</text>
+        <text x={PAD.left} y={H - 6} fontSize={9} fill="#a8a29e" textAnchor="start">50%</text>
+        <text x={PAD.left + plotW} y={H - 6} fontSize={9} fill="#a8a29e" textAnchor="end">98%</text>
+        <text x={PAD.left + plotW / 2} y={H - 6} fontSize={9} fill="#a8a29e" textAnchor="middle">per-layer rate</text>
 
         {/* Y axis labels */}
-        <text x={PAD.left - 4} y={PAD.top + 5} fontSize={7} fill="#a8a29e" textAnchor="end">100%</text>
-        <text x={PAD.left - 4} y={PAD.top + plotH} fontSize={7} fill="#a8a29e" textAnchor="end">0%</text>
+        <text x={PAD.left - 4} y={PAD.top + 5} fontSize={9} fill="#a8a29e" textAnchor="end">100%</text>
+        <text x={PAD.left - 4} y={PAD.top + plotH} fontSize={9} fill="#a8a29e" textAnchor="end">0%</text>
       </svg>
     </div>
   );

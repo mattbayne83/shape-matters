@@ -1,15 +1,5 @@
 import { SECTION_LABEL } from '../../lib/styles';
-
-function scrollToAnchor(e: React.MouseEvent<HTMLAnchorElement>) {
-  e.preventDefault();
-  const href = e.currentTarget.getAttribute('href');
-  if (!href) return;
-  const target = document.querySelector(href);
-  if (!target) return;
-  const details = target.closest('details');
-  if (details && !details.open) details.open = true;
-  setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-}
+import { scrollToAnchor } from '../../lib/scrollToAnchor';
 
 interface MetricCardProps {
   label: string;
@@ -22,7 +12,7 @@ interface MetricCardProps {
 
 export function MetricCard({ label, value, unit, sub, accent, infoHref }: MetricCardProps) {
   return (
-    <div className="bg-white border border-stone-200 rounded-xl px-4 py-3.5 min-w-0">
+    <div className="bg-white border border-stone-200 rounded-xl p-4 shadow-sm min-w-0">
       <div className={`${SECTION_LABEL} mb-1.5 flex items-center gap-1`}>
         {label}
         {infoHref && (

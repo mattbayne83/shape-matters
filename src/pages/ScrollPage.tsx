@@ -5,7 +5,7 @@ import { GembaComparison } from '../components/model/GembaComparison';
 import { ComparisonView } from '../components/model/ComparisonView';
 import { ModelYourOrg } from '../components/model/ModelYourOrg';
 import { ShapeSection } from '../components/model/ShapeSection';
-import { Prose } from '../components/ui/Prose';
+import { MethodologySection } from '../components/model/MethodologySection';
 import { GeometricHero } from '../components/ui/GeometricHero';
 import { useCompanyStore } from '../store/useCompanyStore';
 import { REFERENCE_COMPANIES } from '../data/referenceCompanies';
@@ -68,100 +68,112 @@ export function ScrollPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
             {/* Card 1: Signal Fidelity */}
-            <div className="group text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:-translate-y-1 hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default">
-              <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
-                Signal Fidelity
-              </div>
-              <div className="flex items-baseline justify-between mb-1">
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
-                  {flatM.fidelityAtTopPct.toFixed(0)}%
+            <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[180px]">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
+                  Signal Fidelity
                 </div>
-                <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
-                  {deepM.fidelityAtTopPct.toFixed(1)}%
+                <div className="flex items-baseline justify-between mb-1">
+                  <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
+                    {flatM.fidelityAtTopPct.toFixed(0)}%
+                  </div>
+                  <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
+                  <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
+                    {deepM.fidelityAtTopPct.toFixed(1)}%
+                  </div>
+                </div>
+                <div className="flex justify-between text-[10px] text-stone-500 mb-3">
+                  <span>{flat.name} · {flat.levels} level</span>
+                  <span>{deep.name} · {deep.levels} levels</span>
                 </div>
               </div>
-              <div className="flex justify-between text-[10px] text-stone-500 mb-3">
-                <span>{flat.name} · {flat.levels} level</span>
-                <span>{deep.name} · {deep.levels} levels</span>
-              </div>
-              <div className="h-1.5 rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(to right, #1C1917, #B84515)' }} />
-              <div className="text-[10px] text-stone-500 mt-2.5 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300 leading-relaxed">
-                Each relay retains {fidelityRate}% — loss compounds across every level
+              <div>
+                <div className="h-1.5 rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(to right, #1C1917, #B84515)' }} />
+                <div className="text-[10px] text-stone-500 mt-2.5 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300 leading-relaxed">
+                  Each relay retains {fidelityRate}% — loss compounds across every level
+                </div>
               </div>
             </div>
 
             {/* Card 2: Decision Speed */}
-            <div className="group text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:-translate-y-1 hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default">
-              <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
-                Decision Speed
-              </div>
-              <div className="flex items-baseline justify-between mb-1">
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
-                  {flatM.roundTripLayers}
+            <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[180px]">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
+                  Decision Speed
                 </div>
-                <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
-                  {deepM.roundTripLayers}
+                <div className="flex items-baseline justify-between mb-1">
+                  <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
+                    {flatM.roundTripLayers}
+                  </div>
+                  <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
+                  <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
+                    {deepM.roundTripLayers}
+                  </div>
+                </div>
+                <div className="flex justify-between text-[10px] text-stone-500 mb-3">
+                  <span>{flat.name} · 0 hops</span>
+                  <span>{deep.name} · {deepM.roundTripLayers} hops</span>
                 </div>
               </div>
-              <div className="flex justify-between text-[10px] text-stone-500 mb-3">
-                <span>{flat.name} · 0 hops</span>
-                <span>{deep.name} · {deepM.roundTripLayers} hops</span>
-              </div>
-              {/* Relay dot chain */}
-              <div className="flex items-center gap-1 h-1.5">
-                {Array.from({ length: deep.levels }, (_, i) => {
-                  const t = i / (deep.levels - 1);
-                  const r = Math.round(28 + t * (184 - 28));
-                  const g = Math.round(25 + t * (69 - 25));
-                  const b = Math.round(23 + t * (21 - 23));
-                  return (
-                    <div
-                      key={i}
-                      className="h-1.5 flex-1 rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{
-                        backgroundColor: `rgb(${r}, ${g}, ${b})`,
-                        transitionDelay: `${i * 40}ms`,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-              <div className="text-[10px] text-stone-500 mt-2.5 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300 leading-relaxed">
-                Round-trip relay hops — every hop adds latency and distortion
+              <div>
+                {/* Relay dot chain */}
+                <div className="flex items-center gap-1 h-1.5">
+                  {Array.from({ length: deep.levels }, (_, i) => {
+                    const t = i / (deep.levels - 1);
+                    const r = Math.round(28 + t * (184 - 28));
+                    const g = Math.round(25 + t * (69 - 25));
+                    const b = Math.round(23 + t * (21 - 23));
+                    return (
+                      <div
+                        key={i}
+                        className="h-1.5 flex-1 rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{
+                          backgroundColor: `rgb(${r}, ${g}, ${b})`,
+                          transitionDelay: `${i * 40}ms`,
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="text-[10px] text-stone-500 mt-2.5 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300 leading-relaxed">
+                  Round-trip relay hops — every hop adds latency and distortion
+                </div>
               </div>
             </div>
 
             {/* Card 3: Flatness Index */}
-            <div className="group text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:-translate-y-1 hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default">
-              <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
-                Flatness Index
-              </div>
-              <div className="flex items-baseline justify-between mb-1">
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
-                  {flatM.flatnessIndex.toFixed(1)}
+            <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[180px]">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
+                  Flatness Index
                 </div>
-                <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
-                  {deepM.flatnessIndex.toFixed(2)}
+                <div className="flex items-baseline justify-between mb-1">
+                  <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
+                    {flatM.flatnessIndex.toFixed(1)}
+                  </div>
+                  <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
+                  <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
+                    {deepM.flatnessIndex.toFixed(2)}
+                  </div>
+                </div>
+                <div className="flex justify-between text-[10px] text-stone-500 mb-3">
+                  <span>{flat.name} · {flat.levels} level</span>
+                  <span>{deep.name} · {deep.levels} levels</span>
                 </div>
               </div>
-              <div className="flex justify-between text-[10px] text-stone-500 mb-3">
-                <span>{flat.name} · {flat.levels} level</span>
-                <span>{deep.name} · {deep.levels} levels</span>
-              </div>
-              {/* Two shape silhouettes */}
-              <div className="flex items-end justify-between h-5 opacity-30 group-hover:opacity-100 transition-opacity duration-300">
-                <svg viewBox="0 0 40 20" className="h-5 w-12">
-                  <polygon points="2,18 20,4 38,18" fill="none" stroke="#1C1917" strokeWidth="1.5" />
-                </svg>
-                <svg viewBox="0 0 20 30" className="h-5 w-6">
-                  <polygon points="2,28 10,2 18,28" fill="none" stroke="#B84515" strokeWidth="1.5" />
-                </svg>
-              </div>
-              <div className="text-[10px] text-stone-500 mt-2.5 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300 leading-relaxed">
-                Higher is flatter — span of control divided by depth
+              <div>
+                {/* Two shape silhouettes */}
+                <div className="flex items-end justify-between h-5 opacity-30 group-hover:opacity-100 transition-opacity duration-300">
+                  <svg viewBox="0 0 40 20" className="h-5 w-12">
+                    <polygon points="2,18 20,4 38,18" fill="none" stroke="#1C1917" strokeWidth="1.5" />
+                  </svg>
+                  <svg viewBox="0 0 20 30" className="h-5 w-6">
+                    <polygon points="2,28 10,2 18,28" fill="none" stroke="#B84515" strokeWidth="1.5" />
+                  </svg>
+                </div>
+                <div className="text-[10px] text-stone-500 mt-2.5 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300 leading-relaxed">
+                  Higher is flatter — span of control divided by depth
+                </div>
               </div>
             </div>
           </div>
@@ -358,328 +370,16 @@ export function ScrollPage() {
       </section>
 
       {/* ─── METHODOLOGY ─── */}
-      <section id="methodology" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
+      <section id="methodology" className="py-16 md:py-24 px-6 md:px-12">
         <FadeIn className="max-w-5xl mx-auto">
-          <details className="group">
-            <summary className="cursor-pointer list-none">
-              <div className="flex items-center justify-between bg-white border border-stone-200 rounded-xl px-5 py-4 group-open:rounded-b-none group-open:border-b-0">
-                <div>
-                  <div className={`${SECTION_LABEL} mb-1`}>Methodology</div>
-                  <div className="text-sm text-stone-500">
-                    Data sources, formula derivations, assumptions, and limitations
-                  </div>
-                </div>
-                <div className="text-stone-400 text-xs font-semibold group-open:hidden">
-                  Show ▾
-                </div>
-                <div className="text-stone-400 text-xs font-semibold hidden group-open:block">
-                  Hide ▴
-                </div>
-              </div>
-            </summary>
-            <div className="bg-white border border-stone-200 border-t-0 rounded-b-xl px-5 pb-5">
-              <Prose>
-                <h3>Metric Formulas</h3>
-                <p>
-                  Each formula below corresponds to a metric card in the Model Your Org section.
-                  Variables: <strong>r</strong> = per-layer fidelity rate (default 0.82),{' '}
-                  <strong>L</strong> = number of levels, <strong>N</strong> = total employees,{' '}
-                  <strong>n<sub>k</sub></strong> = employees at layer k (layer 0 = ICs, layer L-1 = CEO).
-                </p>
-              </Prose>
-
-              {/* ── Primary Metrics ── */}
-              <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-6 mb-3">
-                Primary Metrics
-              </div>
-              <div className="space-y-4">
-                <div id="methodology-signal-fidelity" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Signal Fidelity</span>{' = '}
-                    r<sup>(L-1)</sup> × 100%
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    The percentage of the original message that survives L-1 relay hops from frontline to CEO.
-                    Based on Bartlett's serial reproduction research (1932): each retelling preserves only a fraction r of the original.
-                    At 82% fidelity and 6 levels, only 37% of the original signal reaches the top.
-                  </div>
-                </div>
-
-                <div id="methodology-decision-quality" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Decision Quality</span>{' = '}
-                    r<sup>(L-1)</sup> × e<sup>(-λ·L·K)</sup>
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    Combines signal fidelity with information staleness.
-                    The first term (r<sup>L-1</sup>) captures signal degradation; the second (e<sup>-λLK</sup>)
-                    captures time decay — information loses value as it ages during the decision cycle.
-                    Constants: λ = 0.008 (staleness decay), K = 3 days per layer.
-                  </div>
-                </div>
-
-                <div id="methodology-pivot-speed" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Pivot Speed</span>{' = '}
-                    (1/N) × Σ n<sub>k</sub> × r<sup>|L-1-k|</sup>
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    The CEO's fidelity-weighted reach across all layers (torque model).
-                    For each layer k, the directive's effective weight is n<sub>k</sub> (people at that layer)
-                    discounted by r<sup>|L-1-k|</sup> (signal decay over the distance).
-                    Dividing by N normalizes to [0, 1]. A score of 0.5+ means directives effectively land;
-                    below 0.25, leadership pivots are largely lost in translation.
-                  </div>
-                </div>
-
-                <div id="methodology-decision-latency" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Decision Latency</span>{' = '}
-                    L × K{' '}
-                    <span className="text-stone-400 text-xs">(K = 3 days/layer)</span>
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    The round-trip time for a decision cycle: information travels up L layers,
-                    gets processed, and the decision travels back down.
-                    K = 3 days/layer is a conservative estimate accounting for scheduling, review, and approval at each level.
-                  </div>
-                </div>
-
-                <div id="methodology-management-tax" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Management Tax</span>{' = '}
-                    (N - n<sub>0</sub>) / N × 100%
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    The percentage of the organization in management roles (all non-IC layers).
-                    Layer 0 (frontline ICs) does the productive work; layers 1 through L-1 manage.
-                    Layer counts use geometric narrowing: n<sub>k</sub> = N / span<sup>k</sup> (normalized).
-                    Below 15% is lean; above 30% means nearly half the org is managing rather than producing.
-                  </div>
-                </div>
-
-                <div id="methodology-drift-cost" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Drift Cost</span>{' = '}
-                    e<sup>(-α·(L-1)·90)</sup> × 100%
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    Information accuracy remaining after 90 days.
-                    Each layer adds a drift rate α = 0.005/day — compounding across L-1 layers.
-                    This models how strategic alignment erodes over time: a 6-level org loses accuracy
-                    ~5× faster than a 2-level org because drift compounds at every relay point.
-                  </div>
-                </div>
-              </div>
-
-              {/* ── Secondary Metrics ── */}
-              <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-8 mb-3">
-                Secondary Metrics
-              </div>
-              <div className="space-y-4">
-                <div id="methodology-span-of-control" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Span of Control</span>{' = '}
-                    N<sup>1/L</sup>
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    Average number of direct reports per manager, assuming uniform geometric narrowing.
-                    Below 4 indicates excessive management layers; above 7 suggests a lean, empowered structure.
-                  </div>
-                </div>
-
-                <div id="methodology-shape-gap" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Shape Gap</span>{' = '}
-                    Σ|w<sub>ideal</sub> - w<sub>actual</sub>| / 2N
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    How much the actual org shape deviates from an idealized linear triangle.
-                    The idealized triangle narrows linearly; real orgs narrow exponentially (creating a horn shape).
-                    Higher values indicate a more pronounced middle-management bulge.
-                  </div>
-                </div>
-
-                <div id="methodology-throughput" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Throughput</span>{' = '}
-                    5 × N<sup>0.6</sup>{' '}
-                    <span className="text-stone-400 text-xs">decisions/month</span>
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    Estimated organizational decision throughput using a sub-linear scaling model.
-                    Larger orgs make more decisions, but not proportionally — coordination overhead grows.
-                    The 0.6 exponent reflects diminishing returns from organizational complexity.
-                  </div>
-                </div>
-
-                <div id="methodology-flatness-index" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Flatness Index</span>{' = '}
-                    Span / L
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    A composite measure of structural flatness: the ratio of average span of control to org depth.
-                    Higher values indicate flatter organizations. An index of 1.0 means span equals depth;
-                    values above 2.0 indicate meaningfully flat structures.
-                  </div>
-                </div>
-
-                <div id="methodology-annual-comm-loss" className="border border-stone-200 rounded-lg p-4 scroll-mt-24">
-                  <div className="font-mono text-sm text-stone-800 mb-1.5">
-                    <span className="font-bold">Annual Comm Loss</span>{' = '}
-                    N × $10,140 × (1 - r<sup>2(L-1)</sup>)
-                  </div>
-                  <div className="text-xs text-stone-500 leading-relaxed">
-                    Estimated annual cost of ineffective communication, based on the Axios HQ 2025
-                    State of Internal Communications finding of $10,140/employee/year average loss.
-                    Scaled by the organization's round-trip signal degradation — deeper orgs waste more
-                    because messages lose fidelity on every round trip.
-                  </div>
-                </div>
-              </div>
-
-              {/* ── Geometry Internals ── */}
-              <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-8 mb-3">
-                Geometry Internals
-              </div>
-              <div className="my-2 border border-stone-200 rounded-lg p-4">
-                <div className="font-mono text-sm text-stone-800 leading-loose space-y-1">
-                  <div>
-                    <span className="text-stone-400">Slope Angle{'            '}</span> = arctan(2L / span){' '}
-                    <span className="text-stone-400 text-xs">in degrees — steep = narrow span</span>
-                  </div>
-                  <div>
-                    <span className="text-stone-400">Moment of Inertia{'      '}</span> = Σ n<sub>k</sub>·(k - centroid)<sup>2</sup>{' '}
-                    <span className="text-stone-400 text-xs">organizational rigidity proxy</span>
-                  </div>
-                  <div>
-                    <span className="text-stone-400">Center of Mass{'         '}</span> = Σ(k·n<sub>k</sub>) / N{' '}
-                    <span className="text-stone-400 text-xs">weighted average layer position</span>
-                  </div>
-                  <div>
-                    <span className="text-stone-400">Round-trip Fidelity{'    '}</span> = r<sup>2(L-1)</sup>{' '}
-                    <span className="text-stone-400 text-xs">signal up + decision back down</span>
-                  </div>
-                </div>
-              </div>
-
-              <Prose>
-                <h3>Shape Classification</h3>
-                <p>
-                  Organizations are classified into four shape archetypes based on their slope angle and shape gap:
-                </p>
-              </Prose>
-
-              <div className="my-6 border border-stone-200 rounded-lg p-4">
-                <div className="font-mono text-sm text-stone-800 leading-loose space-y-1">
-                  <div>
-                    <span className="text-stone-400">Mesa{'                   '}</span> slope &lt; 30° or levels ≤ 2{' '}
-                    <span className="text-stone-400 text-xs">— flat and wide, minimal hierarchy</span>
-                  </div>
-                  <div>
-                    <span className="text-stone-400">Pyramid{'                '}</span> slope 30-55°, gap &lt; 8%{' '}
-                    <span className="text-stone-400 text-xs">— balanced, closest to idealized triangle</span>
-                  </div>
-                  <div>
-                    <span className="text-stone-400">Diamond{'                '}</span> gap &gt; 8%, slope &gt; 40°{' '}
-                    <span className="text-stone-400 text-xs">— bloated middle layers, hidden costs</span>
-                  </div>
-                  <div>
-                    <span className="text-stone-400">Obelisk{'                '}</span> slope &gt; 55°{' '}
-                    <span className="text-stone-400 text-xs">— steep and deep, narrow span of control</span>
-                  </div>
-                </div>
-              </div>
-
-              <Prose>
-                <h3>Key Assumptions</h3>
-                <ul>
-                  <li>
-                    <strong>Per-layer fidelity rate (default 82%)</strong> — Based on serial
-                    reproduction research. Empirical estimates from Bartlett (1932) and replications
-                    (Roediger et al., 2014) suggest 70-90% per relay depending on message complexity.
-                    The rate is user-adjustable.
-                  </li>
-                  <li>
-                    <strong>Uniform span assumption</strong> — The model uses N<sup>1/L</sup> to
-                    estimate average span of control, assuming a roughly uniform distribution. Real
-                    organizations have variable spans across levels.
-                  </li>
-                  <li>
-                    <strong>Communication loss ($10,140/employee/year)</strong> — From Axios HQ 2025
-                    State of Internal Communications report.
-                  </li>
-                  <li>
-                    <strong>Triangle model assumes symmetric narrowing</strong> — Equal span at all
-                    layers. Real organizations have variable spans. The Shape Gap metric quantifies
-                    structural deviation from this idealized linear hierarchy.
-                  </li>
-                </ul>
-
-                <h3>Data Sources</h3>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Source</th>
-                      <th>Used For</th>
-                      <th>Year</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Bartlett, F.C.</td>
-                      <td>Serial reproduction theory, fidelity degradation model</td>
-                      <td>1932</td>
-                    </tr>
-                    <tr>
-                      <td>Roediger et al.</td>
-                      <td>Modern replication of serial reproduction effects</td>
-                      <td>2014</td>
-                    </tr>
-                    <tr>
-                      <td>Deming, W.E.</td>
-                      <td>Quality framework, variation theory, 14 points</td>
-                      <td>1982</td>
-                    </tr>
-                    <tr>
-                      <td>Ohno, Taiichi</td>
-                      <td>Toyota Production System, Gemba Walk methodology</td>
-                      <td>1950s-1988</td>
-                    </tr>
-                    <tr>
-                      <td>Axios HQ</td>
-                      <td>Annual communication loss estimate ($10,140/employee)</td>
-                      <td>2025</td>
-                    </tr>
-                    <tr>
-                      <td>SEC 10-K filings</td>
-                      <td>Company employee counts and organizational data</td>
-                      <td>2024</td>
-                    </tr>
-                    <tr>
-                      <td>Microsoft Research</td>
-                      <td>Organizational communication network studies</td>
-                      <td>2024</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <h3>Limitations</h3>
-                <ul>
-                  <li>
-                    <strong>Organizational levels are often ambiguous</strong> — Different counting
-                    methods produce different numbers. The model uses "levels from CEO to frontline IC."
-                  </li>
-                  <li>
-                    <strong>The model assumes serial communication</strong> — Real organizations use
-                    parallel, skip-level, and informal channels that may partially compensate for
-                    hierarchical fidelity loss.
-                  </li>
-                </ul>
-              </Prose>
-            </div>
-          </details>
+          <div className={`${SECTION_LABEL} mb-3`}>Methodology</div>
+          <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
+            How We Calculate
+          </h2>
+          <p className="text-sm text-stone-500 mb-8">
+            Data sources, formula derivations, assumptions, and limitations
+          </p>
+          <MethodologySection />
         </FadeIn>
       </section>
 

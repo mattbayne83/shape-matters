@@ -3,10 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 
 export function ParallaxBackground() {
     const ref = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['start start', 'end end']
-    });
+    const { scrollYProgress } = useScroll();
 
     // Calculate parallax offset.
     // The background will rise slower than the page scroll,
@@ -41,13 +38,13 @@ export function ParallaxBackground() {
                     <rect width="100%" height="100%" fill="url(#parallax-grid)" />
 
                     {/* Subtle floating geometry that scrolls with the grid */}
-                    <g opacity="0.4">
-                        <polygon points="20vw,20vh 25vw,10vh 25vw,30vh" fill="#a8a29e" />
-                        <polygon points="70vw,40vh 80vw,35vh 75vw,50vh" fill="#d6d3d1" />
-                        <polygon points="40vw,70vh 45vw,60vh 50vw,75vh" fill="none" stroke="#a8a29e" strokeWidth="2" />
-                        <circle cx="85vw" cy="85vh" r="4vw" fill="none" stroke="#e7e5e4" strokeWidth="1" />
-                        <circle cx="15vw" cy="90vh" r="8vw" fill="none" stroke="#f5f5f4" strokeWidth="2" />
-                    </g>
+                    <svg viewBox="0 0 2000 2000" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" opacity="0.4">
+                        <polygon points="400,400 500,200 500,600" fill="#a8a29e" />
+                        <polygon points="1400,800 1600,700 1500,1000" fill="#d6d3d1" />
+                        <polygon points="800,1400 900,1200 1000,1500" fill="none" stroke="#a8a29e" strokeWidth="4" />
+                        <circle cx="1700" cy="1700" r="80" fill="none" stroke="#e7e5e4" strokeWidth="4" />
+                        <circle cx="300" cy="1800" r="160" fill="none" stroke="#f5f5f4" strokeWidth="4" />
+                    </svg>
                 </svg>
             </motion.div>
 

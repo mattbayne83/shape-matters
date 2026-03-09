@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'problem', label: 'Problem' },
@@ -11,6 +12,7 @@ const SECTIONS = [
 
 export function SectionNav() {
   const [active, setActive] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -33,6 +35,7 @@ export function SectionNav() {
   }, []);
 
   function scrollTo(id: string) {
+    setIsMobileMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }
 
@@ -44,38 +47,17 @@ export function SectionNav() {
           className="flex items-center gap-1 hover:opacity-70 transition-opacity"
         >
           <span className="text-sm font-black font-serif text-stone-900 tracking-tight">shape</span>
-          <div className="relative h-4 md:h-5 w-[1.2em] group flex items-center justify-center">
+          <div className="relative h-3.5 md:h-4 w-[1.4em] mx-1 group flex items-center justify-center">
             <svg
-              className="absolute inset-0 w-full h-full text-stone-900 transition-transform duration-500 ease-out group-hover:scale-105"
-              viewBox="0 0 120 100"
-              fill="none"
+              className="absolute inset-0 w-full h-full text-stone-900 transition-colors duration-500 group-hover:text-ember"
+              viewBox="0 0 100 100"
+              fill="currentColor"
               style={{ overflow: 'visible' }}
             >
-              {/* 
-                Perfect geometric alignments.
-                Slope of the triangles and the center line all mathematically equal to exactly -2.666 (dx=30, dy=80 and dx=15, dy=40).
-              */}
-              {/* Left downward-pointing triangle */}
+              {/* Single, elegant triangle that flattens into a line on hover */}
               <polygon
-                points="20,10 50,10 35,50"
-                fill="currentColor"
-                className="origin-center transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-x-1 hover:fill-ember cursor-pointer"
-              />
-
-              {/* Center slicing diagonal line */}
-              <line
-                x1="45" y1="90"
-                x2="75" y2="10"
-                stroke="currentColor"
-                strokeWidth="7"
-                className="origin-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-y-110 group-hover:stroke-stone-900"
-              />
-
-              {/* Right upward-pointing triangle */}
-              <polygon
-                points="85,30 100,70 70,70"
-                fill="currentColor"
-                className="origin-center transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-1 group-hover:translate-y-1 hover:fill-ember cursor-pointer"
+                points="50,10 100,85 0,85"
+                className="origin-[50%_85%] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-[0.15]"
               />
             </svg>
           </div>
@@ -95,7 +77,36 @@ export function SectionNav() {
             </button>
           ))}
         </div>
+
+        {/* Mobile Menu Toggle */}
+        <button
+          className="md:hidden p-2 text-stone-600 hover:text-stone-900 transition-colors"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle mobile menu"
+        >
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="absolute top-[49px] right-0 w-64 md:hidden py-2 bg-white/95 backdrop-blur-md border border-stone-200 shadow-xl rounded-bl-xl origin-top-right">
+          <div className="flex flex-col">
+            {SECTIONS.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => scrollTo(s.id)}
+                className={`px-6 py-3 text-sm font-semibold text-left transition-colors ${active === s.id
+                  ? 'bg-ember/10 text-ember border-l-2 border-ember'
+                  : 'text-stone-600 hover:text-stone-900 hover:bg-stone-50 border-l-2 border-transparent'
+                  }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

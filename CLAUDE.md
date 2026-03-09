@@ -49,8 +49,8 @@ Single-page scroll layout in `src/pages/ScrollPage.tsx`. Navigation via anchor l
 `SectionNav` component renders the nav bar with these anchors.
 
 ### Key Directories
-- `src/lib/` — Pure calculation functions (orgMetrics.ts, depthTax.ts, triangleGeometry.ts, fidelityColor.ts, styles.ts)
-- `src/data/` — Reference company data (6 companies, 5 archetypes)
+- `src/lib/` — Pure calculation functions (orgMetrics.ts, depthTax.ts, triangleGeometry.ts, fidelityColor.ts, styles.ts, scrollToAnchor.ts)
+- `src/data/` — Reference company data (6 companies, 5 archetypes) + methodologyMetrics.tsx (11 metric definitions)
 - `src/store/` — Zustand persist store (fidelityRate, levels, headcount — shared across sections)
 - `src/components/model/` — Visualization & interaction components
 - `src/components/layout/` — SectionNav
@@ -72,15 +72,19 @@ Shared inputs across Model and Shape sections:
 - `RestructuringImpact`: Delta metrics for removing one level (agility, inertia, managerRatio, fidelity)
 
 ### Key Components
-- `ModelYourOrg` — Two-column: sticky inputs (3 sliders + preset dropdown), outputs (6 primary cards, restructuring panel, 5 secondary cards)
-- `SignalCascade` — Funnel visualization: shrinking bars + trapezoid connectors with cascading highlight sweep. Dynamic `@keyframes` via inline `<style>` tag, `useId()` for multi-instance safety. Keyframe names include input values so animations restart on slider change.
+- `ModelYourOrg` — CSS grid layout (`grid-cols-[24rem_1fr]`): sticky inputs left, outputs right. Row 1: inputs + hero card. Row 2: SensitivitySweep + 6 primary FlippableMetricCards (same row = aligned heights). Row 3: What-if panel + secondary metrics.
+- `SignalCascade` — Funnel visualization: shrinking bars + trapezoid connectors with cascading highlight sweep. Dynamic `@keyframes` via inline `<style>` tag, `useId()` for multi-instance safety. Keyframe names include input values so animations restart on slider change. Bars anchored to top (not vertically centered). `barScale = usable - labelSpace` reserves 48px for label text.
+- `GembaComparison` — Side-by-side Evidence cards: "Without Gemba Walk" (light, 9 levels, 82% fidelity) vs "With Gemba Walk" (dark bg-stone-900, 9 levels, 100%). Both use `bottomUp` prop for org-chart orientation (L0 at bottom, L8 at top). Hover pulse animation via `group`/`group-hover`.
+- `LayerDiagram` — Horizontal bar chart per org level. Props: `inverted` (warm amber bars for dark bg), `hoverPulse` (cascading `gemba-pulse` animation), `bottomUp` (L0 at bottom). `invertedBarColor()` blends stone→amber/ember.
 - `InteractiveFidelityDemo` — Interactive playground in Problem section: fidelity + levels sliders → SignalCascade + metrics
 - `AnimatedCounter` — Smoothly animated number transitions (framer-motion `useMotionValue`)
 - `FlippableMetricCard` — Primary metric card with value, sub-text, outcome range bar, `infoHref` link to methodology
 - `MetricCard` — Secondary metric card with `infoHref` link
+- `MethodologyCard` — "Pokemon card" metric definition: category stripe, badge, formula block, description
+- `MethodologySection` — Full methodology section: card grids + prose (geometry, classification, assumptions, sources)
 - `ShapeSection` — Prose + classification badge + ShapeOverlay only (reads from store)
 - `ShapeOverlay` — SVG triangle vs horn overlay with center-of-mass dot
-- `SensitivitySweep` — Fidelity sensitivity SVG chart
+- `SensitivitySweep` — Fidelity sensitivity SVG chart (flex-col container, SVG flex-1 to fill grid cell height)
 - `ComparisonView` — 6 companies, archetype filter pills
 - `KeyObservations` — Auto-generated insights (flattest, best signal, leanest, most agile)
 
@@ -90,11 +94,16 @@ Shared inputs across Model and Shape sections:
 - `calcTriangleGeometry(levels, employees, fidelityRate)` — slope, shapeGap, agilityScore (torque model), inertia, torqueProfile, shape classification
 - `calcRestructuringImpact(levels, employees, fidelityRate)` — deltas for agility, inertia, managerRatio, fidelity
 - `fidelityColor(percentage, semantic?)` — Monochrome: stone-300 → stone-900. Semantic mode: ember → stone-700.
+- `metricColor(goodness)` — Maps 0-1 score to stone-700 (best) → ember (worst)
 
 ### Methodology Section
-- Per-metric formula entries with anchor IDs (e.g., `#methodology-signal-fidelity`)
-- Cards link via `infoHref` → `scrollToAnchor()` opens `<details>` + smooth scrolls
-- Sections: Primary Metrics → Secondary Metrics → Geometry Internals → Shape Classification → Assumptions → Data Sources
+- Full visible section (not collapsible) with "pokemon card" style metric definition cards in responsive grid
+- `MethodologySection` component wraps card grids + supplementary prose
+- `MethodologyCard` component: category stripe (ember/warm-stone), badge pill, serif title, formula block, description
+- `methodologyMetrics.tsx` data file: 11 typed `MetricDefinition` entries (6 primary, 5 secondary)
+- Per-metric anchor IDs preserved (e.g., `#methodology-signal-fidelity`)
+- Cards link via `infoHref` → shared `scrollToAnchor()` utility → smooth scroll
+- Sections: Primary Grid → Secondary Grid → Geometry Internals → Shape Classification → Assumptions → Data Sources
 
 ### Gotchas
 - **Formulas live ONLY in Methodology** — no formula boxes in other sections
@@ -103,7 +112,8 @@ Shared inputs across Model and Shape sections:
 - **`decisionGravityRatio` still computed** but NOT displayed — replaced by Management Tax (`managerRatio`)
 - **`InertiaProfile.tsx` is dead code** — unused since Shape section streamlining
 - **`TheoryView.tsx` is dead code** — unused legacy
-- **Background alternation**: white → stone-50 → white → stone-50...
+- **`scrollToAnchor` is shared** (`src/lib/scrollToAnchor.ts`) — used by FlippableMetricCard, MetricCard. No `<details>` logic (methodology is no longer collapsible).
+- **Background alternation**: white → stone-50 → white → stone-50... (methodology section is white)
 - **Product name**: "Shape Matters" (footer + nav logo)
 - **`calcRestructuringImpact` imports `calcOrgMetrics`** for managerRatioDelta (safe — no circular dep)
 - **All neutrals are stone, NOT slate** — slate is never used in content surfaces (only in design-system.md's dark nav spec, which was not implemented)
@@ -112,7 +122,10 @@ Shared inputs across Model and Shape sections:
 - **SVG hardcoded hex colors use stone scale** — e.g. `#e7e5e4` (stone-200), `#a8a29e` (stone-400), `#44403c` (stone-700), `#1C1917` (stone-900)
 - **fidelityColor.ts monochrome mode** uses stone HSL (h:24, s:6-10), not slate
 - **SignalCascade dynamic keyframes** — keyframe names MUST include input values (levels + fidelityRate) so browsers restart animations on slider change. Plain `useId()` names are stable across renders and won't trigger restarts.
-- **SignalCascade containers** — ModelYourOrg: `max-w-[280px] md:max-w-[340px]`, InteractiveFidelityDemo: `max-w-[360px]`. Don't shrink below these or the labels become unreadable.
+- **SignalCascade `barScale`** — reserves `labelSpace` (48px non-compact) so "100%" text doesn't clip at 1 level
+- **ModelYourOrg is CSS grid** — don't add flex wrappers around columns; items use `lg:col-start-*` / `lg:row-start-*` placement. Sensitivity + metrics share row 2 for automatic height alignment.
+- **LayerDiagram `bottomUp`** — reverses render order (L0 at bottom). Used by GembaComparison only; CompanyCard uses default top-down.
+- **LayerDiagram `invertedBarColor()`** — warm amber for dark backgrounds (stone→ember hue blend). Don't use `fidelityColor()` on dark bg — it returns near-black at 100%.
 
 ## Deployment
 - GitHub Pages: [https://mattbayne83.github.io/shape-matters/](https://mattbayne83.github.io/shape-matters/)

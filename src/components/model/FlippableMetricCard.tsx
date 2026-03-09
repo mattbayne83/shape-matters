@@ -1,14 +1,4 @@
-function scrollToAnchor(e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    const href = e.currentTarget.getAttribute('href');
-    if (!href) return;
-    const target = document.querySelector(href);
-    if (!target) return;
-    const details = target.closest('details');
-    if (details && !details.open) details.open = true;
-    setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-}
+import { scrollToAnchor } from '../../lib/scrollToAnchor';
 
 interface FlippableMetricCardProps {
     label: string;
@@ -53,8 +43,8 @@ export function FlippableMetricCard({
     markerLeftPct = Math.max(0, Math.min(100, markerLeftPct));
 
     return (
-        <div className="bg-white border border-stone-200 rounded-xl flex flex-col items-center justify-center px-4 pt-4 pb-3 shadow-sm">
-            <div className="text-[10px] font-semibold text-stone-500 uppercase tracking-wide mb-1 flex items-center gap-1">
+        <div className="bg-white border border-stone-200 rounded-xl flex flex-col items-center justify-center px-4 py-3 shadow-sm min-h-[110px]">
+            <div className="text-[10px] font-semibold text-stone-500 uppercase tracking-wide mb-0.5 flex items-center gap-1">
                 {label}
                 {infoHref && (
                     <a
@@ -76,10 +66,10 @@ export function FlippableMetricCard({
                 {value}
                 {unit && <span className="text-sm font-normal text-stone-400 ml-0.5">{unit}</span>}
             </div>
-            {sub && <div className="text-[10px] text-stone-400 mt-1.5">{sub}</div>}
+            {sub && <div className="text-[9px] text-stone-400 mt-1">{sub}</div>}
 
             {/* Outcome range bar */}
-            <div className="w-full mt-3 pt-2 border-t border-stone-100">
+            <div className="w-full mt-2 pt-1.5 border-t border-stone-100">
                 <div
                     className="relative w-full h-1.5 rounded-full"
                     style={{ background: 'linear-gradient(to right, #57534e, #a8a29e, #E05A1B)' }}

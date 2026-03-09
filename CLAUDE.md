@@ -64,6 +64,8 @@ Shared inputs across Model and Shape sections:
 - `fidelityRate: number` (default 82), `levels: number` (default 6), `headcount: number` (default 5000)
 - ModelYourOrg + InteractiveFidelityDemo write `levels`; other components read only
 - Persist key: `org-shape-storage`
+- `applyUrlParams()` reads `?l=&h=&f=` from URL at module load + after `onRehydrateStorage`. URL params always override persisted state.
+- `buildShareUrl()` builds `?l=&h=&f=#model` URL from current state
 
 ### Data Model
 - 6 reference companies across 5 archetypes: `flat`, `tech`, `flattened`, `experimental`, `energy`
@@ -127,6 +129,10 @@ Shared inputs across Model and Shape sections:
 - **ModelYourOrg is CSS grid** — don't add flex wrappers around columns; items use `lg:col-start-*` / `lg:row-start-*` placement. Sensitivity + metrics share row 2 for automatic height alignment.
 - **LayerDiagram `bottomUp`** — reverses render order (L0 at bottom). Used by GembaComparison only; CompanyCard uses default top-down.
 - **LayerDiagram `invertedBarColor()`** — warm amber for dark backgrounds (stone→ember hue blend). Don't use `fidelityColor()` on dark bg — it returns near-black at 100%.
+- **Shareable URL uses query params** (`?l=9&h=150000&f=82`), NOT hash params — hash is reserved for section anchors (`#model`)
+- **`applyUrlParams()` runs twice** — once at module scope (first-visit), once via `onRehydrateStorage` (overrides persist rehydration). This is intentional.
+- **`hcSlider` syncs via useEffect** — headcount slider position re-derives from store on external changes (URL hydration, persist, presets)
+- **ScrollPage hash scroll** — 150ms `setTimeout` after mount to scroll to hash anchor. Needed because browser processes hash before React renders DOM.
 
 ## Deployment
 - GitHub Pages: [https://mattbayne83.github.io/shape-matters/](https://mattbayne83.github.io/shape-matters/)
@@ -135,7 +141,7 @@ Shared inputs across Model and Shape sections:
 
 ## Testing
 - **Vitest 4** with separate `vitest.config.ts`
-- 95 unit tests across 4 files in `src/lib/__tests__/`:
+- 101 unit tests across 4 files in `src/lib/__tests__/`:
   - `orgMetrics.test.ts` — span, flatness, fidelity, managers, edge cases
   - `depthTax.test.ts` — signal, drift, latency, decision quality, formula verification
   - `triangleGeometry.test.ts` — layer distribution, shape gap, torque/agility, classification, restructuring

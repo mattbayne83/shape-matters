@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fidelityColor, metricColor } from '../fidelityColor';
+import { fidelityColor, invertedBarColor, metricColor } from '../fidelityColor';
 
 describe('fidelityColor', () => {
   describe('monochrome mode (default)', () => {
@@ -58,6 +58,44 @@ describe('fidelityColor', () => {
       expect(() => fidelityColor(150)).not.toThrow();
       expect(fidelityColor(150)).toBe(fidelityColor(100));
     });
+  });
+});
+
+describe('invertedBarColor', () => {
+  it('returns HSL string', () => {
+    expect(invertedBarColor(50)).toMatch(/^hsl\(\d+, \d+%, \d+%\)$/);
+  });
+
+  it('high fidelity → warmer hue (lower H, toward ember)', () => {
+    const low = invertedBarColor(0);
+    const high = invertedBarColor(100);
+    const hLow = parseInt(low.match(/^hsl\((\d+),/)![1]);
+    const hHigh = parseInt(high.match(/^hsl\((\d+),/)![1]);
+    expect(hLow).toBeGreaterThan(hHigh); // 24 → 19
+  });
+
+  it('high fidelity → higher saturation', () => {
+    const low = invertedBarColor(0);
+    const high = invertedBarColor(100);
+    const sLow = parseInt(low.match(/, (\d+)%,/)![1]);
+    const sHigh = parseInt(high.match(/, (\d+)%,/)![1]);
+    expect(sHigh).toBeGreaterThan(sLow); // 10% → 70%
+  });
+
+  it('high fidelity → higher lightness (readable on dark bg)', () => {
+    const low = invertedBarColor(0);
+    const high = invertedBarColor(100);
+    const lLow = parseInt(low.match(/(\d+)%\)$/)![1]);
+    const lHigh = parseInt(high.match(/(\d+)%\)$/)![1]);
+    expect(lHigh).toBeGreaterThan(lLow); // 35% → 63%
+  });
+
+  it('clamps values below 0', () => {
+    expect(invertedBarColor(-10)).toBe(invertedBarColor(0));
+  });
+
+  it('clamps values above 100', () => {
+    expect(invertedBarColor(150)).toBe(invertedBarColor(100));
   });
 });
 

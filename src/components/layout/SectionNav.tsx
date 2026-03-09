@@ -83,6 +83,7 @@ export function SectionNav() {
           className="md:hidden p-2 text-stone-600 hover:text-stone-900 transition-colors"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle mobile menu"
+          aria-expanded={isMobileMenuOpen}
         >
           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>

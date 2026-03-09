@@ -1,6 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 
-function PyramidGraphic({ isPressed, pBackX, pBackY }: any) {
+interface PyramidGraphicProps {
+    isPressed: boolean;
+    pBackX: number;
+    pBackY: number;
+    isVisible: boolean;
+}
+
+function PyramidGraphic({ isPressed, pBackX, pBackY, isVisible }: PyramidGraphicProps) {
     const [time, setTime] = useState(0);
     const [morph, setMorph] = useState(0); // 0 is pyramid, 1 is straight line
     const rp = useRef<number>(0);
@@ -10,8 +17,10 @@ function PyramidGraphic({ isPressed, pBackX, pBackY }: any) {
     pressedRef.current = isPressed;
 
     useEffect(() => {
-        let t = 0;
-        let m = pressedRef.current ? 1 : 0;
+        if (!isVisible) return;
+
+        let t = time;
+        let m = morph;
         let lastTimestamp = performance.now();
 
         const tick = (timestamp: number) => {
@@ -38,7 +47,8 @@ function PyramidGraphic({ isPressed, pBackX, pBackY }: any) {
         return () => {
             if (rp.current) cancelAnimationFrame(rp.current);
         };
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVisible]);
 
     const layers = [
         { width: 35, y: 20 },
@@ -141,6 +151,19 @@ export function GeometricHero() {
     const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
     const [isHovering, setIsHovering] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+
+    // Pause RAF animation loop when hero is scrolled out of viewport
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsVisible(entry.isIntersecting),
+            { threshold: 0 }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -249,6 +272,7 @@ export function GeometricHero() {
                         isPressed={isPressed}
                         pBackX={pBackX}
                         pBackY={pBackY}
+                        isVisible={isVisible}
                     />
                 </div>
 

@@ -45,6 +45,10 @@ export function InteractiveFidelityDemo() {
                 max={15}
                 value={levels}
                 onChange={(e) => setLevels(+e.target.value)}
+                aria-valuenow={levels}
+                aria-valuemin={1}
+                aria-valuemax={15}
+                aria-valuetext={`${levels} levels`}
                 className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
               />
             </div>
@@ -63,6 +67,10 @@ export function InteractiveFidelityDemo() {
                 max={98}
                 value={rate}
                 onChange={(e) => setRate(+e.target.value)}
+                aria-valuenow={rate}
+                aria-valuemin={50}
+                aria-valuemax={98}
+                aria-valuetext={`${rate}% per-layer fidelity`}
                 className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
               />
             </div>

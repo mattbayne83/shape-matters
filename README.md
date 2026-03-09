@@ -18,20 +18,19 @@ Three cost channels of organizational depth:
 
 - **Interactive Fidelity Demo** — Animated visualization of signal decay across management layers
 - **Decay Curve** — Two-line chart showing upward fidelity vs. round-trip fidelity
-- **Company Comparison** — 13 reference companies across 5 archetypes with shape metrics and signal fidelity
+- **Company Comparison** — 6 reference companies across 4 archetypes with shape metrics and signal fidelity
 - **Shape Overlay** — Exponential horn vs. idealized triangle visualization with shape gap analysis
-- **Model Your Org** — Unified interactive playground: 3 sliders, 3-way visualization toggle (Rings/Signal/Shape), depth tax + structure metrics
+- **Model Your Org** — Unified interactive calculator: 3 sliders (levels, headcount, fidelity rate), depth tax metrics, sensitivity sweep, restructuring impact
 - **Gemba Walk Analysis** — Illustrates direct observation vs. relay chain information loss
 
-## Reference Companies (13)
+## Reference Companies (6)
 
 | Archetype | Companies |
 |---|---|
-| **Flat by Design** | Valve (1 level), W.L. Gore (3), Nucor (4), Chesapeake Energy (4) |
-| **Tech Giants** | Google (8), Microsoft (8), Amazon (9) |
-| **Recently Flattened** | Meta (6), X/Twitter (4) |
-| **Experimental** | Haier (3), Spotify (5) |
-| **Energy** | Williams (7.5), ONEOK (9) |
+| **Flat by Design** | Valve (1 level), Nucor (4) |
+| **Tech Giants** | Google (8), Amazon (9) |
+| **Recently Flattened** | Meta (6) |
+| **Experimental** | Haier (3) |
 
 ## Key Formulas
 
@@ -51,7 +50,7 @@ Where r = per-layer retention rate, L = levels, N = total employees.
 - Tailwind CSS 4 + Typography plugin
 - Zustand 5 (persist) for state management
 - Lucide React for icons
-- Inter + DM Mono fonts
+- Source Serif 4 + Inter + DM Mono fonts
 
 ## Getting Started
 
@@ -60,6 +59,8 @@ npm install
 npm run dev       # Start dev server (Vite HMR)
 npm run build     # TypeScript check + production build
 npm run lint      # ESLint
+npm run test      # Vitest (single run)
+npm run test:watch # Vitest (watch mode)
 npm run preview   # Preview production build locally
 ```
 
@@ -69,28 +70,30 @@ npm run preview   # Preview production build locally
 src/
   components/
     layout/       SectionNav — anchor-based navigation bar
-    model/        14 visualization & interaction components
-    ui/           Prose, GeometricHero
+    model/        18 visualization & interaction components
+    ui/           Prose, FadeIn, GeometricHero
   pages/
     ScrollPage    Single-page layout with all sections
   lib/
     orgMetrics    Core calculations (span, flatness, fidelity, managers)
     depthTax      Depth tax model (signal, drift, decision costs)
     triangleGeometry  Shape gap, slope, gravity, agility calculations
-    fidelityColor Gradient mapping utility (green → amber → red)
+    fidelityColor Gradient mapping utility (stone monochrome + ember semantic)
     styles        Tailwind class constants
+    scrollToAnchor Smooth scroll utility for metric → methodology links
+    __tests__/    95 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor)
   store/
-    useCompanyStore  Zustand persist store (global fidelity rate)
+    useCompanyStore  Zustand persist store (levels, headcount, fidelityRate)
   data/
-    referenceCompanies  13 curated reference companies
+    referenceCompanies  6 curated reference companies
   types/
-    index         Company, OrgMetrics, DepthTaxResult, Archetype
+    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, Archetype
 ```
 
 ## Architecture
 
 - **No router** — Single-page scroll layout with anchor-based navigation (`#problem`, `#proof`, `#shape`, `#evidence`, `#model`, `#methodology`)
-- **Global fidelity rate** — User-adjustable (default 82%), stored in Zustand persist, accessible from all visualizations
+- **Shared inputs** — Levels (default 6), headcount (default 5000), fidelity rate (default 82%) stored in Zustand persist, accessible from all visualizations
 - **Custom SVG/Canvas** — All charts and visualizations are built from scratch (no charting library)
 - **Dynamic colors** — Runtime hex values use inline `style` (Tailwind can't JIT runtime hex)
 

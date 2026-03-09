@@ -1,4 +1,4 @@
-import { fidelityColor } from '../../lib/fidelityColor';
+import { fidelityColor, invertedBarColor } from '../../lib/fidelityColor';
 
 interface LayerDiagramProps {
   levels: number;
@@ -11,16 +11,6 @@ interface LayerDiagramProps {
   inverted?: boolean;
   /** Show cascading pulse overlay on parent group-hover */
   hoverPulse?: boolean;
-}
-
-/** Inverted fidelityColor: warm amber bars for dark backgrounds */
-function invertedBarColor(fidelity: number): string {
-  const t = Math.max(0, Math.min(100, fidelity)) / 100;
-  // Blends from muted stone (low fid) → warm amber/ember (high fid)
-  const h = 24 - t * 5;    // 24 → 19 (stone → ember hue)
-  const s = 10 + t * 60;   // 10% → 70%
-  const l = 35 + t * 28;   // 35% → 63%
-  return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
 }
 
 export function LayerDiagram({ levels, fidelityRate, compact, inverted, hoverPulse }: LayerDiagramProps) {
@@ -36,7 +26,7 @@ export function LayerDiagram({ levels, fidelityRate, compact, inverted, hoverPul
   const labelColor = inverted ? 'text-stone-400' : 'text-stone-500';
 
   return (
-    <div className={`flex flex-col items-center ${gap} py-2`}>
+    <div className={`flex flex-col items-center ${gap} py-2`} role="img" aria-label={`Layer diagram showing signal fidelity across ${levels} levels at ${fidelityRate}% per-layer retention`}>
       {layers.map((l, i) => {
         // Width = fidelity percentage (signal retained)
         // At L0 fidelity=100%, bar is full width. Deeper layers shrink.

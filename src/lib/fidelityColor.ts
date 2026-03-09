@@ -27,6 +27,19 @@ export function fidelityColor(pct: number, semantic?: boolean): string {
 }
 
 /**
+ * Inverted fidelity color for dark backgrounds.
+ * Blends from muted stone (low fidelity) → warm amber/ember (high fidelity).
+ * Use instead of fidelityColor() on dark bg where near-black at 100% is unreadable.
+ */
+export function invertedBarColor(fidelity: number): string {
+  const t = Math.max(0, Math.min(100, fidelity)) / 100;
+  const h = 24 - t * 5;    // 24 → 19 (stone → ember hue)
+  const s = 10 + t * 60;   // 10% → 70%
+  const l = 35 + t * 28;   // 35% → 63%
+  return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
+}
+
+/**
  * Maps a 0-1 "goodness" score to a color on the stone-700 → ember scale.
  * 1 = best (stone-700, quiet) → 0 = worst (ember, loud).
  */

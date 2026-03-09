@@ -6,6 +6,17 @@ Prioritized by impact on the research tool's credibility, usability, and reach.
 
 ## P0 — High Impact
 
+### Narrative Reorder: Calculator First (/elon Step 1)
+The interactive calculator (ModelYourOrg) is buried in section 6 of 7. Users must scroll through ~5 screens of research prose before they can play. The tool IS the hook — flip the order so users model their own org first, then read the theory behind the numbers.
+- [ ] Move ModelYourOrg to section 1 or 2 (play first, read second)
+- [ ] Evaluate whether InteractiveFidelityDemo can be removed (it partially duplicates ModelYourOrg)
+- [ ] If kept, reduce InteractiveFidelityDemo to a minimal inline teaser that links to the full calculator
+
+### Consolidate Redundant Sections (/elon Step 2)
+Shape (#shape) and Evidence (#evidence) sit back-to-back as two theory-heavy sections. Consider merging into a single "Theory" section to tighten the narrative arc.
+- [ ] Evaluate merging Shape + Evidence into one section
+- [ ] Audit GeometricHero — pure decoration, question whether it earns its weight or should be deleted
+
 ### Expand Reference Dataset
 - [ ] Add 5-10 more companies across underrepresented industries (healthcare, finance, government, military, non-profit)
 - [ ] Add historical snapshots for companies that restructured (e.g., Microsoft pre/post Nadella, GE under Welch vs. Immelt)
@@ -19,6 +30,12 @@ Prioritized by impact on the research tool's credibility, usability, and reach.
 
 ## P1 — Medium Impact
 
+### Shareable Calculator URL (/elon Step 4)
+Encode calculator inputs (levels, headcount, fidelityRate) in the URL hash so users can share "here's what YOUR org looks like" links. Single highest-leverage feature for organic reach.
+- [x] Encode calculator params in URL hash (e.g., `#model?l=9&h=150000&f=82`)
+- [x] Read hash on load → hydrate Zustand store
+- [x] Add "Copy link" button to ModelYourOrg
+
 ### Testing
 - [x] Add Vitest for unit tests
 - [x] Test `calcOrgMetrics()` and `calcDepthTax()` with known inputs/outputs
@@ -28,7 +45,6 @@ Prioritized by impact on the research tool's credibility, usability, and reach.
 
 ### Data Export
 - [ ] Export comparison data as CSV
-- [ ] Export calculator results as shareable URL (encode params in hash)
 - [ ] PDF/image export for charts (html-to-image or similar)
 
 ### Accessibility & Mobile
@@ -66,6 +82,19 @@ Prioritized by impact on the research tool's credibility, usability, and reach.
 ---
 
 ## Completed
+
+### Shareable Calculator URL
+- [x] URL params `?l=&h=&f=` encode calculator state, `#model` hash scrolls to section
+- [x] `applyUrlParams()` hydrates store at module load + after persist rehydration (`onRehydrateStorage`)
+- [x] "Copy shareable link" button in ModelYourOrg input panel with 2s "Copied!" feedback
+- [x] `hcSlider` sync useEffect for external headcount changes
+- [x] Programmatic scroll-to-hash in ScrollPage (150ms delay for React render + persist)
+
+### README Cleanup
+- [x] Fixed stale company count (13 → 6), removed 7 non-existent companies from table
+- [x] Updated component count (14 → 18), font list, fidelityColor description, store description
+- [x] Added test commands, test directory, scrollToAnchor to project structure
+- [x] Confirmed no Cloudflare Pages references
 
 ### Dead Code Cleanup + Testing + Terminology
 - [x] Deleted `InertiaProfile.tsx` (151 lines dead code)

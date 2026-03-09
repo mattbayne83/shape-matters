@@ -1,6 +1,8 @@
 import { SectionNav } from './components/layout/SectionNav';
 import { ParallaxBackground } from './components/layout/ParallaxBackground';
 import { ScrollPage } from './pages/ScrollPage';
+// Side-effect import: hydrateFromUrl() runs at module load, before first render
+import './store/useCompanyStore';
 
 export default function App() {
   return (

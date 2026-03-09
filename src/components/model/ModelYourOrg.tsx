@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
-import { useCompanyStore } from '../../store/useCompanyStore';
+import { useEffect, useMemo, useState, useCallback } from 'react';
+import { Link } from 'lucide-react';
+import { useCompanyStore, buildShareUrl } from '../../store/useCompanyStore';
 import { calcDepthTax } from '../../lib/depthTax';
 import { calcOrgMetrics } from '../../lib/orgMetrics';
 import { calcTriangleGeometry, calcRestructuringImpact } from '../../lib/triangleGeometry';
@@ -32,6 +33,18 @@ export function ModelYourOrg() {
   const storeHeadcount = useCompanyStore((s) => s.setHeadcount);
   const [hcSlider, setHcSlider] = useState(() => Math.round(headcountToSlider(headcount)));
   const [preset, setPreset] = useState('custom');
+  const [copied, setCopied] = useState(false);
+
+  // Sync slider position when headcount changes externally (URL hydration, persist rehydration)
+  useEffect(() => {
+    setHcSlider(Math.round(headcountToSlider(headcount)));
+  }, [headcount]);
+
+  const handleCopyLink = useCallback(async () => {
+    await navigator.clipboard.writeText(buildShareUrl());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, []);
 
   const handlePresetChange = (id: string) => {
     setPreset(id);
@@ -111,6 +124,10 @@ export function ModelYourOrg() {
             max={15}
             value={levels}
             onChange={(e) => handleLevels(+e.target.value)}
+            aria-valuenow={levels}
+            aria-valuemin={1}
+            aria-valuemax={15}
+            aria-valuetext={`${levels} levels`}
             className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
           />
         </div>
@@ -131,6 +148,10 @@ export function ModelYourOrg() {
             max={100}
             value={hcSlider}
             onChange={(e) => handleHeadcount(+e.target.value)}
+            aria-valuenow={hcSlider}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuetext={`${headcount.toLocaleString()} employees`}
             className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
           />
         </div>
@@ -149,12 +170,24 @@ export function ModelYourOrg() {
             max={98}
             value={fidelityRate}
             onChange={(e) => setFidelityRate(+e.target.value)}
+            aria-valuenow={fidelityRate}
+            aria-valuemin={50}
+            aria-valuemax={98}
+            aria-valuetext={`${fidelityRate}% per-layer fidelity`}
             className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
           />
           <div className="text-[9px] text-stone-400 mt-1">
             80-85% is a reasonable empirical midpoint based on Bartlett's research.
           </div>
         </div>
+
+        <button
+          onClick={handleCopyLink}
+          className="flex items-center justify-center gap-1.5 w-full text-xs text-stone-500 hover:text-stone-700 border border-stone-200 hover:border-stone-300 rounded-lg py-2 transition-colors cursor-pointer"
+        >
+          <Link className="w-3.5 h-3.5" />
+          {copied ? 'Copied!' : 'Copy shareable link'}
+        </button>
       </div>
 
       {/* ── SENSITIVITY (row 2 left — same row as metrics, so grid aligns them) ── */}

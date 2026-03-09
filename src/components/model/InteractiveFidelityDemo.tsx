@@ -120,11 +120,11 @@ export function InteractiveFidelityDemo() {
               <AnimatedCounter
                 value={fidelityNum}
                 decimals={1}
-                className="text-4xl lg:text-5xl font-black font-mono tracking-tight transition-colors duration-300"
+                className="text-4xl lg:text-5xl font-bold font-mono tracking-tight tabular-nums transition-colors duration-300"
                 style={{ color: fidelityColor(fidelityNum) }}
               />
               <span
-                className="text-3xl lg:text-4xl font-black font-mono transition-colors duration-300 ml-0.5"
+                className="text-3xl lg:text-4xl font-bold font-mono tabular-nums transition-colors duration-300 ml-0.5"
                 style={{ color: fidelityColor(fidelityNum) }}>
                 %
               </span>

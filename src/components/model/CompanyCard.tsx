@@ -28,11 +28,11 @@ export function CompanyCard({ company, fidelityRate }: CompanyCardProps) {
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div>
           <div className="text-[10px] text-stone-500 uppercase">Levels</div>
-          <div className="text-xl font-extrabold text-stone-900 font-mono">{company.levels}</div>
+          <div className="text-xl font-bold text-stone-900 font-mono tabular-nums">{company.levels}</div>
         </div>
         <div>
           <div className="text-[10px] text-stone-500 uppercase">Employees</div>
-          <div className="text-xl font-extrabold text-stone-900 font-mono">
+          <div className="text-xl font-bold text-stone-900 font-mono tabular-nums">
             {company.employees >= 1000000
               ? `${(company.employees / 1000000).toFixed(1)}M`
               : company.employees >= 1000
@@ -42,11 +42,11 @@ export function CompanyCard({ company, fidelityRate }: CompanyCardProps) {
         </div>
         <div>
           <div className="text-[10px] text-stone-500 uppercase">Avg Span</div>
-          <div className="text-xl font-extrabold text-stone-900 font-mono">{m.avgSpan.toFixed(1)}</div>
+          <div className="text-xl font-bold text-stone-900 font-mono tabular-nums">{m.avgSpan.toFixed(1)}</div>
         </div>
         <div>
           <div className="text-[10px] text-stone-500 uppercase">Flatness</div>
-          <div className="text-xl font-extrabold font-mono text-stone-900">
+          <div className="text-xl font-bold font-mono tabular-nums text-stone-900">
             {m.flatnessIndex.toFixed(2)}
           </div>
         </div>
@@ -59,7 +59,7 @@ export function CompanyCard({ company, fidelityRate }: CompanyCardProps) {
         <div className="flex items-baseline justify-between mb-1">
           <div className="text-[10px] text-stone-500">Up (IC → CEO)</div>
           <div
-            className="text-lg font-extrabold font-mono"
+            className="text-lg font-bold font-mono tabular-nums"
             style={{ color: fidelityColor(m.fidelityAtTopPct) }}
           >
             {m.fidelityAtTopPct.toFixed(1)}%
@@ -84,13 +84,13 @@ export function CompanyCard({ company, fidelityRate }: CompanyCardProps) {
         <div className="grid grid-cols-2 gap-2">
           <div>
             <div className="text-[10px] text-stone-500">Manager Ratio</div>
-            <div className="text-lg font-extrabold text-stone-900 font-mono">
+            <div className="text-lg font-bold text-stone-900 font-mono tabular-nums">
               {m.managerRatio.toFixed(1)}%
             </div>
           </div>
           <div>
             <div className="text-[10px] text-stone-500">ICs (Doers)</div>
-            <div className="text-lg font-extrabold text-stone-600 font-mono">
+            <div className="text-lg font-bold text-stone-600 font-mono tabular-nums">
               {m.icCount.toLocaleString()}
             </div>
           </div>

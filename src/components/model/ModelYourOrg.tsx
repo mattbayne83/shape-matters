@@ -202,13 +202,13 @@ export function ModelYourOrg() {
           </div>
           <div className="flex items-baseline">
             <div
-              className="text-4xl lg:text-5xl font-black font-mono tracking-tight transition-colors duration-300"
+              className="text-4xl lg:text-5xl font-bold font-mono tracking-tight tabular-nums transition-colors duration-300"
               style={{ color: fidelityColor(tax.roundTripFidelity, true) }}
             >
               {tax.roundTripFidelity.toFixed(1)}
             </div>
             <span
-              className="text-3xl lg:text-4xl font-black font-mono transition-colors duration-300 ml-0.5"
+              className="text-3xl lg:text-4xl font-bold font-mono tabular-nums transition-colors duration-300 ml-0.5"
               style={{ color: fidelityColor(tax.roundTripFidelity, true) }}>
               %
             </span>
@@ -329,28 +329,28 @@ export function ModelYourOrg() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Pivot Speed</div>
-                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                     +{(restructure.agilityDelta * 100).toFixed(1)}%
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">faster pivots</div>
                 </div>
                 <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Inertia</div>
-                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                     -{restructure.inertiaReduction.toFixed(0)}%
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">less rigidity</div>
                 </div>
                 <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Mgmt Tax</div>
-                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                     {restructure.managerRatioDelta < 0 ? '' : '+'}{restructure.managerRatioDelta.toFixed(1)}
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">{restructure.managerRatioDelta < 0 ? 'percentage points · leaner' : 'percentage points · more overhead'}</div>
                 </div>
                 <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Signal Fidelity</div>
-                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                     +{restructure.fidelityGain.toFixed(1)}
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">percentage points · better signal</div>

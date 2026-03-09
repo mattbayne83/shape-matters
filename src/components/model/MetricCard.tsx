@@ -28,7 +28,7 @@ export function MetricCard({ label, value, unit, sub, accent, infoHref }: Metric
           </a>
         )}
       </div>
-      <div className="text-2xl font-extrabold leading-none font-mono" style={{ color: accent || '#1C1917' }}>
+      <div className="text-2xl font-bold leading-none font-mono tabular-nums" style={{ color: accent || '#1C1917' }}>
         {value}
         {unit && <span className="text-sm font-normal text-stone-500 ml-1">{unit}</span>}
       </div>

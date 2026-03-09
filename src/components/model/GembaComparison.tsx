@@ -15,7 +15,7 @@ export function GembaComparison() {
             <LayerDiagram levels={9} fidelityRate={82} hoverPulse />
           </div>
           <div className="text-center mt-2">
-            <span className="text-lg font-black font-mono text-stone-900">17.4%</span>
+            <span className="text-lg font-bold font-mono tabular-nums text-stone-900">17.4%</span>
             <span className="text-[10px] text-stone-500 ml-1">fidelity at top</span>
           </div>
         </div>
@@ -28,7 +28,7 @@ export function GembaComparison() {
             <LayerDiagram levels={9} fidelityRate={100} inverted hoverPulse />
           </div>
           <div className="text-center mt-2">
-            <span className="text-lg font-black font-mono text-white">100%</span>
+            <span className="text-lg font-bold font-mono tabular-nums text-white">100%</span>
             <span className="text-[10px] text-stone-400 ml-1">fidelity at every level</span>
           </div>
         </div>

@@ -59,17 +59,17 @@ export function HeroSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           {/* Card 1: Signal Fidelity */}
-          <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[180px]">
+          <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[200px]">
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
                 Signal Fidelity
               </div>
               <div className="flex items-baseline justify-between mb-1">
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
+                <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums text-stone-900">
                   {flatM.fidelityAtTopPct.toFixed(0)}%
                 </div>
                 <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
+                <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums" style={{ color: '#B84515' }}>
                   {deepM.fidelityAtTopPct.toFixed(1)}%
                 </div>
               </div>
@@ -87,17 +87,17 @@ export function HeroSection() {
           </div>
 
           {/* Card 2: Decision Speed */}
-          <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[180px]">
+          <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[200px]">
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
                 Decision Speed
               </div>
               <div className="flex items-baseline justify-between mb-1">
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
+                <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums text-stone-900">
                   {flatM.roundTripLayers}
                 </div>
                 <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
+                <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums" style={{ color: '#B84515' }}>
                   {deepM.roundTripLayers}
                 </div>
               </div>
@@ -133,17 +133,17 @@ export function HeroSection() {
           </div>
 
           {/* Card 3: Flatness Index */}
-          <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[180px]">
+          <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[200px]">
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
                 Flatness Index
               </div>
               <div className="flex items-baseline justify-between mb-1">
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter text-stone-900">
+                <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums text-stone-900">
                   {flatM.flatnessIndex.toFixed(1)}
                 </div>
                 <div className="text-[10px] text-stone-300 font-bold uppercase tracking-wider">vs</div>
-                <div className="text-3xl md:text-4xl font-black font-mono tracking-tighter" style={{ color: '#B84515' }}>
+                <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums" style={{ color: '#B84515' }}>
                   {deepM.flatnessIndex.toFixed(2)}
                 </div>
               </div>

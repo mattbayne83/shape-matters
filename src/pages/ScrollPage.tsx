@@ -349,7 +349,7 @@ export function ScrollPage() {
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
             See Your Organization's Shape
           </h2>
-          <p className="text-sm text-stone-500 mb-8 max-w-2xl">
+          <p className="text-sm text-stone-500 mb-8">
             Adjust levels, headcount, and fidelity rate to see how depth affects signal quality,
             decision speed, and organizational agility.
           </p>

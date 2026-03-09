@@ -82,7 +82,7 @@ export function FlippableMetricCard({
             <div className="w-full mt-3 pt-2 border-t border-stone-100">
                 <div
                     className="relative w-full h-1.5 rounded-full"
-                    style={{ background: 'linear-gradient(to right, #16a34a, #fbbf24, #ef4444)' }}
+                    style={{ background: 'linear-gradient(to right, #57534e, #a8a29e, #E05A1B)' }}
                 >
                     <div
                         className="absolute top-[-7px] w-0 h-0 border-l-[5px] border-r-[5px] border-t-[6px] border-transparent transition-all duration-300"
@@ -93,8 +93,8 @@ export function FlippableMetricCard({
                     />
                 </div>
                 <div className="flex justify-between text-[9px] font-medium text-stone-400 mt-0.5">
-                    <span className="text-green-600">{bestLabel}</span>
-                    <span className="text-red-600">{worstLabel}</span>
+                    <span className="text-stone-600">{bestLabel}</span>
+                    <span className="text-ember">{worstLabel}</span>
                 </div>
             </div>
         </div>

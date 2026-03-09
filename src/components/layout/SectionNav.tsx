@@ -44,16 +44,41 @@ export function SectionNav() {
           className="flex items-center gap-1 hover:opacity-70 transition-opacity"
         >
           <span className="text-sm font-black font-serif text-stone-900 tracking-tight">shape</span>
-          <svg className="h-4 md:h-5 w-auto" viewBox="0 0 120 100" fill="none">
-            {/* Left downward-pointing triangle */}
-            <polygon points="16.2,25 53.8,25 35,75" fill="#1C1917" />
+          <div className="relative h-4 md:h-5 w-[1.2em] group flex items-center justify-center">
+            <svg
+              className="absolute inset-0 w-full h-full text-stone-900 transition-transform duration-500 ease-out group-hover:scale-105"
+              viewBox="0 0 120 100"
+              fill="none"
+              style={{ overflow: 'visible' }}
+            >
+              {/* 
+                Perfect geometric alignments.
+                Slope of the triangles and the center line all mathematically equal to exactly -2.666 (dx=30, dy=80 and dx=15, dy=40).
+              */}
+              {/* Left downward-pointing triangle */}
+              <polygon
+                points="20,10 50,10 35,50"
+                fill="currentColor"
+                className="origin-center transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-x-1 hover:fill-ember cursor-pointer"
+              />
 
-            {/* Center slicing diagonal line */}
-            <line x1="45" y1="90" x2="75" y2="10" stroke="#1C1917" strokeWidth="8" />
+              {/* Center slicing diagonal line */}
+              <line
+                x1="45" y1="90"
+                x2="75" y2="10"
+                stroke="currentColor"
+                strokeWidth="7"
+                className="origin-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-y-110 group-hover:stroke-stone-900"
+              />
 
-            {/* Right upward-pointing triangle */}
-            <polygon points="85,25 103.8,75 66.2,75" fill="#1C1917" />
-          </svg>
+              {/* Right upward-pointing triangle */}
+              <polygon
+                points="85,30 100,70 70,70"
+                fill="currentColor"
+                className="origin-center transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-1 group-hover:translate-y-1 hover:fill-ember cursor-pointer"
+              />
+            </svg>
+          </div>
           <span className="text-sm font-black font-serif text-stone-900 tracking-tight">matters</span>
         </button>
         <div className="hidden md:flex items-center gap-1">

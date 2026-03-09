@@ -78,26 +78,6 @@ body {
   }
 }
 
-@keyframes cascade-pulse {
-  0% {
-    transform: translateY(var(--pulse-start, 0));
-    opacity: 0;
-  }
-
-  10% {
-    opacity: 0.6;
-  }
-
-  90% {
-    opacity: 0.3;
-  }
-
-  100% {
-    transform: translateY(var(--pulse-end, 200px));
-    opacity: 0;
-  }
-}
-
 @keyframes ring-scale {
   from {
     transform: scale(0);

@@ -3,7 +3,7 @@ import { useCompanyStore } from '../../store/useCompanyStore';
 import { calcDepthTax } from '../../lib/depthTax';
 import { calcOrgMetrics } from '../../lib/orgMetrics';
 import { calcTriangleGeometry, calcRestructuringImpact } from '../../lib/triangleGeometry';
-import { fidelityColor } from '../../lib/fidelityColor';
+import { fidelityColor, metricColor } from '../../lib/fidelityColor';
 import { SECTION_LABEL } from '../../lib/styles';
 import { MetricCard } from './MetricCard';
 import { SignalCascade } from './SignalCascade';
@@ -110,7 +110,7 @@ export function ModelYourOrg() {
               <input
                 id="mo-levels"
                 type="range"
-                min={2}
+                min={1}
                 max={15}
                 value={levels}
                 onChange={(e) => handleLevels(+e.target.value)}
@@ -178,7 +178,7 @@ export function ModelYourOrg() {
               Signal remaining after {levels - 1} layers up and {levels - 1} layers down ({(levels - 1) * 2} relay hops).
             </div>
           </div>
-          <div className="w-full max-w-[200px] md:max-w-[240px] shrink-0">
+          <div className="w-full max-w-[280px] md:max-w-[340px] shrink-0">
             <SignalCascade levels={levels} fidelityRate={fidelityRate} semantic />
           </div>
         </div>
@@ -202,7 +202,7 @@ export function ModelYourOrg() {
             label="Decision Quality"
             value={`${(tax.decisionQuality * 100).toFixed(1)}%`}
             sub="compound fidelity × latency"
-            color={tax.decisionQuality > 0.5 ? '#16a34a' : tax.decisionQuality > 0.25 ? '#d97706' : '#dc2626'}
+            color={metricColor(tax.decisionQuality)}
             infoHref="#methodology-decision-quality"
             minOut={0}
             maxOut={100}
@@ -215,7 +215,7 @@ export function ModelYourOrg() {
             label="Pivot Speed"
             value={geo.agilityScore.toFixed(2)}
             sub={geo.agilityScore > 0.5 ? 'Strong reach — directives land' : geo.agilityScore > 0.25 ? 'Moderate reach — signal fades' : 'Weak reach — directives lost'}
-            color={geo.agilityScore > 0.5 ? '#16a34a' : geo.agilityScore > 0.25 ? '#d97706' : '#dc2626'}
+            color={metricColor(geo.agilityScore)}
             infoHref="#methodology-pivot-speed"
             minOut={0}
             maxOut={1}
@@ -229,7 +229,7 @@ export function ModelYourOrg() {
             value={tax.decisionLatency}
             unit=" days"
             sub={`${Math.round(tax.decisionsPerMonth).toLocaleString()} decisions/month`}
-            color="#dc2626"
+            color={metricColor(1 - Math.min((tax.decisionLatency - 3) / 42, 1))}
             infoHref="#methodology-decision-latency"
             minOut={0}
             maxOut={60}
@@ -242,7 +242,7 @@ export function ModelYourOrg() {
             label="Management Tax"
             value={`${m.managerRatio.toFixed(1)}%`}
             sub={m.managerRatio < 15 ? 'Lean — minimal overhead' : m.managerRatio < 30 ? 'Moderate layers of management' : 'Heavy — half the org manages'}
-            color={m.managerRatio < 15 ? '#16a34a' : m.managerRatio < 30 ? '#d97706' : '#dc2626'}
+            color={metricColor(1 - Math.min(m.managerRatio / 50, 1))}
             infoHref="#methodology-management-tax"
             minOut={0}
             maxOut={50}
@@ -255,7 +255,7 @@ export function ModelYourOrg() {
             label="Drift Cost"
             value={`${tax.ninetyDayAccuracy.toFixed(1)}%`}
             sub="90-day accuracy"
-            color={tax.ninetyDayAccuracy > 80 ? '#16a34a' : tax.ninetyDayAccuracy > 50 ? '#d97706' : '#dc2626'}
+            color={metricColor(tax.ninetyDayAccuracy / 100)}
             infoHref="#methodology-drift-cost"
             minOut={0}
             maxOut={100}
@@ -268,9 +268,9 @@ export function ModelYourOrg() {
 
         {/* ── [F] Restructuring Impact — always visible ── */}
         {restructure && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4">
+          <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 mb-4">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wide bg-emerald-100 px-2 py-0.5 rounded-full">What if</span>
+              <span className="text-[10px] font-bold text-stone-700 uppercase tracking-wide bg-stone-100 px-2 py-0.5 rounded-full">What if</span>
               <span className="text-[11px] text-stone-600">
                 You removed a layer ({restructure.currentLevels} → {restructure.proposedLevels}) with the same {headcount.toLocaleString()} employees
               </span>
@@ -278,28 +278,28 @@ export function ModelYourOrg() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               <div className="bg-white rounded-lg px-3 py-2.5">
                 <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Pivot Speed</div>
-                <div className="text-lg font-black font-mono text-green-600">
+                <div className="text-lg font-black font-mono text-stone-900">
                   +{(restructure.agilityDelta * 100).toFixed(1)}%
                 </div>
                 <div className="text-[10px] text-stone-400">faster pivots</div>
               </div>
               <div className="bg-white rounded-lg px-3 py-2.5">
                 <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Inertia</div>
-                <div className="text-lg font-black font-mono text-green-600">
+                <div className="text-lg font-black font-mono text-stone-900">
                   -{restructure.inertiaReduction.toFixed(0)}%
                 </div>
                 <div className="text-[10px] text-stone-400">less rigidity</div>
               </div>
               <div className="bg-white rounded-lg px-3 py-2.5">
                 <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Mgmt Tax</div>
-                <div className="text-lg font-black font-mono" style={{ color: restructure.managerRatioDelta < 0 ? '#16a34a' : '#d97706' }}>
+                <div className="text-lg font-black font-mono text-stone-900">
                   {restructure.managerRatioDelta < 0 ? '' : '+'}{restructure.managerRatioDelta.toFixed(1)}pp
                 </div>
                 <div className="text-[10px] text-stone-400">{restructure.managerRatioDelta < 0 ? 'leaner structure' : 'more overhead'}</div>
               </div>
               <div className="bg-white rounded-lg px-3 py-2.5">
                 <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Signal Fidelity</div>
-                <div className="text-lg font-black font-mono text-green-600">
+                <div className="text-lg font-black font-mono text-stone-900">
                   +{restructure.fidelityGain.toFixed(1)}pp
                 </div>
                 <div className="text-[10px] text-stone-400">better signal to top</div>
@@ -327,14 +327,14 @@ export function ModelYourOrg() {
               label="Span of Control"
               value={m.avgSpan.toFixed(1)}
               sub="avg reports per manager"
-              accent={m.avgSpan >= 7 ? '#16a34a' : m.avgSpan >= 4 ? '#d97706' : '#dc2626'}
+              accent={metricColor(Math.min((m.avgSpan - 2) / 10, 1))}
               infoHref="#methodology-span-of-control"
             />
             <MetricCard
               label="Shape Gap"
               value={`${(geo.totalShapeGap * 100).toFixed(1)}%`}
               sub="triangle vs. actual"
-              accent={geo.totalShapeGap > 0.15 ? '#dc2626' : geo.totalShapeGap > 0.05 ? '#d97706' : '#16a34a'}
+              accent={metricColor(1 - Math.min(geo.totalShapeGap / 0.3, 1))}
               infoHref="#methodology-shape-gap"
             />
             <MetricCard
@@ -342,14 +342,14 @@ export function ModelYourOrg() {
               value={Math.round(tax.decisionsPerMonth).toLocaleString()}
               unit="/month"
               sub="at this org size"
-              accent="#0891b2"
+              accent="#57534e"
               infoHref="#methodology-throughput"
             />
             <MetricCard
               label="Flatness Index"
               value={m.flatnessIndex.toFixed(2)}
               sub="Higher = flatter"
-              accent="#2563eb"
+              accent="#57534e"
               infoHref="#methodology-flatness-index"
             />
             <MetricCard
@@ -357,7 +357,7 @@ export function ModelYourOrg() {
               value={`$${(m.annualCommLoss / 1000000).toFixed(1)}`}
               unit="M"
               sub="Ineffective comms cost"
-              accent="#dc2626"
+              accent="#E05A1B"
               infoHref="#methodology-annual-comm-loss"
             />
           </div>

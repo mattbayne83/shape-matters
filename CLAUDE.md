@@ -8,7 +8,32 @@ Open-source interactive research tool exploring how organizational depth degrade
 - Tailwind CSS 4 + Typography plugin
 - Zustand 5 (persist) for state
 - Lucide React for icons
-- Inter + DM Mono fonts
+- Source Serif 4 (headings) + Inter (body) + DM Mono (code) fonts
+
+## Design System
+Full reference in `design-system.md`. Key tokens:
+
+### Color Palette
+- **Neutrals**: Warm stone scale (stone-50 through stone-900) — NOT slate
+- **Primary accent**: Ember `#E05A1B` (`bg-ember`), light `#F4A261` (`bg-ember-light`), deep `#B84515` (`bg-ember-deep`)
+- **Warm accent**: `#A8967A` (`bg-warm-stone`)
+- **Data viz**: org-green, org-blue, org-purple, org-amber, org-red, org-cyan (unchanged)
+- **Nav**: Light (stone-based), not dark shell
+
+### Typography
+- Headings: `font-serif` (Source Serif 4) + `font-bold` + `tracking-tight`
+- Body: `font-sans` (Inter) — 18px for prose, 16px for UI chrome
+- Code/data: `font-mono` (DM Mono)
+- Section labels: `text-xs font-semibold uppercase tracking-widest text-stone-500`
+
+### Theme Tokens (index.css @theme)
+```css
+--font-serif: 'Source Serif 4', Georgia, serif;
+--color-ember: #E05A1B;
+--color-ember-light: #F4A261;
+--color-ember-deep: #B84515;
+--color-warm-stone: #A8967A;
+```
 
 ## Architecture
 
@@ -48,6 +73,9 @@ Shared inputs across Model and Shape sections:
 
 ### Key Components
 - `ModelYourOrg` — Two-column: sticky inputs (3 sliders + preset dropdown), outputs (6 primary cards, restructuring panel, 5 secondary cards)
+- `SignalCascade` — Funnel visualization: shrinking bars + trapezoid connectors with cascading highlight sweep. Dynamic `@keyframes` via inline `<style>` tag, `useId()` for multi-instance safety. Keyframe names include input values so animations restart on slider change.
+- `InteractiveFidelityDemo` — Interactive playground in Problem section: fidelity + levels sliders → SignalCascade + metrics
+- `AnimatedCounter` — Smoothly animated number transitions (framer-motion `useMotionValue`)
 - `FlippableMetricCard` — Primary metric card with value, sub-text, outcome range bar, `infoHref` link to methodology
 - `MetricCard` — Secondary metric card with `infoHref` link
 - `ShapeSection` — Prose + classification badge + ShapeOverlay only (reads from store)
@@ -61,7 +89,7 @@ Shared inputs across Model and Shape sections:
 - `calcDepthTax(levels, headcount, fidelityRate)` — signalFidelity, decisionQuality, decisionLatency, driftCost, throughput
 - `calcTriangleGeometry(levels, employees, fidelityRate)` — slope, shapeGap, agilityScore (torque model), inertia, torqueProfile, shape classification
 - `calcRestructuringImpact(levels, employees, fidelityRate)` — deltas for agility, inertia, managerRatio, fidelity
-- `fidelityColor(percentage, semantic?)` — Maps 0-100% to green → amber → red
+- `fidelityColor(percentage, semantic?)` — Monochrome: stone-300 → stone-900. Semantic mode: ember → stone-700.
 
 ### Methodology Section
 - Per-metric formula entries with anchor IDs (e.g., `#methodology-signal-fidelity`)
@@ -75,9 +103,16 @@ Shared inputs across Model and Shape sections:
 - **`decisionGravityRatio` still computed** but NOT displayed — replaced by Management Tax (`managerRatio`)
 - **`InertiaProfile.tsx` is dead code** — unused since Shape section streamlining
 - **`TheoryView.tsx` is dead code** — unused legacy
-- **Background alternation**: white → slate-50 → white → slate-50...
+- **Background alternation**: white → stone-50 → white → stone-50...
 - **Product name**: "Shape Matters" (footer + nav logo)
 - **`calcRestructuringImpact` imports `calcOrgMetrics`** for managerRatioDelta (safe — no circular dep)
+- **All neutrals are stone, NOT slate** — slate is never used in content surfaces (only in design-system.md's dark nav spec, which was not implemented)
+- **Slider accents use `accent-ember`** — not blue
+- **Focus rings use `focus:ring-ember/30`** — not blue
+- **SVG hardcoded hex colors use stone scale** — e.g. `#e7e5e4` (stone-200), `#a8a29e` (stone-400), `#44403c` (stone-700), `#1C1917` (stone-900)
+- **fidelityColor.ts monochrome mode** uses stone HSL (h:24, s:6-10), not slate
+- **SignalCascade dynamic keyframes** — keyframe names MUST include input values (levels + fidelityRate) so browsers restart animations on slider change. Plain `useId()` names are stable across renders and won't trigger restarts.
+- **SignalCascade containers** — ModelYourOrg: `max-w-[280px] md:max-w-[340px]`, InteractiveFidelityDemo: `max-w-[360px]`. Don't shrink below these or the labels become unreadable.
 
 ## Deployment
 - GitHub Pages: [https://mattbayne83.github.io/shape-matters/](https://mattbayne83.github.io/shape-matters/)

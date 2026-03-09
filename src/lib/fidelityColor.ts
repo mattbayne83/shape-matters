@@ -2,8 +2,8 @@
  * Maps a fidelity percentage (0-100) to a color.
  *
  * Default (monochrome): stone-300 → stone-900. Used across the page.
- * Semantic mode: red → amber → green. Used in the interactive playground
- * so users *feel* signal degradation as they manipulate sliders.
+ * Semantic mode: ember (low fidelity) → stone-700 (high fidelity).
+ * Used in the interactive playground so users *feel* signal degradation.
  */
 export function fidelityColor(pct: number, semantic?: boolean): string {
   const clamped = Math.max(0, Math.min(100, pct));
@@ -17,16 +17,25 @@ export function fidelityColor(pct: number, semantic?: boolean): string {
     return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
   }
 
-  // Semantic: red (0%) → amber (50%) → green (100%)
-  if (t <= 0.5) {
-    const seg = t / 0.5;
-    const h = 0 + seg * 38;
-    const s = 72 + seg * (92 - 72);
-    return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, 45%)`;
-  }
-  const seg = (t - 0.5) / 0.5;
-  const h = 38 + seg * (142 - 38);
-  const s = 92 + seg * (71 - 92);
-  const l = 45 + seg * (32 - 45);
+  // Semantic: ember (0%) → stone-700 (100%)
+  // ember:    hsl(19, 79%, 49%)
+  // stone-700: hsl(24, 6%, 33%)
+  const h = 19 + t * (24 - 19);
+  const s = 79 + t * (6 - 79);
+  const l = 49 + t * (33 - 49);
+  return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
+}
+
+/**
+ * Maps a 0-1 "goodness" score to a color on the stone-700 → ember scale.
+ * 1 = best (stone-700, quiet) → 0 = worst (ember, loud).
+ */
+export function metricColor(goodness: number): string {
+  const t = Math.max(0, Math.min(1, goodness));
+  // stone-700: hsl(24, 6%, 33%)  — best (quiet)
+  // ember:     hsl(19, 79%, 49%) — worst (loud)
+  const h = 24 + (1 - t) * (19 - 24);
+  const s = 6 + (1 - t) * (79 - 6);
+  const l = 33 + (1 - t) * (49 - 33);
   return `hsl(${h.toFixed(0)}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
 }

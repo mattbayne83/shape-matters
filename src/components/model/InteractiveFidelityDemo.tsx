@@ -1,14 +1,16 @@
 import { useState, useMemo } from 'react';
-import { fidelityColor } from '../../lib/fidelityColor';
+import { fidelityColor, metricColor } from '../../lib/fidelityColor';
 import { SECTION_LABEL } from '../../lib/styles';
 import { SignalCascade } from './SignalCascade';
 import { calcDepthTax } from '../../lib/depthTax';
 import { FlippableMetricCard } from './FlippableMetricCard';
 import { AnimatedCounter } from './AnimatedCounter';
+import { useCompanyStore } from '../../store/useCompanyStore';
 
 export function InteractiveFidelityDemo() {
   const [rate, setRate] = useState(82);
-  const [levels, setLevels] = useState(6);
+  const levels = useCompanyStore((s) => s.levels);
+  const setLevels = useCompanyStore((s) => s.setLevels);
 
   // Calculate base fidelity manually for immediate display 
   const fidelityNum = Math.pow(rate / 100, levels - 1) * 100;
@@ -47,31 +49,26 @@ export function InteractiveFidelityDemo() {
             </div>
 
             <div>
-              <div className="flex items-baseline justify-between mb-1.5">
-                <label htmlFor="demo-levels" className="text-[11px] font-bold text-stone-700 uppercase">
-                  Levels
-                </label>
-                <span className="font-mono font-bold text-sm" style={{ color: '#B84515' }}>{levels}</span>
+              <div className="flex items-baseline justify-between mb-3">
+                <div>
+                  <label htmlFor="demo-levels" className="text-sm font-bold text-stone-900 uppercase tracking-wide">
+                    Org Levels
+                  </label>
+                  <div className="text-xs text-stone-500 mt-1">Adjust depth of hierarchy</div>
+                </div>
+                <span className="text-2xl font-black font-sans tabular-nums text-stone-900 bg-white px-3 py-1 rounded-md shadow-sm border border-stone-200">
+                  {levels}
+                </span>
               </div>
               <input
                 id="demo-levels"
                 type="range"
-                min={2}
+                min={1}
                 max={15}
                 value={levels}
                 onChange={(e) => setLevels(+e.target.value)}
-                className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer"
-                style={{
-                  accentColor: '#B84515',
-                  // Fallback for custom thumb color if accentColor not fully supported
-                  '--thumb-color': '#B84515',
-                } as React.CSSProperties}
+                className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
               />
-              <style>{`
-                #demo-levels::-webkit-slider-thumb {
-                  background-color: var(--thumb-color);
-                }
-              `}</style>
             </div>
           </div>
 
@@ -81,7 +78,7 @@ export function InteractiveFidelityDemo() {
               label="Decision Quality"
               value={`${(tax.decisionQuality * 100).toFixed(1)}%`}
               sub="compound fidelity × latency"
-              color={tax.decisionQuality > 0.5 ? '#16a34a' : tax.decisionQuality > 0.25 ? '#d97706' : '#dc2626'}
+              color={metricColor(tax.decisionQuality)}
               minOut={0}
               maxOut={100}
               currentOut={tax.decisionQuality * 100}
@@ -93,7 +90,7 @@ export function InteractiveFidelityDemo() {
               label="Drift Cost"
               value={`${tax.ninetyDayAccuracy.toFixed(1)}%`}
               sub="90-day accuracy"
-              color={tax.ninetyDayAccuracy > 80 ? '#16a34a' : tax.ninetyDayAccuracy > 50 ? '#d97706' : '#dc2626'}
+              color={metricColor(tax.ninetyDayAccuracy / 100)}
               minOut={0}
               maxOut={100}
               currentOut={tax.ninetyDayAccuracy}
@@ -125,7 +122,7 @@ export function InteractiveFidelityDemo() {
             </div>
           </div>
 
-          <div className="w-full max-w-[280px]">
+          <div className="w-full max-w-[360px]">
             <SignalCascade levels={levels} fidelityRate={rate} semantic />
           </div>
 

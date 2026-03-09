@@ -1,10 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <!-- Circle (O) -->
-  <circle cx="20" cy="50" r="18" fill="black" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
+  <style>
+    .shape { fill: #1C1917; }
+    .line { stroke: #1C1917; }
+    @media (prefers-color-scheme: dark) {
+      .shape { fill: #F5F5F4; } /* stone-100 */
+      .line { stroke: #F5F5F4; }
+    }
+  </style>
   
-  <!-- Vertical Bar (I) -->
-  <rect x="45" y="32" width="10" height="36" fill="black" />
+  <!-- Left downward-pointing triangle -->
+  <polygon points="16.2,25 53.8,25 35,75" class="shape" />
   
-  <!-- Upward Triangle (A) -->
-  <polygon points="80,32 98,68 62,68" fill="black" />
+  <!-- Center slicing diagonal line -->
+  <line x1="45" y1="90" x2="75" y2="10" strokeWidth="8" class="line" />
+  
+  <!-- Right upward-pointing triangle -->
+  <polygon points="85,25 103.8,75 66.2,75" class="shape" />
 </svg>

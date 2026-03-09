@@ -69,7 +69,7 @@ export const METHODOLOGY_METRICS: MetricDefinition[] = [
     title: 'Span of Control',
     formula: <>N<sup>1/L</sup></>,
     description:
-      'Average number of direct reports per manager, assuming uniform geometric narrowing. Below 4 indicates excessive management layers; above 7 suggests a lean, empowered structure.',
+      'Average number of direct reports per manager, assuming uniform geometric narrowing. Below 4 indicates excessive management levels; above 7 suggests a lean, empowered structure.',
     category: 'secondary',
   },
   {

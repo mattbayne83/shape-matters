@@ -27,28 +27,10 @@ export function InteractiveFidelityDemo() {
 
           <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 flex flex-col gap-5">
             <div>
-              <div className="flex items-baseline justify-between mb-1.5">
-                <label htmlFor="demo-fidelity" className="text-[11px] font-bold text-stone-700 uppercase">
-                  Per-layer fidelity
-                </label>
-                <span className="font-mono font-bold text-stone-900 text-sm">{rate}%</span>
-              </div>
-              <input
-                id="demo-fidelity"
-                type="range"
-                min={50}
-                max={98}
-                value={rate}
-                onChange={(e) => setRate(+e.target.value)}
-                className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
-              />
-            </div>
-
-            <div>
               <div className="flex items-baseline justify-between mb-3">
                 <div>
                   <label htmlFor="demo-levels" className="text-sm font-bold text-stone-900 uppercase tracking-wide">
-                    Org Levels
+                    Levels
                   </label>
                   <div className="text-xs text-stone-500 mt-1">Adjust depth of hierarchy</div>
                 </div>
@@ -64,6 +46,24 @@ export function InteractiveFidelityDemo() {
                 value={levels}
                 onChange={(e) => setLevels(+e.target.value)}
                 className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
+              />
+            </div>
+
+            <div>
+              <div className="flex items-baseline justify-between mb-1.5">
+                <label htmlFor="demo-fidelity" className="text-[11px] font-bold text-stone-700 uppercase">
+                  Per-layer fidelity
+                </label>
+                <span className="font-mono font-bold text-stone-900 text-sm">{rate}%</span>
+              </div>
+              <input
+                id="demo-fidelity"
+                type="range"
+                min={50}
+                max={98}
+                value={rate}
+                onChange={(e) => setRate(+e.target.value)}
+                className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
               />
             </div>
           </div>

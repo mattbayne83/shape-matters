@@ -91,12 +91,12 @@ export function ModelYourOrg() {
           </select>
         </div>
 
-        {/* Primary Slider: Org Levels */}
+        {/* Primary Slider: Levels */}
         <div className="bg-stone-50 border border-stone-200 rounded-lg p-5">
           <div className="flex items-baseline justify-between mb-3 text-center md:text-left">
             <div>
               <label htmlFor="mo-levels" className="text-sm font-bold text-stone-900 uppercase tracking-wide">
-                Org Levels
+                Levels
               </label>
               <div className="text-xs text-stone-500 mt-1">Adjust depth of hierarchy</div>
             </div>
@@ -138,7 +138,7 @@ export function ModelYourOrg() {
         <div>
           <div className="flex items-baseline justify-between mb-1.5">
             <label htmlFor="mo-fidelity" className="text-[11px] font-bold text-stone-700 uppercase">
-              Per-Layer Fidelity Rate
+              Per-Layer Fidelity
             </label>
             <span className="text-sm font-bold font-sans tabular-nums text-stone-900 border-b border-stone-200">{fidelityRate}%</span>
           </div>
@@ -181,7 +181,7 @@ export function ModelYourOrg() {
             </span>
           </div>
           <div className="text-[10px] text-stone-400 mt-1.5 leading-relaxed">
-            Signal remaining after {levels - 1} layers up and {levels - 1} layers down ({(levels - 1) * 2} relays).
+            Signal remaining after {levels - 1} relays up and {levels - 1} relays down ({(levels - 1) * 2} total).
           </div>
         </div>
 
@@ -248,7 +248,7 @@ export function ModelYourOrg() {
         <FlippableMetricCard
           label="Management Tax"
           value={`${m.managerRatio.toFixed(1)}%`}
-          sub={m.managerRatio < 15 ? 'Lean — minimal overhead' : m.managerRatio < 30 ? 'Moderate layers of management' : 'Heavy — half the org manages'}
+          sub={m.managerRatio < 15 ? 'Lean — minimal overhead' : m.managerRatio < 30 ? 'Moderate levels of management' : 'Heavy — half the org manages'}
           color={metricColor(1 - Math.min(m.managerRatio / 50, 1))}
           infoHref="#methodology-management-tax"
           minOut={0}
@@ -277,12 +277,12 @@ export function ModelYourOrg() {
       <div className="lg:col-start-2 lg:row-start-3 flex flex-col gap-4 min-w-0">
         {/* ── [F] Restructuring Impact — always visible ── */}
         {restructure && (
-          <div className="bg-stone-50/80 backdrop-blur-md border border-stone-200/50 rounded-xl p-4 relative overflow-hidden">
+          <div className="bg-orange-50/80 backdrop-blur-md border-2 rounded-xl p-4 relative overflow-hidden animate-what-if-border transition-colors duration-700">
             {/* Moving Glow */}
             <div
-              className="absolute -inset-[100%] animate-slide-glow pointer-events-none opacity-80"
+              className="absolute -inset-[100%] animate-slide-glow pointer-events-none opacity-100"
               style={{
-                background: 'radial-gradient(circle at center, rgba(224, 90, 27, 0.15) 0%, transparent 40%)',
+                background: 'radial-gradient(circle at center, rgba(224, 90, 27, 0.25) 0%, rgba(224, 90, 27, 0.1) 25%, transparent 50%)',
               }}
             />
             {/* Content Container (z-index ensures it sits above the background glow) */}
@@ -290,34 +290,34 @@ export function ModelYourOrg() {
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-[10px] font-bold text-stone-700 uppercase tracking-wide bg-stone-100/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-stone-200/50">What if</span>
                 <span className="text-[11px] text-stone-600 font-medium">
-                  You removed a layer ({restructure.currentLevels} → {restructure.proposedLevels}) with the same {headcount.toLocaleString()} employees
+                  You removed a level ({restructure.currentLevels} → {restructure.proposedLevels}) with the same {headcount.toLocaleString()} employees
                 </span>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5">
+                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Pivot Speed</div>
-                  <div className="text-lg font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
                     +{(restructure.agilityDelta * 100).toFixed(1)}%
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">faster pivots</div>
                 </div>
-                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5">
+                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Inertia</div>
-                  <div className="text-lg font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
                     -{restructure.inertiaReduction.toFixed(0)}%
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">less rigidity</div>
                 </div>
-                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5">
+                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Mgmt Tax</div>
-                  <div className="text-lg font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
                     {restructure.managerRatioDelta < 0 ? '' : '+'}{restructure.managerRatioDelta.toFixed(1)}
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">{restructure.managerRatioDelta < 0 ? 'percentage points · leaner' : 'percentage points · more overhead'}</div>
                 </div>
-                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5">
+                <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                   <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Signal Fidelity</div>
-                  <div className="text-lg font-black font-mono text-stone-900 drop-shadow-sm">
+                  <div className="text-2xl font-black font-mono text-stone-900 drop-shadow-sm">
                     +{restructure.fidelityGain.toFixed(1)}
                   </div>
                   <div className="text-[10px] text-stone-400 font-medium">percentage points · better signal</div>

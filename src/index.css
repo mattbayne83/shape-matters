@@ -217,8 +217,29 @@ body {
   }
 }
 
+@keyframes what-if-border-pulse {
+  0% {
+    border-color: rgba(224, 90, 27, 0.2);
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  50% {
+    border-color: rgba(224, 90, 27, 0.4);
+    box-shadow: 0 0 20px 0 rgba(224, 90, 27, 0.15);
+  }
+
+  100% {
+    border-color: rgba(224, 90, 27, 0.2);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
 @layer utilities {
   .animate-slide-glow {
     animation: slide-glow 6s ease-in-out infinite alternate;
+  }
+
+  .animate-what-if-border {
+    animation: what-if-border-pulse 6s ease-in-out infinite alternate;
   }
 }

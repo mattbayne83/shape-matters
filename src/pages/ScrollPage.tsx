@@ -90,7 +90,7 @@ export function ScrollPage() {
               <div>
                 <div className="h-1.5 rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'linear-gradient(to right, #1C1917, #B84515)' }} />
                 <div className="text-[10px] text-stone-500 mt-2.5 max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-300 leading-relaxed">
-                  Each relay retains {fidelityRate}% — loss compounds across every level
+                  Each relay retains {fidelityRate}% — loss compounds across every layer
                 </div>
               </div>
             </div>

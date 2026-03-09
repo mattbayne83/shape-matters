@@ -114,9 +114,9 @@ export function SignalCascade({ levels, fidelityRate, semantic, compact }: Signa
               <text
                 x={centerX + d.bw / 2 + 8}
                 y={d.y + d.blockH / 2 + 4}
-                fontSize={12}
-                fontWeight={600}
-                fill="#a8a29e"
+                fontSize={9}
+                fontWeight={500}
+                fill="#c8c3be"
                 style={{
                   animation: 'cascade-reveal 0.3s ease-out both',
                   animationDelay: `${i * 80 + 200}ms`,

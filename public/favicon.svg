@@ -1,19 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">
   <style>
     .shape { fill: #1C1917; }
-    .line { stroke: #1C1917; }
     @media (prefers-color-scheme: dark) {
       .shape { fill: #F5F5F4; } /* stone-100 */
-      .line { stroke: #F5F5F4; }
     }
   </style>
   
-  <!-- Left downward-pointing triangle -->
-  <polygon points="16.2,25 53.8,25 35,75" class="shape" />
-  
-  <!-- Center slicing diagonal line -->
-  <line x1="45" y1="90" x2="75" y2="10" strokeWidth="8" class="line" />
-  
-  <!-- Right upward-pointing triangle -->
-  <polygon points="85,25 103.8,75 66.2,75" class="shape" />
+  <!-- Center upward-pointing triangle -->
+  <polygon points="60,10 110,90 10,90" class="shape" />
 </svg>

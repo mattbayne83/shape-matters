@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Github, MessageCircle, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Github, MessageCircle } from 'lucide-react';
 import { InteractiveFidelityDemo } from '../components/model/InteractiveFidelityDemo';
 import { GembaComparison } from '../components/model/GembaComparison';
 import { ComparisonView } from '../components/model/ComparisonView';
@@ -11,6 +11,10 @@ import { SECTION_LABEL } from '../lib/styles';
 import { FadeIn } from '../components/ui/FadeIn';
 
 export function ScrollPage() {
+  // Footer visibility state (starts visible, hides after scroll/delay, shows at bottom)
+  const [isFooterVisible, setIsFooterVisible] = useState(true);
+  const [isFooterFixed, setIsFooterFixed] = useState(true);
+
   // Browser processes hash before React renders the DOM, so the scroll
   // target doesn't exist yet. Re-apply after mount + persist hydration.
   useEffect(() => {
@@ -20,6 +24,49 @@ export function ScrollPage() {
       document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
     }, 150);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Footer hide/show behavior
+  useEffect(() => {
+    let hideTimer: number;
+
+    // Hide fixed footer after 3 seconds on initial load
+    hideTimer = setTimeout(() => {
+      if (window.scrollY < 100) {
+        setIsFooterVisible(false);
+      }
+    }, 3000);
+
+    const handleScroll = () => {
+      clearTimeout(hideTimer);
+
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const distanceFromBottom = documentHeight - (scrollY + windowHeight);
+
+      // Show footer (static position) when within 200px of bottom
+      if (distanceFromBottom < 200) {
+        setIsFooterFixed(false);
+        setIsFooterVisible(true);
+      }
+      // Hide footer when scrolling down past 100px
+      else if (scrollY > 100) {
+        setIsFooterFixed(false);
+        setIsFooterVisible(false);
+      }
+      // Show fixed footer when at top
+      else {
+        setIsFooterFixed(true);
+        setIsFooterVisible(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      clearTimeout(hideTimer);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
@@ -230,17 +277,17 @@ export function ScrollPage() {
       </section>
 
       {/* ─── FOOTER ─── */}
-      <footer className="border-t border-stone-200 py-10 px-6 md:px-12 relative z-10 bg-white">
+      <footer
+        className={`border-t border-stone-200 py-4 px-6 z-10 bg-white transition-all duration-500 ${
+          isFooterFixed ? 'fixed bottom-0 left-0 right-0' : 'relative'
+        } ${
+          isFooterVisible
+            ? 'opacity-100 translate-y-0'
+            : 'opacity-0 translate-y-8 pointer-events-none'
+        }`}
+      >
         <div className="max-w-5xl mx-auto text-center">
-          <div className="text-sm text-stone-500 mb-3">
-            <strong className="text-stone-700">Shape Matters</strong> is an open-source research tool
-            exploring how organizational depth degrades information fidelity. Built on Bartlett's
-            serial reproduction research (1932), Deming's quality framework, and Toyota's Gemba Walk
-            methodology.
-          </div>
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-stone-400">
-            <span>MIT License</span>
-            <span>·</span>
             <a
               href="https://github.com/mattbayne83/shape-matters"
               target="_blank"
@@ -261,15 +308,17 @@ export function ScrollPage() {
               Discussions
             </a>
             <span>·</span>
-            <a
-              href="https://github.com/mattbayne83/shape-matters/issues/new?template=company-suggestion.yml"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 hover:text-stone-700 transition-colors"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Suggest a Company
-            </a>
+            <span>
+              Built by{' '}
+              <a
+                href="https://mattbayne.dev/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-stone-700 transition-colors"
+              >
+                Matt Bayne
+              </a>
+            </span>
           </div>
         </div>
       </footer>

@@ -7,6 +7,7 @@ import { ModelYourOrg } from '../components/model/ModelYourOrg';
 import { ShapeSection } from '../components/model/ShapeSection';
 import { MethodologySection } from '../components/model/MethodologySection';
 import { HeroSection } from '../components/model/HeroSection';
+import { SimulateSection } from '../components/model/SimulateSection';
 import { SECTION_LABEL } from '../lib/styles';
 import { FadeIn } from '../components/ui/FadeIn';
 
@@ -28,10 +29,8 @@ export function ScrollPage() {
 
   // Footer hide/show behavior
   useEffect(() => {
-    let hideTimer: number;
-
     // Hide fixed footer after 3 seconds on initial load
-    hideTimer = setTimeout(() => {
+    const hideTimer = setTimeout(() => {
       if (window.scrollY < 100) {
         setIsFooterVisible(false);
       }
@@ -108,6 +107,9 @@ export function ScrollPage() {
           <InteractiveFidelityDemo />
         </FadeIn>
       </section>
+
+      {/* ─── THE TELEPHONE EFFECT ─── */}
+      <SimulateSection />
 
       {/* ─── THE PROOF (Company data — moved up from section 6) ─── */}
       <section id="proof" className="py-16 md:py-24 px-6 md:px-12">

@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'problem', label: 'Problem' },
+  { id: 'simulate', label: 'Simulate' },
   { id: 'proof', label: 'Proof' },
   { id: 'shape', label: 'Shape' },
   { id: 'evidence', label: 'Evidence' },

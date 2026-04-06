@@ -6,8 +6,6 @@ interface CompanyState {
   levels: number;
   headcount: number;
   activeScenarioId: string | null;
-  customMessage: string;
-  simulationActive: boolean;
 }
 
 interface CompanyActions {
@@ -15,8 +13,6 @@ interface CompanyActions {
   setLevels: (levels: number) => void;
   setHeadcount: (headcount: number) => void;
   setActiveScenarioId: (id: string | null) => void;
-  setCustomMessage: (msg: string) => void;
-  setSimulationActive: (active: boolean) => void;
 }
 
 /** Apply ?l=&h=&f= URL params to the store. Returns true if any params were found. */
@@ -49,15 +45,11 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       fidelityRate: 82,
       levels: 6,
       headcount: 5000,
-      activeScenarioId: null,
-      customMessage: '',
-      simulationActive: false,
+      activeScenarioId: 'innovation-proposal',
       setFidelityRate: (rate) => set({ fidelityRate: rate }),
       setLevels: (levels) => set({ levels }),
       setHeadcount: (headcount) => set({ headcount }),
       setActiveScenarioId: (id) => set({ activeScenarioId: id }),
-      setCustomMessage: (msg) => set({ customMessage: msg }),
-      setSimulationActive: (active) => set({ simulationActive: active }),
     }),
     {
       name: 'org-shape-storage',

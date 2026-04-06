@@ -2,7 +2,6 @@ import { useCompanyStore } from '../../store/useCompanyStore';
 import { SECTION_LABEL } from '../../lib/styles';
 import { FadeIn } from '../ui/FadeIn';
 import { ScenarioPicker } from './ScenarioPicker';
-import { MessageInput } from './MessageInput';
 import { RelayCascade } from './RelayCascade';
 
 export function SimulateSection() {
@@ -17,36 +16,41 @@ export function SimulateSection() {
           Watch Your Message Decay
         </h2>
         <p className="text-sm text-stone-500 mb-8 max-w-2xl">
-          Pick a scenario or type your own message. Then watch it pass through each management
-          layer — distorted, softened, and reframed at every step.
+          Pick a scenario and watch it pass through each management layer — distorted,
+          softened, and reframed at every step. The cards fade as signal decays.
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-[20rem_1fr] gap-8 items-start">
           {/* Left column — sticky on desktop */}
           <div className="lg:sticky lg:top-20 space-y-5">
             <ScenarioPicker />
-            <MessageInput />
 
-            {/* Levels slider */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <div className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
-                  Org Levels
+            {/* Levels slider — matches Problem/Model section style */}
+            <div className="bg-stone-50 border border-stone-200 rounded-xl p-4">
+              <div className="flex items-baseline justify-between mb-3">
+                <div>
+                  <label htmlFor="sim-levels" className="text-sm font-bold text-stone-900 uppercase tracking-wide">
+                    Levels
+                  </label>
+                  <div className="text-xs text-stone-500 mt-1">Adjust depth of hierarchy</div>
                 </div>
-                <span className="text-sm font-bold font-mono text-stone-800">{levels}</span>
+                <span className="text-2xl font-black font-sans tabular-nums text-stone-900 bg-white px-3 py-1 rounded-md shadow-sm border border-stone-200">
+                  {levels}
+                </span>
               </div>
               <input
+                id="sim-levels"
                 type="range"
                 min={2}
                 max={12}
                 value={levels}
                 onChange={(e) => setLevels(Number(e.target.value))}
-                className="w-full accent-ember"
+                aria-valuenow={levels}
+                aria-valuemin={2}
+                aria-valuemax={12}
+                aria-valuetext={`${levels} levels`}
+                className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
               />
-              <div className="flex justify-between text-[10px] text-stone-400">
-                <span>2 (flat)</span>
-                <span>12 (deep)</span>
-              </div>
             </div>
           </div>
 

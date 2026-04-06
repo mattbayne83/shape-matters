@@ -15,18 +15,9 @@ const CATEGORIES: ScenarioCategory[] = ['safety', 'customer', 'innovation', 'str
 export function ScenarioPicker() {
   const activeScenarioId = useCompanyStore((s) => s.activeScenarioId);
   const setActiveScenarioId = useCompanyStore((s) => s.setActiveScenarioId);
-  const setCustomMessage = useCompanyStore((s) => s.setCustomMessage);
 
   function handleSelect(id: string) {
-    if (activeScenarioId === id) {
-      setActiveScenarioId(null);
-      setCustomMessage('');
-      return;
-    }
-    const scenario = SCENARIOS.find((s) => s.id === id);
-    if (!scenario) return;
-    setActiveScenarioId(id);
-    setCustomMessage(scenario.originalMessage);
+    setActiveScenarioId(activeScenarioId === id ? null : id);
   }
 
   return (

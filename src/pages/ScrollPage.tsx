@@ -4,7 +4,6 @@ import { InteractiveFidelityDemo } from '../components/model/InteractiveFidelity
 import { GembaComparison } from '../components/model/GembaComparison';
 import { ComparisonView } from '../components/model/ComparisonView';
 import { ModelYourOrg } from '../components/model/ModelYourOrg';
-import { ShapeSection } from '../components/model/ShapeSection';
 import { MethodologySection } from '../components/model/MethodologySection';
 import { HeroSection } from '../components/model/HeroSection';
 import { SimulateSection } from '../components/model/SimulateSection';
@@ -125,9 +124,6 @@ export function ScrollPage() {
           <ComparisonView />
         </FadeIn>
       </section>
-
-      {/* ─── THE SHAPE (streamlined geometry) ─── */}
-      <ShapeSection />
 
       {/* ─── THE EVIDENCE ─── */}
       <section id="evidence" className="py-16 md:py-24 px-6 md:px-12">

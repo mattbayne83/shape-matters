@@ -1,10 +1,8 @@
-import { motion } from 'framer-motion';
 import { fidelityColor } from '../../lib/fidelityColor';
 
 interface SignalVerdictCardProps {
   fidelityPct: number;
   relayCount: number;
-  delayIndex: number;
   finalMessage: string;
 }
 
@@ -16,18 +14,11 @@ function verdictLabel(pct: number): string {
   return 'Near-total loss — the original signal is unrecoverable';
 }
 
-export function SignalVerdictCard({ fidelityPct, relayCount, delayIndex, finalMessage }: SignalVerdictCardProps) {
+export function SignalVerdictCard({ fidelityPct, relayCount, finalMessage }: SignalVerdictCardProps) {
   const color = fidelityColor(fidelityPct, true);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.6,
-        ease: [0.21, 0.47, 0.32, 0.98],
-        delay: delayIndex * 0.4 + 0.2,
-      }}
+    <div
       className="border-2 rounded-xl p-4"
       style={{ borderColor: color }}
     >
@@ -42,7 +33,7 @@ export function SignalVerdictCard({ fidelityPct, relayCount, delayIndex, finalMe
       </div>
 
       <p className="text-sm text-stone-800 leading-relaxed mb-3 italic">
-        "{finalMessage}"
+        &ldquo;{finalMessage}&rdquo;
       </p>
 
       <div className="flex items-baseline gap-3">
@@ -54,6 +45,6 @@ export function SignalVerdictCard({ fidelityPct, relayCount, delayIndex, finalMe
         </span>
       </div>
       <p className="text-[11px] text-stone-400 mt-1">{verdictLabel(fidelityPct)}</p>
-    </motion.div>
+    </div>
   );
 }

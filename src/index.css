@@ -125,46 +125,6 @@ body {
   }
 }
 
-/* Triangle geometry animations */
-@keyframes shape-draw {
-  from {
-    stroke-dashoffset: 2000;
-  }
-
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes horn-grow {
-  from {
-    clip-path: inset(100% 0 0 0);
-    opacity: 0;
-  }
-
-  to {
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
-  }
-}
-
-/* Shape overlay continuous animations */
-@keyframes gap-breathe {
-
-  0%,
-  100% {
-    opacity: 0.1;
-  }
-
-  50% {
-    opacity: 0.25;
-  }
-}
-
-.gap-breathe {
-  animation: fade-in 0.8s ease-out 0.6s both, gap-breathe 4s ease-in-out infinite 1.4s;
-}
-
 @keyframes float-subtle {
 
   0%,

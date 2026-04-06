@@ -27,6 +27,7 @@ export function fidelityHint(fidelityRate: number): string {
 }
 
 export function decisionCycleHint(decisionCycle: number, levels: number): string {
+  if (levels <= 1) return 'Flat — no relay layers';
   const totalDays = Math.round(decisionCycle * (levels - 1));
   let label: string;
   if (decisionCycle <= 2) label = 'Startup-fast';

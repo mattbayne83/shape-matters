@@ -48,6 +48,23 @@ describe('fidelityHint', () => {
   it('returns exceptional label', () => {
     expect(fidelityHint(95)).toBe('Exceptional — near-lossless relay');
   });
+
+  // Boundary tests
+  it('returns below-average at exactly 65', () => {
+    expect(fidelityHint(65)).toBe('Below average — 35% signal lost per hop');
+  });
+
+  it('returns typical at exactly 80', () => {
+    expect(fidelityHint(80)).toBe('Typical — 20% signal lost per hop');
+  });
+
+  it('returns typical at exactly 85', () => {
+    expect(fidelityHint(85)).toBe('Typical — 15% signal lost per hop');
+  });
+
+  it('returns high at exactly 92', () => {
+    expect(fidelityHint(92)).toBe('High — only 8% lost per hop');
+  });
 });
 
 describe('decisionCycleHint', () => {
@@ -65,6 +82,10 @@ describe('decisionCycleHint', () => {
 
   it('returns glacial with total days', () => {
     expect(decisionCycleHint(12, 6)).toBe('Glacial — 60d CEO → front line');
+  });
+
+  it('returns flat hint when levels is 1', () => {
+    expect(decisionCycleHint(3, 1)).toBe('Flat — no relay layers');
   });
 });
 

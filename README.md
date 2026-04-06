@@ -17,9 +17,8 @@ Three cost channels of organizational depth:
 ## Features
 
 - **Interactive Fidelity Demo** — Animated visualization of signal decay across management layers
-- **Decay Curve** — Two-line chart showing upward fidelity vs. round-trip fidelity
+- **Message Relay Simulator** — 5 scenario-driven simulations showing how messages distort through org levels with incentive annotations explaining *why* each layer reframes the signal
 - **Company Comparison** — 6 reference companies across 4 archetypes with shape metrics and signal fidelity
-- **Shape Overlay** — Exponential horn vs. idealized triangle visualization with shape gap analysis
 - **Model Your Org** — Unified interactive calculator: 3 sliders (levels, headcount, fidelity rate), depth tax metrics, sensitivity sweep, restructuring impact
 - **Gemba Walk Analysis** — Illustrates direct observation vs. relay chain information loss
 
@@ -70,7 +69,7 @@ npm run preview   # Preview production build locally
 src/
   components/
     layout/       SectionNav — anchor-based navigation bar
-    model/        18 visualization & interaction components
+    model/        21 visualization & interaction components
     ui/           Prose, FadeIn, GeometricHero
   pages/
     ScrollPage    Single-page layout with all sections
@@ -81,18 +80,19 @@ src/
     fidelityColor Gradient mapping utility (stone monochrome + ember semantic)
     styles        Tailwind class constants
     scrollToAnchor Smooth scroll utility for metric → methodology links
-    __tests__/    95 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor)
+    __tests__/    124 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor, signalRelay)
   store/
     useCompanyStore  Zustand persist store (levels, headcount, fidelityRate)
   data/
     referenceCompanies  6 curated reference companies
+    scenarios       5 relay simulation scenarios (safety, customer, innovation, strategy, operations)
   types/
-    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, Archetype
+    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, Scenario, RelayLevel
 ```
 
 ## Architecture
 
-- **No router** — Single-page scroll layout with anchor-based navigation (`#problem`, `#proof`, `#shape`, `#evidence`, `#model`, `#methodology`)
+- **No router** — Single-page scroll layout with anchor-based navigation (`#problem`, `#simulate`, `#evidence`, `#proof`, `#model`, `#methodology`)
 - **Shared inputs** — Levels (default 6), headcount (default 5000), fidelity rate (default 82%) stored in Zustand persist, accessible from all visualizations
 - **Custom SVG/Canvas** — All charts and visualizations are built from scratch (no charting library)
 - **Dynamic colors** — Runtime hex values use inline `style` (Tailwind can't JIT runtime hex)

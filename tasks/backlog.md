@@ -6,15 +6,9 @@ Prioritized by impact on the research tool's credibility, usability, and reach.
 
 ## P0 — High Impact
 
-### Narrative Reorder: Calculator First (/elon Step 1)
-The interactive calculator (ModelYourOrg) is buried in section 6 of 7. Users must scroll through ~5 screens of research prose before they can play. The tool IS the hook — flip the order so users model their own org first, then read the theory behind the numbers.
-- [ ] Move ModelYourOrg to section 1 or 2 (play first, read second)
-- [ ] Evaluate whether InteractiveFidelityDemo can be removed (it partially duplicates ModelYourOrg)
-- [ ] If kept, reduce InteractiveFidelityDemo to a minimal inline teaser that links to the full calculator
-
-### Consolidate Redundant Sections (/elon Step 2)
-Shape (#shape) and Evidence (#evidence) sit back-to-back as two theory-heavy sections. Consider merging into a single "Theory" section to tighten the narrative arc.
-- [ ] Evaluate merging Shape + Evidence into one section
+### Evaluate InteractiveFidelityDemo Redundancy
+The Simulate section now provides a more compelling interactive demo of signal decay. InteractiveFidelityDemo in the Problem section partially overlaps — evaluate whether it should be simplified to a minimal teaser or removed.
+- [ ] Evaluate whether InteractiveFidelityDemo can be removed or simplified (it partially duplicates Simulate)
 - [ ] Audit GeometricHero — pure decoration, question whether it earns its weight or should be deleted
 
 ### Expand Reference Dataset
@@ -113,6 +107,22 @@ Moved to Completed section.
 ### Community Features
 - [x] GitHub Discussions integration for company data debate
 - [x] "Suggest a company" form that opens a pre-filled GitHub issue
+
+### Message Relay Simulator
+- [x] 5 hand-authored scenarios (Safety, Customer, Innovation, Strategy, Operations) with 8 relay levels each
+- [x] Rule-based transformation engine for custom messages (regex-based, 6 progressive tiers)
+- [x] Collapsed cascade: Origin + L1 visible, expandable middle layers, Verdict card anchored
+- [x] Opacity fade: card opacity mirrors signal fidelity (floor 0.35)
+- [x] Innovation scenario selected by default (never blank)
+- [x] 23 new unit tests (signal relay + scenario data integrity)
+- [x] Slider styling matches Problem/Model sections
+
+### Shape Section Removed + Narrative Reorder
+- [x] Removed ShapeSection + ShapeOverlay components (544 lines)
+- [x] Removed 3 CSS keyframe animations (shape-draw, horn-grow, gap-breathe)
+- [x] Kept triangleGeometry.ts + types (shared with ModelYourOrg)
+- [x] Reordered sections: Problem → Simulate → Evidence → Proof → Model → Methodology
+- [x] Updated background alternation (stone-50 → white → stone-50 → white → stone-50 → white)
 
 ### Cross-Platform Font Rendering Fix
 - [x] `font-black` (900) → `font-bold` (700) on all `font-mono` elements (DM Mono only ships 300/400/500)

@@ -5,12 +5,18 @@ interface CompanyState {
   fidelityRate: number;
   levels: number;
   headcount: number;
+  activeScenarioId: string | null;
+  customMessage: string;
+  simulationActive: boolean;
 }
 
 interface CompanyActions {
   setFidelityRate: (rate: number) => void;
   setLevels: (levels: number) => void;
   setHeadcount: (headcount: number) => void;
+  setActiveScenarioId: (id: string | null) => void;
+  setCustomMessage: (msg: string) => void;
+  setSimulationActive: (active: boolean) => void;
 }
 
 /** Apply ?l=&h=&f= URL params to the store. Returns true if any params were found. */
@@ -43,15 +49,27 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       fidelityRate: 82,
       levels: 6,
       headcount: 5000,
+      activeScenarioId: null,
+      customMessage: '',
+      simulationActive: false,
       setFidelityRate: (rate) => set({ fidelityRate: rate }),
       setLevels: (levels) => set({ levels }),
       setHeadcount: (headcount) => set({ headcount }),
+      setActiveScenarioId: (id) => set({ activeScenarioId: id }),
+      setCustomMessage: (msg) => set({ customMessage: msg }),
+      setSimulationActive: (active) => set({ simulationActive: active }),
     }),
     {
       name: 'org-shape-storage',
       // URL params must override persisted state. persist rehydrates async
       // (microtask), so we re-apply URL params after rehydration completes.
       onRehydrateStorage: () => () => { applyUrlParams(); },
+      // Only persist the original 3 fields; simulation fields reset on reload
+      partialize: (state) => ({
+        fidelityRate: state.fidelityRate,
+        levels: state.levels,
+        headcount: state.headcount,
+      }),
     }
   )
 );

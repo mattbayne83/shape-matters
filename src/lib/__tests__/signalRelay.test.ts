@@ -134,3 +134,44 @@ describe('truncateRelayLevels', () => {
     expect(result).toHaveLength(8);
   });
 });
+
+import { SCENARIOS } from '../../data/scenarios';
+
+describe('scenario data integrity', () => {
+  it('has exactly 5 scenarios', () => {
+    expect(SCENARIOS).toHaveLength(5);
+  });
+
+  it('covers all 5 categories', () => {
+    const categories = new Set(SCENARIOS.map((s) => s.category));
+    expect(categories).toEqual(new Set(['safety', 'strategy', 'customer', 'innovation', 'operations']));
+  });
+
+  it('each scenario has exactly 8 relay levels', () => {
+    for (const scenario of SCENARIOS) {
+      expect(scenario.levels).toHaveLength(8);
+    }
+  });
+
+  it('each relay level has all required fields', () => {
+    for (const scenario of SCENARIOS) {
+      for (const level of scenario.levels) {
+        expect(level.role).toBeTruthy();
+        expect(level.message).toBeTruthy();
+        expect(level.incentive).toBeTruthy();
+        expect(Array.isArray(level.lostDetails)).toBe(true);
+        expect(Array.isArray(level.addedFraming)).toBe(true);
+      }
+    }
+  });
+
+  it('messages get shorter or equal at each successive level', () => {
+    for (const scenario of SCENARIOS) {
+      for (let i = 1; i < scenario.levels.length; i++) {
+        expect(scenario.levels[i].message.length).toBeLessThanOrEqual(
+          scenario.levels[i - 1].message.length * 1.3
+        );
+      }
+    }
+  });
+});

@@ -106,3 +106,22 @@ export interface TriangleGeometry {
   shapeClass: ShapeClassification;
   shapeClassLabel: string;
 }
+
+// ── Relay Simulator ─────────────────────────────────────────────────
+export type ScenarioCategory = 'safety' | 'strategy' | 'customer' | 'innovation' | 'operations';
+
+export interface RelayLevel {
+  role: string;
+  message: string;
+  incentive: string;
+  lostDetails: string[];
+  addedFraming: string[];
+}
+
+export interface Scenario {
+  id: string;
+  title: string;
+  category: ScenarioCategory;
+  originalMessage: string;
+  levels: RelayLevel[];
+}

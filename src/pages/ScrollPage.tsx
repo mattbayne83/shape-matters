@@ -110,23 +110,8 @@ export function ScrollPage() {
       {/* ─── THE TELEPHONE EFFECT ─── */}
       <SimulateSection />
 
-      {/* ─── THE PROOF (Company data — moved up from section 6) ─── */}
-      <section id="proof" className="py-16 md:py-24 px-6 md:px-12">
-        <FadeIn className="max-w-5xl mx-auto">
-          <div className={`${SECTION_LABEL} mb-3`}>The Proof</div>
-          <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
-            Real Companies, Real Structures
-          </h2>
-          <p className="text-sm text-stone-500 mb-8 max-w-2xl">
-            Here's what compound signal decay looks like across 6 real companies — from Valve's
-            zero-relay flat structure to Amazon's 9-level hierarchy.
-          </p>
-          <ComparisonView />
-        </FadeIn>
-      </section>
-
       {/* ─── THE EVIDENCE ─── */}
-      <section id="evidence" className="py-16 md:py-24 px-6 md:px-12">
+      <section id="evidence" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
         <FadeIn className="max-w-5xl mx-auto">
           <div className={`${SECTION_LABEL} mb-3`}>The Evidence</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-6">
@@ -242,6 +227,21 @@ export function ScrollPage() {
               </div>
             </div>
           </div>
+        </FadeIn>
+      </section>
+
+      {/* ─── THE PROOF ─── */}
+      <section id="proof" className="py-16 md:py-24 px-6 md:px-12">
+        <FadeIn className="max-w-5xl mx-auto">
+          <div className={`${SECTION_LABEL} mb-3`}>The Proof</div>
+          <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
+            Real Companies, Real Structures
+          </h2>
+          <p className="text-sm text-stone-500 mb-8 max-w-2xl">
+            Here&apos;s what compound signal decay looks like across 6 real companies — from Valve&apos;s
+            zero-relay flat structure to Amazon&apos;s 9-level hierarchy.
+          </p>
+          <ComparisonView />
         </FadeIn>
       </section>
 

@@ -4,8 +4,8 @@ import { Menu, X } from 'lucide-react';
 const SECTIONS = [
   { id: 'problem', label: 'Problem' },
   { id: 'simulate', label: 'Simulate' },
-  { id: 'proof', label: 'Proof' },
   { id: 'evidence', label: 'Evidence' },
+  { id: 'proof', label: 'Proof' },
   { id: 'model', label: 'Model' },
   { id: 'methodology', label: 'Methodology' },
 ];

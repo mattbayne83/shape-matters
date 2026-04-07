@@ -33,6 +33,8 @@ export interface Company {
   notes: string;
   source: string;
   sourceUrl?: string;
+  decisionCycle?: number;     // days/layer (optional for backward compat)
+  culturalAgility?: number;   // 0-100 (optional for backward compat)
 }
 
 export interface OrgMetrics {
@@ -107,6 +109,33 @@ export interface TriangleGeometry {
   shapeClassLabel: string;
 }
 
+// ── Thermal Lag (Pillar 2) ──────────────────────────────────────────
+export interface LayerDelay {
+  layer: number;
+  role: string;
+  cumulativeDelay: number;  // days
+  marginalDelay: number;    // days added by this layer
+}
+
+export interface ThermalLagResult {
+  totalDelay: number;         // days, CEO to front line
+  marginalLayerCost: number;  // days saved by removing deepest layer
+  lagRatio: number;           // actual / linear delay
+  layerDelays: LayerDelay[];  // per-layer breakdown
+}
+
+// ── Damped Response (Pillar 3) ──────────────────────────────────────
+export type ResponseRegime = 'under-damped' | 'critically-damped' | 'over-damped';
+
+export interface DampedResponseResult {
+  dampingRatio: number;       // ζ (zeta)
+  naturalFrequency: number;   // ω₀
+  overshootPct: number;       // 0 for over-damped
+  settlingTimeWeeks: number;  // time to stay within 2% of target
+  regime: ResponseRegime;
+  regimeLabel: string;        // "Too Fast" | "Right-Sized" | "Too Slow"
+}
+
 // ── Relay Simulator ─────────────────────────────────────────────────
 export type ScenarioCategory = 'safety' | 'strategy' | 'customer' | 'innovation' | 'operations';
 
@@ -124,4 +153,11 @@ export interface Scenario {
   category: ScenarioCategory;
   originalMessage: string;
   levels: RelayLevel[];
+}
+
+// ── Health Scores ──────────────────────────────────────────────────
+export interface HealthScore {
+  score: number;          // 0-100, rounded integer
+  label: string;          // "Live", "Nimble", "Stuck", etc.
+  color: string;          // Hex color for the score band
 }

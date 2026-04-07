@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Score Calibration Explorer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: Inter, system-ui, sans-serif;
+    background: #fafaf9;
+    color: #1c1917;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  h1 { font-family: Georgia, serif; font-size: 1.75rem; margin-bottom: 0.25rem; }
+  h2 { font-family: Georgia, serif; font-size: 1.25rem; margin: 2rem 0 1rem; color: #44403c; }
+  h3 { font-size: 0.85rem; font-weight: 600; color: #78716c; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+  p.subtitle { color: #78716c; font-size: 0.9rem; margin-bottom: 2rem; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+  .card {
+    background: white;
+    border: 1px solid #e7e5e4;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .chart-container { position: relative; width: 100%; height: 340px; margin: 0.5rem 0; }
+  canvas { width: 100%; height: 100%; }
+  .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; font-size: 0.8rem; color: #57534e; }
+  .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+  .legend-swatch { width: 24px; height: 3px; border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 1rem; }
+  th {
+    text-align: left; font-weight: 600; color: #78716c; font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.06em; padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid #e7e5e4;
+  }
+  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f5f5f4; font-variant-numeric: tabular-nums; }
+  tr:hover { background: #fafaf9; }
+  .org-name { font-weight: 600; color: #44403c; }
+  .score { font-weight: 700; font-family: monospace; }
+  .score-good { color: #44403c; }
+  .score-mid { color: #B84515; }
+  .score-bad { color: #dc2626; }
+  .band-strip {
+    display: flex; height: 28px; border-radius: 6px; overflow: hidden; margin: 0.75rem 0;
+    font-size: 0.65rem; font-weight: 600; color: white;
+  }
+  .band-strip > div { display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+  code { background: #f5f5f4; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.78rem; }
+</style>
+</head>
+<body>
+
+<h1>Score Calibration Explorer</h1>
+<p class="subtitle">Compare calibration curves for Propagation Lag and Change Response health scores. Star marks the recommended option.</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Propagation Lag Score</h3>
+    <p style="font-size:0.8rem; color:#78716c; margin-bottom:0.5rem;">
+      <code>score = 100 * exp(-delay / tau)</code> where <code>delay = d * (L-1)^2</code>
+    </p>
+    <div class="chart-container"><canvas id="lagChart"></canvas></div>
+    <div class="legend" id="lagLegend"></div>
+  </div>
+  <div class="card">
+    <h3>Change Response Score</h3>
+    <p style="font-size:0.8rem; color:#78716c; margin-bottom:0.5rem;">
+      <code>score = 100 * exp(-((zeta-1)/sigma)^2)</code> where <code>zeta = L*0.01634*sqrt(H) / (2*a/10)</code>
+    </p>
+    <div class="chart-container"><canvas id="responseChart"></canvas></div>
+    <div class="legend" id="responseLegend"></div>
+  </div>
+</div>
+
+<h2>Proposed Label Bands</h2>
+<div class="grid-2">
+  <div class="card">
+    <h3>Lag Score Labels</h3>
+    <div class="band-strip">
+      <div style="flex:15; background:#dc2626;">0-19 Annual</div>
+      <div style="flex:20; background:#E05A1B;">20-39 Seasonal</div>
+      <div style="flex:25; background:#F4A261;">40-64 Quarterly</div>
+      <div style="flex:20; background:#a8967a;">65-84 Monthly</div>
+      <div style="flex:15; background:#44403c;">85+ Sprint</div>
+    </div>
+    <p style="font-size:0.75rem; color:#78716c;">Anchored to planning cadences.</p>
+  </div>
+  <div class="card">
+    <h3>Response Score Labels</h3>
+    <div class="band-strip">
+      <div style="flex:20; background:#dc2626;">0-19 Dysfunctional</div>
+      <div style="flex:20; background:#E05A1B;">20-39 Impaired</div>
+      <div style="flex:25; background:#F4A261;">40-64 Strained</div>
+      <div style="flex:20; background:#a8967a;">65-84 Responsive</div>
+      <div style="flex:15; background:#44403c;">85+ Tuned</div>
+    </div>
+    <p style="font-size:0.75rem; color:#78716c;">Centered on zeta=1.0. Both extremes penalized.</p>
+  </div>
+</div>
+
+<h2>Example Organizations — Score Comparison</h2>
+<div class="card" style="overflow-x:auto;" id="orgTableContainer"></div>
+
+<h2>Cross-Pillar Consistency Check</h2>
+<div class="card">
+  <p style="font-size:0.85rem; color:#57534e; margin-bottom:1rem;">
+    Signal Fidelity (0-100%) is the reference. New scores should produce similar severity for the same org.
+  </p>
+  <div id="crossPillarContainer"></div>
+</div>
+
+<script>
+const orgs = [
+  { name: 'Flat Startup',           L: 3,  H: 100,    d: 1,   a: 80 },
+  { name: 'Agile Tech Co',          L: 4,  H: 1000,   d: 2,   a: 70 },
+  { name: 'Growth-Stage',           L: 5,  H: 2500,   d: 2.5, a: 60 },
+  { name: 'Default Mid-Size',       L: 6,  H: 5000,   d: 3,   a: 55 },
+  { name: 'Traditional Enterprise', L: 8,  H: 25000,  d: 5,   a: 35 },
+  { name: 'Lean Enterprise',        L: 8,  H: 50000,  d: 1.5, a: 65 },
+  { name: 'Deep Bureaucracy',       L: 12, H: 100000, d: 7,   a: 20 },
+];
+
+function calcDelay(L, d) { return d * (L - 1) * (L - 1); }
+function calcZeta(L, H, a) { return (L * 0.01634 * Math.sqrt(H)) / (2 * (a / 10)); }
+function calcFidelity(L, r) { return Math.pow(r, L - 1) * 100; }
+function lagScore(delay, tau) { return 100 * Math.exp(-delay / tau); }
+function responseScore(zeta, sigma) { return 100 * Math.exp(-Math.pow((zeta - 1) / sigma, 2)); }
+function scoreClass(s) { return s >= 65 ? 'score-good' : s >= 35 ? 'score-mid' : 'score-bad'; }
+
+const lagTaus = [60, 75, 100, 120];
+const respSigmas = [0.35, 0.50, 0.65, 0.80];
+const colors = ['#E05A1B', '#F4A261', '#a8967a', '#44403c'];
+
+function drawChart(canvasId, legendId, xLabel, xMax, curves, markers, paramLabels, recIdx) {
+  const canvas = document.getElementById(canvasId);
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width, H = rect.height;
+  const pad = { top: 20, right: 30, bottom: 50, left: 55 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+
+  ctx.strokeStyle = '#e7e5e4'; ctx.lineWidth = 1;
+  for (let y = 0; y <= 100; y += 20) {
+    const py = pad.top + ch * (1 - y / 100);
+    ctx.beginPath(); ctx.moveTo(pad.left, py); ctx.lineTo(pad.left + cw, py); ctx.stroke();
+    ctx.fillStyle = '#a8a29e'; ctx.font = '11px system-ui';
+    ctx.textAlign = 'right'; ctx.fillText(y, pad.left - 8, py + 4);
+  }
+
+  // Band backgrounds
+  [[0,19,'rgba(220,38,38,0.05)'],[20,39,'rgba(224,90,27,0.05)'],[40,64,'rgba(244,162,97,0.05)'],
+   [65,84,'rgba(168,150,122,0.05)'],[85,100,'rgba(68,64,60,0.06)']].forEach(([lo,hi,c]) => {
+    ctx.fillStyle = c;
+    ctx.fillRect(pad.left, pad.top + ch*(1-hi/100), cw, ch*(hi-lo)/100);
+  });
+
+  // X ticks
+  const isLag = canvasId === 'lagChart';
+  const xSteps = isLag ? [0,30,60,90,120,180,250,350,500] : [0,0.5,1.0,1.5,2.0,2.5,3.0];
+  ctx.fillStyle = '#a8a29e'; ctx.font = '11px system-ui'; ctx.textAlign = 'center';
+  xSteps.forEach(x => {
+    if (x > xMax) return;
+    const px = pad.left + (x / xMax) * cw;
+    ctx.strokeStyle = '#e7e5e4';
+    ctx.beginPath(); ctx.moveTo(px, pad.top + ch); ctx.lineTo(px, pad.top + ch + 6); ctx.stroke();
+    ctx.fillText(isLag ? x + 'd' : x.toFixed(1), px, pad.top + ch + 20);
+  });
+
+  // Critical damping line for response chart
+  if (!isLag) {
+    const px = pad.left + (1.0 / xMax) * cw;
+    ctx.strokeStyle = '#78716c'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(px, pad.top); ctx.lineTo(px, pad.top + ch); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#78716c'; ctx.font = 'bold 10px system-ui';
+    ctx.fillText('optimal', px, pad.top + 12);
+  }
+
+  ctx.fillStyle = '#78716c'; ctx.font = '12px system-ui';
+  ctx.fillText(xLabel, pad.left + cw / 2, H - 5);
+
+  ctx.save(); ctx.translate(12, pad.top + ch / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#78716c'; ctx.font = '12px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('Health Score', 0, 0); ctx.restore();
+
+  // Curves
+  curves.forEach((fn, i) => {
+    ctx.strokeStyle = colors[i];
+    ctx.lineWidth = i === recIdx ? 3 : 2;
+    ctx.setLineDash(i === recIdx ? [] : [6, 3]);
+    ctx.beginPath();
+    for (let s = 0; s <= 300; s++) {
+      const x = (s / 300) * xMax;
+      const y = fn(x);
+      const px = pad.left + (x / xMax) * cw;
+      const py = pad.top + ch * (1 - Math.max(0, Math.min(100, y)) / 100);
+      s === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  });
+
+  // Marker dots on recommended curve
+  const shortNames = ['Startup', 'Agile', 'Growth', 'Default', 'Trad', 'Lean', 'Bureau'];
+  markers.forEach((m, mi) => {
+    const y = curves[recIdx](m.x);
+    const px = pad.left + (Math.min(m.x, xMax) / xMax) * cw;
+    const py = pad.top + ch * (1 - Math.max(0, Math.min(100, y)) / 100);
+
+    // All curve dots
+    curves.forEach((fn, ci) => {
+      const yy = fn(m.x);
+      const pyy = pad.top + ch * (1 - Math.max(0, Math.min(100, yy)) / 100);
+      ctx.beginPath(); ctx.arc(px, pyy, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = colors[ci]; ctx.globalAlpha = 0.6; ctx.fill(); ctx.globalAlpha = 1;
+    });
+
+    // Label on recommended
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fillStyle = colors[recIdx]; ctx.fill();
+    ctx.strokeStyle = 'white'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#1c1917'; ctx.font = 'bold 10px system-ui'; ctx.textAlign = 'left';
+    const off = py < 40 ? 16 : -10;
+    ctx.fillText(shortNames[mi], px + 8, py + off);
+  });
+
+  // Legend
+  const legend = document.getElementById(legendId);
+  legend.textContent = '';
+  paramLabels.forEach((l, i) => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    const swatch = document.createElement('div');
+    swatch.className = 'legend-swatch';
+    swatch.style.background = colors[i];
+    if (i !== recIdx) {
+      swatch.style.background = 'repeating-linear-gradient(90deg,' + colors[i] + ' 0,' + colors[i] + ' 6px,transparent 6px,transparent 9px)';
+    }
+    const text = document.createTextNode(l + (i === recIdx ? ' (rec)' : ''));
+    item.appendChild(swatch);
+    item.appendChild(text);
+    legend.appendChild(item);
+  });
+}
+
+function buildOrgTable() {
+  const container = document.getElementById('orgTableContainer');
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+
+  const row1 = document.createElement('tr');
+  ['Organization','L','H','d','a','Delay','zeta'].forEach(t => {
+    const th = document.createElement('th'); th.textContent = t; row1.appendChild(th);
+  });
+  lagTaus.forEach((t, i) => {
+    const th = document.createElement('th');
+    th.textContent = 'tau=' + t;
+    th.style.color = colors[i];
+    if (i === 0) th.style.borderLeft = '2px solid #d6d3d1';
+    row1.appendChild(th);
+  });
+  respSigmas.forEach((s, i) => {
+    const th = document.createElement('th');
+    th.textContent = 'sig=' + s.toFixed(2);
+    th.style.color = colors[i];
+    if (i === 0) th.style.borderLeft = '2px solid #d6d3d1';
+    row1.appendChild(th);
+  });
+  thead.appendChild(row1);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  orgs.forEach(o => {
+    const delay = calcDelay(o.L, o.d);
+    const zeta = calcZeta(o.L, o.H, o.a);
+    const tr = document.createElement('tr');
+
+    const addCell = (text, cls) => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      if (cls) td.className = cls;
+      return td;
+    };
+
+    tr.appendChild(addCell(o.name, 'org-name'));
+    tr.appendChild(addCell(o.L));
+    tr.appendChild(addCell(o.H.toLocaleString()));
+    tr.appendChild(addCell(o.d));
+    tr.appendChild(addCell(o.a));
+    const delayCell = addCell(delay + 'd'); delayCell.style.fontWeight = '700'; tr.appendChild(delayCell);
+    const zetaCell = addCell(zeta.toFixed(2)); zetaCell.style.fontWeight = '700'; tr.appendChild(zetaCell);
+
+    lagTaus.forEach((t, i) => {
+      const s = lagScore(delay, t);
+      const td = addCell(Math.round(s), 'score ' + scoreClass(s));
+      if (i === 0) td.style.borderLeft = '2px solid #d6d3d1';
+      tr.appendChild(td);
+    });
+    respSigmas.forEach((sig, i) => {
+      const s = responseScore(zeta, sig);
+      const td = addCell(Math.round(s), 'score ' + scoreClass(s));
+      if (i === 0) td.style.borderLeft = '2px solid #d6d3d1';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+function buildCrossPillarTable() {
+  const container = document.getElementById('crossPillarContainer');
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const hrow = document.createElement('tr');
+  ['Organization','Fidelity','Lag (tau=75)','Resp (sig=0.50)','Resp (sig=0.65)','Avg (sig=0.50)','Avg (sig=0.65)'].forEach(t => {
+    const th = document.createElement('th'); th.textContent = t; hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  orgs.forEach(o => {
+    const fid = calcFidelity(o.L, 0.82);
+    const delay = calcDelay(o.L, o.d);
+    const zeta = calcZeta(o.L, o.H, o.a);
+    const lag75 = lagScore(delay, 75);
+    const resp50 = responseScore(zeta, 0.50);
+    const resp65 = responseScore(zeta, 0.65);
+    const avg50 = (fid + lag75 + resp50) / 3;
+    const avg65 = (fid + lag75 + resp65) / 3;
+
+    const tr = document.createElement('tr');
+    const addCell = (text, cls) => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      if (cls) td.className = cls;
+      tr.appendChild(td);
+    };
+    addCell(o.name, 'org-name');
+    [fid, lag75, resp50, resp65, avg50, avg65].forEach(v => {
+      addCell(Math.round(v), 'score ' + scoreClass(v));
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+function render() {
+  const lagMarkers = orgs.map(o => ({ x: calcDelay(o.L, o.d) }));
+  const respMarkers = orgs.map(o => ({ x: Math.min(calcZeta(o.L, o.H, o.a), 3.4) }));
+  drawChart('lagChart', 'lagLegend', 'Total Propagation Delay (days)', 500,
+    lagTaus.map(tau => x => lagScore(x, tau)), lagMarkers, lagTaus.map(t => 'tau=' + t), 1);
+  drawChart('responseChart', 'responseLegend', 'Damping Ratio (zeta)', 3.5,
+    respSigmas.map(sigma => x => responseScore(x, sigma)), respMarkers, respSigmas.map(s => 'sig=' + s.toFixed(2)), 1);
+}
+
+buildOrgTable();
+buildCrossPillarTable();
+render();
+window.addEventListener('resize', render);
+</script>
+</body>
+</html>

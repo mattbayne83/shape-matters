@@ -6,7 +6,7 @@ export interface MetricDefinition {
   formula: ReactNode;
   description: string;
   constants?: string;
-  category: 'primary' | 'secondary';
+  category: 'primary' | 'secondary' | 'lag' | 'response';
 }
 
 export const METHODOLOGY_METRICS: MetricDefinition[] = [
@@ -104,5 +104,53 @@ export const METHODOLOGY_METRICS: MetricDefinition[] = [
     description:
       'Estimated annual cost of ineffective communication, based on the Axios HQ 2025 finding of $10,140/employee/year average loss. Scaled by round-trip signal degradation — deeper orgs waste more because messages lose fidelity on every round trip.',
     category: 'secondary',
+  },
+
+  // ── Lag Metrics ──
+  {
+    id: 'methodology-propagation-delay',
+    title: 'Propagation Delay',
+    formula: <>d × (L-1)<sup>2</sup></>,
+    description:
+      'Total time for a strategic signal to propagate from CEO to front line. Based on Fourier\'s Law of thermal conduction — each layer acts as insulation. The key insight: delay scales with the square of depth, not linearly. At 6 levels and 3 days/layer, propagation takes 75 days (not 15). Adding one layer doesn\'t add one unit of delay — it compounds.',
+    constants: 'd = decision cycle (days/layer)',
+    category: 'lag',
+  },
+  {
+    id: 'methodology-marginal-layer-cost',
+    title: 'Marginal Layer Cost',
+    formula: <>d × (2(L-1) - 1)</>,
+    description:
+      'Days saved by removing the deepest organizational layer. Because delay is quadratic, the savings are disproportionately large for deep orgs. Removing one layer from a 6-level org saves 27 days — not 3. This metric makes the ROI of flattening visceral.',
+    constants: 'd = decision cycle (days/layer)',
+    category: 'lag',
+  },
+
+  // ── Response Metrics ──
+  {
+    id: 'methodology-damping-ratio',
+    title: 'Damping Ratio (ζ)',
+    formula: <>c / 2√(km)</>,
+    description:
+      'The single number that determines how your organization responds to change. Based on the damped harmonic oscillator from classical mechanics. Under-damped (ζ < 0.7): org overshoots and oscillates. Critically damped (0.7–1.3): fastest convergence without chaos. Over-damped (ζ > 1.3): sluggish crawl toward the target.',
+    constants: 'c = levels × 1.1, k = agility/10, m = √headcount',
+    category: 'response',
+  },
+  {
+    id: 'methodology-overshoot',
+    title: 'Overshoot',
+    formula: <>e<sup>(-πζ / √(1-ζ²))</sup> × 100%</>,
+    description:
+      'How far past the target your organization swings before correcting. Only applies to under-damped orgs (ζ < 1). A 19% overshoot means the org over-commits resources by 19% on a pivot before pulling back. Over-damped orgs never overshoot — they just arrive too slowly.',
+    category: 'response',
+  },
+  {
+    id: 'methodology-settling-time',
+    title: 'Settling Time',
+    formula: <>4ζ / ω<sub>0</sub> × scale</>,
+    description:
+      'How long until the organization stays within 2% of the target after a major change (pivot, new strategy, market response). The 2% band represents practical alignment — close enough that execution is effective. Shorter is better, but too short often means under-damped oscillation.',
+    constants: 'ω₀ = √(k/m), scale = 3.5 weeks',
+    category: 'response',
   },
 ];

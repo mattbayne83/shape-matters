@@ -43,31 +43,35 @@ Single-page scroll layout in `src/pages/ScrollPage.tsx`. Navigation via anchor l
 - `#simulate` — The Telephone Effect (scenario-driven message relay simulator)
 - `#evidence` — The Evidence (Gemba Walk, Deming framework, unified model)
 - `#proof` — The Proof (6 company comparison, key observations)
-- `#model` — Model Your Org (two-column: sticky inputs left, outputs right)
+- `#model` — Model Your Org (progressive disclosure: 3 pillar cards + expandable visualizations)
 - `#methodology` — Methodology (per-metric formula entries with anchor IDs, assumptions, data sources)
 
 `SectionNav` component renders the nav bar with these anchors.
 
 ### Key Directories
-- `src/lib/` — Pure calculation functions (orgMetrics.ts, depthTax.ts, triangleGeometry.ts, fidelityColor.ts, signalRelay.ts, styles.ts, scrollToAnchor.ts)
-- `src/data/` — Reference company data (6 companies, 5 archetypes) + methodologyMetrics.tsx (11 metric definitions) + scenarios.ts (5 relay simulation scenarios)
-- `src/store/` — Zustand persist store (fidelityRate, levels, headcount — shared across sections) + non-persisted simulation state (activeScenarioId)
+- `src/lib/` — Pure calculation functions (orgMetrics.ts, depthTax.ts, triangleGeometry.ts, thermalLag.ts, dampedResponse.ts, fidelityColor.ts, healthScores.ts, signalRelay.ts, contextHints.ts, styles.ts, scrollToAnchor.ts)
+- `src/data/` — Reference company data (6 companies, 5 archetypes) + methodologyMetrics.tsx (16 metric definitions) + scenarios.ts (5 relay simulation scenarios)
+- `src/store/` — Zustand persist store (fidelityRate, levels, headcount, decisionCycle, culturalAgility — shared across sections) + non-persisted UI state (activeScenarioId, expandedPillar, advancedInputsOpen)
 - `src/components/model/` — Visualization & interaction components
 - `src/components/layout/` — SectionNav
 - `src/components/ui/` — Prose, FadeIn, GeometricHero
 - `src/pages/` — ScrollPage (single entry page)
-- `src/types/` — TypeScript interfaces (Company, OrgMetrics, DepthTaxResult, TriangleGeometry, RestructuringImpact, Scenario, RelayLevel, ScenarioCategory)
+- `src/types/` — TypeScript interfaces (Company, OrgMetrics, DepthTaxResult, TriangleGeometry, RestructuringImpact, ThermalLagResult, DampedResponseResult, ResponseRegime, HealthScore, Scenario, RelayLevel, ScenarioCategory)
 - `docs/` — THEORY_BRIEF.md, TORQUE_MODEL.md
 
 ### Zustand Store (`useCompanyStore`)
 Shared inputs across sections:
 - `fidelityRate: number` (default 82), `levels: number` (default 6), `headcount: number` (default 5000)
-- `activeScenarioId: string | null` (default `'innovation-proposal'`) — non-persisted, excluded via `partialize`
+- `decisionCycle: number` (default 3, days/layer) — Lag model input
+- `culturalAgility: number` (default 55, 0-100) — Response model input
+- `activeScenarioId: string | null` (default `'innovation-proposal'`) — non-persisted
+- `expandedPillar: 'fidelity' | 'lag' | 'response' | null` (default null) — non-persisted
+- `advancedInputsOpen: boolean` (default false) — non-persisted
 - ModelYourOrg + InteractiveFidelityDemo + SimulateSection write `levels`; other components read only
 - Persist key: `org-shape-storage`
-- `partialize` excludes `activeScenarioId` from persistence — simulation resets on reload
-- `applyUrlParams()` reads `?l=&h=&f=` from URL at module load + after `onRehydrateStorage`. URL params always override persisted state.
-- `buildShareUrl()` builds `?l=&h=&f=#model` URL from current state
+- `partialize` persists fidelityRate, levels, headcount, decisionCycle, culturalAgility. Excludes activeScenarioId, expandedPillar, advancedInputsOpen.
+- `applyUrlParams()` reads `?l=&h=&f=&d=&a=` from URL at module load + after `onRehydrateStorage`. URL params always override persisted state.
+- `buildShareUrl()` builds `?l=&h=&f=&d=&a=#model` URL from current state
 
 ### Data Model
 - 6 reference companies across 5 archetypes: `flat`, `tech`, `flattened`, `experimental`, `energy`
@@ -83,7 +87,14 @@ Shared inputs across sections:
 - `RelayCascade` — Orchestrates cascade display: Origin card → first relay (always visible) → expandable middle layers → SignalVerdictCard. Uses `truncateRelayLevels` to match org depth.
 - `RelayCard` — Single relay level card with level badge, role, distorted message, lost/added detail tags, incentive annotation. Opacity fades based on `fidelityPct` (floor 0.35).
 - `SignalVerdictCard` — Bottom verdict card: final message in quotes, fidelity %, relay count, verdict label. Border color from `fidelityColor(pct, semantic)`.
-- `ModelYourOrg` — CSS grid layout (`grid-cols-[24rem_1fr]`): sticky inputs left, outputs right. Row 1: inputs + hero card. Row 2: SensitivitySweep + 6 primary FlippableMetricCards (same row = aligned heights). Row 3: What-if panel + secondary metrics.
+- `ModelYourOrg` (~178 lines) — Layout orchestrator: InputStrip at top, PillarDashboard below, What-If panel, More Metrics disclosure. More Metrics always contains 6 FlippableMetricCards (fidelity metrics) + 5 secondary MetricCards.
+- `InputStrip` (~193 lines) — Two-row layout. Row 1: 5 custom-styled sliders in 3 groups (Structure: Levels/Size/Fidelity with ember accent | Dynamics: Cycle/Agility with warm-stone | separated by vertical dividers). Row 2: company preset pills (6 companies as rounded-full buttons) + Share button with copy feedback. Custom slider CSS in `index.css` (`.custom-slider`): track fill gradient, 14px thumbs with white border + shadow, hover scale, focus ring.
+- `PillarDashboard` (~207 lines) — 30/70 CSS grid layout: left column (3fr, `order-first`) shows 3 stacked PillarCards. Right column (7fr, `order-last`) swaps between EQ chart and expanded pillar content via AnimatePresence crossfade. Detail panel gets accent-colored left border (3px) when a pillar is expanded. One pillar expands at a time. Fidelity expanded = SignalCascade + SensitivitySweep (side-by-side with divider). Lag expanded = PropagationDelay bars. Response expanded = ChangeResponseTimeline + ThreeFutures (side-by-side with divider).
+- `PillarCard` (~151 lines) — Summary card: 0-100 health score headline (colored by band), description, rotary knob SVG (270° sweep, needle + fill arc), directional "Explore >" / "< Back" CTA. Active card gets accent border + top bar + glowing shadow; inactive siblings dim to 55% opacity + 0.97 scale. Hover: `bg-stone-50/50` background shift.
+- `RadarChart` (~93 lines) — EQ-style segmented column chart (NOT a radar/spider chart despite the filename). 3 vertical columns (Fidelity, Lag, Response) with 10 segments each. VU meter color ramp: stone-700 at bottom → warm-stone → ember-light → ember → red-600 at top. Unfilled segments at 40% opacity. Top filled segment gets colored glow. "100"/"0" scale markers on left edge.
+- `PropagationDelay` — Lag visualization: horizontal bars per layer showing cumulative delay with quadratic acceleration. Blue→warm color gradient. "Removing 1 layer saves N days" annotation.
+- `ChangeResponseTimeline` — Response visualization: SVG step-response curve with org-native phase labels (Mobilize → Overshoot → Correct → Align). Ghost reference curves for three regimes. Overshoot and settling annotations.
+- `ThreeFutures` — Three narrative regime cards (Too Fast / Right-Sized / Too Slow) with step-by-step org stories. Active regime highlighted, others dimmed. Dynamic verdict sentence.
 - `SignalCascade` — Funnel visualization: shrinking bars + trapezoid connectors with cascading highlight sweep. Dynamic `@keyframes` via inline `<style>` tag, `useId()` for multi-instance safety. Keyframe names include input values so animations restart on slider change.
 - `GembaComparison` — Side-by-side Evidence cards: "Without Gemba Walk" (light, 9 levels, 82% fidelity) vs "With Gemba Walk" (dark bg-stone-900, 9 levels, 100%). Both use `bottomUp` prop.
 - `LayerDiagram` — Horizontal bar chart per org level. Props: `inverted`, `hoverPulse`, `bottomUp`.
@@ -106,20 +117,26 @@ Shared inputs across sections:
 - `calcDepthTax(levels, headcount, fidelityRate)` — signalFidelity, decisionQuality, decisionLatency, driftCost, throughput
 - `calcTriangleGeometry(levels, employees, fidelityRate)` — slope, shapeGap, agilityScore (torque model), inertia, torqueProfile, shape classification
 - `calcRestructuringImpact(levels, employees, fidelityRate)` — deltas for agility, inertia, managerRatio, fidelity
+- `calcThermalLag(levels, decisionCycle)` — totalDelay (d×(L-1)²), marginalLayerCost, lagRatio, per-layer delays
+- `calcDampedResponse(levels, headcount, culturalAgility)` — dampingRatio (ζ), overshoot%, settlingTimeWeeks, regime classification
+- `calcStepResponse(t, zeta, omega0)` — step response x(t) for SVG curve generation (under/critically/over-damped)
 - `fidelityColor(percentage, semantic?)` — Monochrome: stone-300 → stone-900. Semantic mode: ember → stone-700.
 - `metricColor(goodness)` — Maps 0-1 score to stone-700 (best) → ember (worst)
+- `calcLagHealth(totalDelay)` — 0-100 health score: `100 × e^(-delay/100)`. Labels: Live (85+), Fresh (65-84), Aging (40-64), Stale (20-39), Expired (0-19)
+- `calcResponseHealth(zeta, regime)` — 0-100 health score: `100 × e^(-((ζ-1)/0.65)²)`. Dual labels by regime: under-damped = Dialed In/Nimble/Twitchy/Fishtailing/Spinning Out; over-damped = Dialed In/Steady/Lumbering/Dragging/Stuck
+- `healthBandColor(score)` — Maps 0-100 score to 5-tier color: stone-700 (85+), warm-stone (65-84), ember-light (40-64), ember (20-39), red-600 (0-19)
 
 ### Methodology Section
 - Full visible section (not collapsible) with "pokemon card" style metric definition cards in responsive grid
 - `MethodologySection` component wraps card grids + supplementary prose
 - `MethodologyCard` component: category stripe (ember/warm-stone), badge pill, serif title, formula block, description
-- `methodologyMetrics.tsx` data file: 11 typed `MetricDefinition` entries (6 primary, 5 secondary)
+- `methodologyMetrics.tsx` data file: 16 typed `MetricDefinition` entries (6 primary, 5 secondary, 2 lag, 3 response)
 - Per-metric anchor IDs preserved (e.g., `#methodology-signal-fidelity`)
 - Cards link via `infoHref` → shared `scrollToAnchor()` utility → smooth scroll
 
 ### Gotchas
 - **Formulas live ONLY in Methodology** — no formula boxes in other sections
-- **ModelYourOrg + InteractiveFidelityDemo + SimulateSection write** to Zustand (levels) — other components read only
+- **InputStrip + InteractiveFidelityDemo + SimulateSection write** to Zustand (levels) — PillarDashboard reads all 5 inputs
 - **Torque model replaced old variance-based agility** — see docs/TORQUE_MODEL.md
 - **`decisionGravityRatio` still computed** but NOT displayed — replaced by Management Tax (`managerRatio`)
 - **`scrollToAnchor` is shared** (`src/lib/scrollToAnchor.ts`) — used by FlippableMetricCard, MetricCard
@@ -134,11 +151,20 @@ Shared inputs across sections:
 - **SignalCascade dynamic keyframes** — keyframe names MUST include input values (levels + fidelityRate) so browsers restart animations on slider change
 - **SignalCascade `barScale`** — reserves `labelSpace` (48px non-compact) so "100%" text doesn't clip at 1 level
 - **Terminology rule**: "Levels" = structural count (sliders, data), "Layer" = relay/process ("per-layer fidelity", "each layer retains"). Use "relays" when combined with the `levels` variable to avoid confusion.
-- **Input order** in ModelYourOrg, InteractiveFidelityDemo, and SimulateSection: Levels (hero control) → secondary inputs. Levels is always the primary slider with accent-ember styling.
-- **ModelYourOrg is CSS grid** — don't add flex wrappers around columns; items use `lg:col-start-*` / `lg:row-start-*` placement
+- **InputStrip is two rows** — Row 1: flex layout with 3 slider groups separated by vertical dividers. Row 2: company pill buttons + share button below `border-t`. Custom slider CSS class `.custom-slider` in `index.css` — track fill via inline `background` gradient, thumb color via per-slider `<style>` tag.
+- **PillarDashboard is 30/70 CSS grid** — `grid-cols-[3fr_7fr]`. Left column (`order-first`) = 3 PillarCards. Right column (`order-last`) swaps EQ chart ↔ expanded content. Detail panel uses `lg:absolute lg:inset-0` for height fill.
+- **RadarChart is NOT a radar chart** — despite the filename, it renders EQ-style segmented columns. The name is historical. Don't add SVG spider/polygon logic.
+- **PillarCard has a Knob sub-component** — inline SVG rotary knob (270° arc). Uses `score` prop (0-100 number) not `value` (string). Both must be passed from PillarDashboard.
+- **FlippableMetricCards always render in More Metrics** — not gated by `expandedPillar`. The auto-open linkage was removed.
 - **LayerDiagram `bottomUp`** — reverses render order (L0 at bottom). Used by GembaComparison only; CompanyCard uses default top-down.
-- **Shareable URL uses query params** (`?l=9&h=150000&f=82`), NOT hash params — hash is reserved for section anchors
+- **Shareable URL uses query params** (`?l=9&h=150000&f=82&d=3&a=55`), NOT hash params — hash is reserved for section anchors
 - **`applyUrlParams()` runs twice** — once at module scope (first-visit), once via `onRehydrateStorage` (overrides persist rehydration). This is intentional.
+- **Dashboard-first layout in Model Your Org** — InputStrip (two rows: sliders + company pills) at top, 30/70 pillar cards/EQ chart split below. All inputs always visible. Expanding a pillar replaces EQ chart in-place (no page jump). PillarCards persist in left column during expand. Detail panel gets accent left border matching expanded pillar.
+- **`expandedPillar` is NOT persisted** — always start at radar view (all collapsed) on reload.
+- **Health scores are 0-100** — All 3 pillars show unified health scores. Signal Fidelity % IS the score natively. Lag and Response are converted via physics-based decay curves (τ=100, σ=0.65).
+- **Damped response formula deviation** — `calcDampingRatio` uses `sqrt(headcount)` as mass (not `headcount/1000`). Settling time uses `4ζ/ω₀` (not `4/(ζ·ω₀)`). These corrections ensure deep orgs are over-damped and deeper orgs settle slower.
+- **MethodologySection category filtering** — Currently only renders `primary` and `secondary` categories. The 5 new `lag` and `response` metrics exist in `methodologyMetrics.tsx` but won't render until MethodologySection.tsx is updated to handle them.
+- **MethodologyCard badge** — Has a binary `isPrimary` check. New `lag`/`response` cards will show "Secondary" badge. Needs update for correct badge labels.
 - **ScrollPage hash scroll** — 150ms `setTimeout` after mount to scroll to hash anchor. Needed because browser processes hash before React renders DOM.
 - **ShapeSection + ShapeOverlay deleted** — Shape was removed from the section flow. `triangleGeometry.ts` and related types remain (used by ModelYourOrg for Pivot Speed/Shape Gap metrics).
 - **Relay simulator uses no animation** — cards render instantly. Opacity fades via CSS `transition-opacity`. No framer-motion in RelayCard, RelayCascade, or SignalVerdictCard.
@@ -153,12 +179,16 @@ Shared inputs across sections:
 
 ## Testing
 - **Vitest 4** with separate `vitest.config.ts`
-- 124 unit tests across 5 files in `src/lib/__tests__/`:
+- 214 unit tests across 9 files in `src/lib/__tests__/`:
   - `orgMetrics.test.ts` — span, flatness, fidelity, managers, edge cases
   - `depthTax.test.ts` — signal, drift, latency, decision quality, formula verification
   - `triangleGeometry.test.ts` — layer distribution, shape gap, torque/agility, classification, restructuring
   - `fidelityColor.test.ts` — monochrome/semantic modes, clamping, HSL output
   - `signalRelay.test.ts` — transformation rules, cumulative application, truncation logic, scenario data integrity
+  - `thermalLag.test.ts` — quadratic propagation delay, marginal cost, lag ratio, per-layer delays, edge cases
+  - `dampedResponse.test.ts` — damping ratio, overshoot formula, settling time, step response (3 regimes), regime classification
+  - `healthScores.test.ts` — lag health (exponential decay), response health (Gaussian), band colors, dual labels, symmetry, edge cases
+  - `contextHints.test.ts` — slider context hint strings, boundary conditions
 
 ## Commands
 ```bash

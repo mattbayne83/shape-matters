@@ -38,6 +38,67 @@ body {
   text-decoration-line: underline;
 }
 
+/* ── Custom range slider ── */
+input[type="range"].custom-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  height: 20px;
+  border-radius: 2px;
+}
+
+input[type="range"].custom-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  /* Track fill is set via inline background on the input element itself */
+  background: transparent;
+}
+
+input[type="range"].custom-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: transparent;
+  border: none;
+}
+
+input[type="range"].custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid white;
+  margin-top: -5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"].custom-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"].custom-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+input[type="range"].custom-slider:hover::-moz-range-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+input[type="range"].custom-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(224,90,27,0.2), 0 1px 3px rgba(0,0,0,0.15);
+}
+
+input[type="range"].custom-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(224,90,27,0.2), 0 1px 3px rgba(0,0,0,0.15);
+}
+
 @layer utilities {
   .preserve-3d {
     transform-style: preserve-3d;

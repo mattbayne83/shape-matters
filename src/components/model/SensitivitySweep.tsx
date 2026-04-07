@@ -51,10 +51,7 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
   const txMax = xFor(TYPICAL_MAX);
 
   return (
-    <div className="bg-white rounded-xl border border-stone-200 p-4 shadow-sm flex flex-col">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-2">
-        Sensitivity — Round-Trip Fidelity vs. Per-Layer Rate
-      </div>
+    <div className="flex-1 w-full flex items-center justify-center">
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full flex-1" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Sensitivity chart showing ${currentRT.toFixed(1)}% round-trip fidelity at ${currentFidelityRate}% per-layer rate across ${levels} levels`}>
         {/* Typical range shading */}
         <rect

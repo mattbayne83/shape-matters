@@ -19,7 +19,9 @@ Three cost channels of organizational depth:
 - **Interactive Fidelity Demo** — Animated visualization of signal decay across management layers
 - **Message Relay Simulator** — 5 scenario-driven simulations showing how messages distort through org levels with incentive annotations explaining *why* each layer reframes the signal
 - **Company Comparison** — 6 reference companies across 4 archetypes with shape metrics and signal fidelity
-- **Model Your Org** — Unified interactive calculator: 3 sliders (levels, headcount, fidelity rate), depth tax metrics, sensitivity sweep, restructuring impact
+- **Model Your Org** — Three-pillar diagnostic: Fidelity (signal decay), Lag (propagation delay), Response (change dynamics). 5 sliders, progressive disclosure. Explore each pillar's visualization independently.
+- **Thermal Lag Model** — Fourier-inspired quadratic delay model showing how org depth compounds propagation time
+- **Damped Response Model** — Spring-mass-damper oscillator showing whether your org overshoots, stalls, or lands after a pivot
 - **Gemba Walk Analysis** — Illustrates direct observation vs. relay chain information loss
 
 ## Reference Companies (6)
@@ -69,7 +71,7 @@ npm run preview   # Preview production build locally
 src/
   components/
     layout/       SectionNav — anchor-based navigation bar
-    model/        21 visualization & interaction components
+    model/        26 visualization & interaction components
     ui/           Prose, FadeIn, GeometricHero
   pages/
     ScrollPage    Single-page layout with all sections
@@ -77,17 +79,19 @@ src/
     orgMetrics    Core calculations (span, flatness, fidelity, managers)
     depthTax      Depth tax model (signal, drift, decision costs)
     triangleGeometry  Shape gap, slope, gravity, agility calculations
+    thermalLag    Thermal lag model (quadratic propagation delay, marginal cost)
+    dampedResponse Damped oscillator model (damping ratio, overshoot, settling time, step response)
     fidelityColor Gradient mapping utility (stone monochrome + ember semantic)
     styles        Tailwind class constants
     scrollToAnchor Smooth scroll utility for metric → methodology links
-    __tests__/    124 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor, signalRelay)
+    __tests__/    164 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor, signalRelay, thermalLag, dampedResponse)
   store/
-    useCompanyStore  Zustand persist store (levels, headcount, fidelityRate)
+    useCompanyStore  Zustand persist store (levels, headcount, fidelityRate, decisionCycle, culturalAgility)
   data/
-    referenceCompanies  6 curated reference companies
+    referenceCompanies  6 curated reference companies (with decisionCycle + culturalAgility)
     scenarios       5 relay simulation scenarios (safety, customer, innovation, strategy, operations)
   types/
-    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, Scenario, RelayLevel
+    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, ThermalLagResult, DampedResponseResult, Scenario, RelayLevel
 ```
 
 ## Architecture

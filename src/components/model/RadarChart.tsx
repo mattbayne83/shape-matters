@@ -1,126 +1,93 @@
 import { healthBandColor } from '../../lib/healthScores';
 
 interface RadarChartProps {
-  fidelity: number;  // 0-100
-  lagHealth: number; // 0-100
-  responseHealth: number; // 0-100
+  fidelity: number;
+  lagHealth: number;
+  responseHealth: number;
 }
 
-const SIZE = 220;
-const CX = SIZE / 2;
-const CY = SIZE / 2 + 6; // slight downward shift so top label has room
-const RADIUS = 80;
+const PILLARS = [
+  { key: 'fidelity', label: 'Fidelity' },
+  { key: 'lag', label: 'Lag' },
+  { key: 'response', label: 'Response' },
+] as const;
 
-// Axes: top (Fidelity), bottom-left (Lag), bottom-right (Response)
-// Angles: -90° (top), 150° (bottom-left), 30° (bottom-right)
-const AXES = [
-  { angle: -90, label: 'FIDELITY' },
-  { angle: 150, label: 'LAG' },
-  { angle: 30, label: 'RESPONSE' },
+const SEGMENTS = 10;
+const SEG_GAP = 3;
+
+// Per-segment color ramp: green at bottom → amber → ember → red at top
+// This mimics a classic VU/EQ meter
+const SEG_COLORS = [
+  '#44403c', // 0-10   stone-700 (baseline)
+  '#44403c', // 10-20  stone-700
+  '#57534e', // 20-30  stone-600
+  '#78716c', // 30-40  stone-500
+  '#A8967A', // 40-50  warm-stone
+  '#A8967A', // 50-60  warm-stone
+  '#F4A261', // 60-70  ember-light
+  '#F4A261', // 70-80  ember-light
+  '#E05A1B', // 80-90  ember
+  '#dc2626', // 90-100 red-600 (redline)
 ];
-
-function polarToXY(angleDeg: number, r: number): [number, number] {
-  const rad = (angleDeg * Math.PI) / 180;
-  return [CX + r * Math.cos(rad), CY + r * Math.sin(rad)];
-}
-
-function gridTriangle(level: number): string {
-  const r = (level / 100) * RADIUS;
-  return AXES.map(({ angle }) => polarToXY(angle, r).join(',')).join(' ');
-}
 
 export function RadarChart({ fidelity, lagHealth, responseHealth }: RadarChartProps) {
   const scores = [fidelity, lagHealth, responseHealth];
-  const dataPoints = scores.map((s, i) => polarToXY(AXES[i].angle, (s / 100) * RADIUS));
-  const dataPolygon = dataPoints.map(([x, y]) => `${x},${y}`).join(' ');
 
   return (
-    <div className="flex justify-center">
-      <svg
-        width={SIZE}
-        height={SIZE}
-        viewBox={`0 0 ${SIZE} ${SIZE}`}
-        className="select-none"
-      >
-        {/* Concentric grid triangles */}
-        {[20, 40, 60, 80, 100].map((level) => (
-          <polygon
-            key={level}
-            points={gridTriangle(level)}
-            fill="none"
-            stroke="#e7e5e4"
-            strokeWidth={level === 100 ? 1.5 : 0.75}
-          />
-        ))}
+    <div className="flex items-end justify-center gap-10 w-full h-full px-8 py-6 relative">
+      {/* Scale markers — left edge */}
+      <div className="absolute left-2 flex flex-col justify-between text-[8px] font-mono text-stone-300 select-none" style={{ top: 44, bottom: 36 }}>
+        <span>100</span>
+        <span>0</span>
+      </div>
 
-        {/* Axis lines */}
-        {AXES.map(({ angle, label }) => {
-          const [x, y] = polarToXY(angle, RADIUS);
-          return (
-            <line
-              key={label}
-              x1={CX}
-              y1={CY}
-              x2={x}
-              y2={y}
-              stroke="#d6d3d1"
-              strokeWidth={1}
-            />
-          );
-        })}
+      {PILLARS.map((pillar, i) => {
+        const score = scores[i];
+        const headlineColor = healthBandColor(score);
+        const filledCount = Math.round(score / 10);
 
-        {/* Data fill */}
-        <polygon
-          points={dataPolygon}
-          fill="#E05A1B"
-          fillOpacity={0.15}
-          stroke="#E05A1B"
-          strokeWidth={2}
-        />
+        return (
+          <div key={pillar.key} className="flex flex-col items-center gap-3 flex-1 max-w-[100px]">
+            {/* Score */}
+            <span
+              className="text-2xl font-extrabold font-mono tabular-nums leading-none"
+              style={{ color: headlineColor }}
+            >
+              {score}
+            </span>
 
-        {/* Data points */}
-        {dataPoints.map(([x, y], i) => (
-          <circle
-            key={i}
-            cx={x}
-            cy={y}
-            r={5}
-            fill={healthBandColor(scores[i])}
-            stroke="white"
-            strokeWidth={2}
-          />
-        ))}
+            {/* EQ column */}
+            <div
+              className="w-full flex flex-col-reverse"
+              style={{ gap: SEG_GAP }}
+            >
+              {Array.from({ length: SEGMENTS }, (_, seg) => {
+                const isFilled = seg < filledCount;
+                const isTop = seg === filledCount - 1 && filledCount > 0;
 
-        {/* Axis labels with scores */}
-        {AXES.map(({ angle, label }, i) => {
-          const labelR = RADIUS + 24;
-          const [lx, ly] = polarToXY(angle, labelR);
-          return (
-            <g key={label}>
-              <text
-                x={lx}
-                y={ly - 5}
-                textAnchor="middle"
-                dominantBaseline="auto"
-                className="fill-stone-900 text-[15px] font-bold"
-                style={{ fontFamily: 'Inter, system-ui, sans-serif', fontVariantNumeric: 'tabular-nums' }}
-              >
-                {scores[i]}
-              </text>
-              <text
-                x={lx}
-                y={ly + 7}
-                textAnchor="middle"
-                dominantBaseline="auto"
-                className="fill-stone-500 text-[9px] font-semibold"
-                style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '0.1em' }}
-              >
-                {label}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+                return (
+                  <div
+                    key={seg}
+                    className="w-full transition-all duration-300"
+                    style={{
+                      height: 14,
+                      borderRadius: 3,
+                      backgroundColor: isFilled ? SEG_COLORS[seg] : '#f5f5f4',
+                      opacity: isFilled ? 1 : 0.4,
+                      boxShadow: isTop ? `0 0 8px ${SEG_COLORS[seg]}55` : 'none',
+                    }}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Label */}
+            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
+              {pillar.label}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

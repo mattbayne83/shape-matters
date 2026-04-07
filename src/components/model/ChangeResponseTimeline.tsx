@@ -122,8 +122,8 @@ export function ChangeResponseTimeline({
     : regime.regime === 'under-damped' ? 'rgba(220,38,38,0.06)' : 'rgba(168,162,158,0.08)';
 
   return (
-    <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-5 lg:p-6">
-      <div className="flex items-start justify-between mb-4">
+    <div className="flex-1 w-full flex flex-col justify-center min-h-0">
+      <div className="flex items-start justify-between mb-2">
         <div>
           <h3 className="text-[11px] font-bold text-stone-500 uppercase tracking-wide mb-1">
             Change Response Timeline

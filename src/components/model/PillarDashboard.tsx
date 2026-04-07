@@ -16,6 +16,7 @@ import { FlippableMetricCard } from './FlippableMetricCard';
 import { PropagationDelay } from './PropagationDelay';
 import { ChangeResponseTimeline } from './ChangeResponseTimeline';
 import { ThreeFutures } from './ThreeFutures';
+import { RadarChart } from './RadarChart';
 
 export function PillarDashboard() {
   const levels = useCompanyStore((s) => s.levels);
@@ -91,6 +92,13 @@ export function PillarDashboard() {
 
   return (
     <div className="flex flex-col gap-6" ref={containerRef}>
+      {/* ── Radar summary ── */}
+      <RadarChart
+        fidelity={fidelityScore}
+        lagHealth={lagHealth.score}
+        responseHealth={responseHealth.score}
+      />
+
       {/* ── Summary cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <PillarCard

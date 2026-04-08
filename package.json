@@ -12,7 +12,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "eval": "bash evals/orchestrator.sh",
+    "eval:models": "tsx evals/helpers/run-models.ts",
+    "eval:sweep": "tsx evals/helpers/sweep.ts"
   },
   "dependencies": {
     "framer-motion": "^12.35.0",
@@ -34,6 +37,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "tailwindcss": "^4.2.1",
+    "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1",

@@ -5,62 +5,45 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-04-08
+
 ### Added
+- **Recursive autoresearch eval system** (`evals/`) — CLI-based research loop for model exploration and hypothesis testing
+  - `evals/orchestrator.sh` — main loop: assembles prompt, calls `claude -p`, updates state per cycle
+  - `evals/helpers/run-models.ts` — CLI bridge to all 9 org-shape pure functions (JSON in, JSON out)
+  - `evals/helpers/sweep.ts` — parameter sweep runner (markdown table or JSON, `--vary` + `--fixed` flags)
+  - `evals/prompts/system-prompt.md` — research agent identity, scoring rubric, journal template
+  - `evals/journal/` — per-cycle research journals (248-400+ lines each)
+  - `evals/insights.md` — accumulated findings across cycles (auto-extracted Key Findings)
+  - `evals/config.json` — cycle counter, enrichment level (`sandbox` → `validated` → `full`)
+- **npm eval scripts**: `npm run eval`, `npm run eval:models`, `npm run eval:sweep`
+- **tsx** added as dev dependency (required for TypeScript CLI helpers)
+- **4 research cycles completed** (cycles 001-004) — 18 accumulated insights including:
+  - Minimum viable fidelity rate formula: `0.05^(1/(2*(L-1)))`
+  - Signal half-life formula: `h = log(2)/|log(r)|` (3.49 layers at 82%)
+  - Effective Depth Ratio (EDR) metric: effective_layers/total_layers
+  - Structural speed limit: `L_max = floor(1 + sqrt(16.25/d))`
+  - McKinsey "3 layers for agile" independently validates the model's speed limit at d≥2
+
+### Changed
 - **Torque Profile visualization** — horizontal bar chart showing pivot efficiency by origin layer when Agility pillar is expanded. CEO bar in ember, others in warm-stone.
 - **Slider tick marks** — reference points on Fidelity/Layer (Low trust 70%, Typical 82%, High trust 93%) and Cycle Time (Startup 2d, Tech 4d, Enterprise 7d)
 - **Pillar card "/100" suffix** — health scores now show e.g. "23/100" to anchor the scale for users
-- **Explore edge strip** — PillarCard "Explore >" replaced with animated chevron on a distinct right-edge strip
-- **Three Pillars: Lag + Response models** — two new physics-based models alongside existing Signal Fidelity
-  - **Thermal Lag** (Pillar 2): Fourier-inspired quadratic propagation delay model (`thermalLag.ts`). Delay scales with L² — removing 1 layer from a 6-level org saves 27 days, not 3.
-  - **Damped Response** (Pillar 3): Spring-mass-damper oscillator model (`dampedResponse.ts`). Classifies orgs as under-damped (overshoots), critically-damped (optimal), or over-damped (sluggish).
-- **Health Scores** — unified 0-100 scoring for all 3 pillars (`healthScores.ts`)
-  - **Lag Health**: exponential decay `100 × e^(-delay/100)` with "Signal Freshness" labels (Live → Expired)
-  - **Response Health**: Gaussian `100 × e^(-((ζ-1)/0.65)²)` with dual "Vehicle Handling" labels (under-damped: Nimble/Twitchy/Fishtailing; over-damped: Steady/Lumbering/Dragging)
-  - 5-tier color banding shared across all pillars: stone-700, warm-stone, ember-light, ember, red-600
-- **EQ-style health chart** — 3 vertical segmented columns (Fidelity, Lag, Response) with VU meter color ramp (stone-700 → red-600), top-segment glow, 0/100 scale markers
-- **Rotary knob indicators** on PillarCards — 270° SVG arc with needle showing 0-100 health score
-- **Company preset pills** — 6 clickable company buttons replacing the dropdown select, with active state (dark pill)
-- **Share button with feedback** — Share2 icon + "Copied" flash (green) replacing ambiguous link icon
-- **Custom slider styling** — CSS `.custom-slider` class: track fill gradient, 14px thumbs with white border + shadow, hover scale, focus-visible ring
-- **Visual bridge** — expanded pillar's accent color extends as 3px left border on the detail panel
-- **Dashboard-first layout** for Model Your Org:
-  - **InputStrip** — two-row layout: 5 sliders (grouped with dividers) + company pills + share
-  - **30/70 split** — stacked pillar cards (left) + EQ chart / detail content (right)
-  - **In-place expand** — clicking a pillar replaces EQ chart with detailed viz (no page jump)
-  - **Explore/Back CTAs** — "Explore >" / "< Back" with correct directional chevrons
-- **PropagationDelay** visualization: horizontal bars with quadratic acceleration
-- 2 new Zustand store inputs: `decisionCycle` (days/layer), `culturalAgility` (0-100)
-- URL params extended: `&d=` (decision cycle), `&a=` (cultural agility)
-- `decisionCycle` and `culturalAgility` fields on reference companies
-- 5 new methodology metric definitions (2 Lag, 3 Response)
-- 76 new unit tests: thermalLag, dampedResponse, healthScores, contextHints (total: 178)
-
-### Changed
 - **Agility pillar model replaced** — damped harmonic oscillator removed (physics inverted for flat orgs); replaced by torque/fidelity model (Pivot Speed). agilityScore × 100 = health score. Flat orgs now correctly score ~97, deep bureaucracies ~27.
-- **Input sliders reduced from 5 to 4** — Adaptability slider removed (only fed the deleted oscillator). Cycle Time retained for Latency pillar.
-- **Slider labels renamed** — Levels → Depth, Size → Headcount, Fidelity → Fidelity/Layer, Cycle → Cycle Time, Agility → removed
+- **Input sliders reduced from 5 to 4** — Adaptability slider removed. Cycle Time retained for Latency pillar.
+- **Dashboard-first layout** for Model Your Org: InputStrip (two rows) → 30/70 pillar cards/EQ chart split
 - **Terminology standardized** — "Depth" for structural count in UI, "Layer" for relay process, "Levels" for code variables only
-- **Section title updated** — "See Your Organization's Shape" → "How Much Signal Survives Your Structure?"
-- **Methodology cards updated** — 3 oscillator metrics (Damping Ratio, Overshoot, Settling Time) replaced with 2 torque metrics (Pivot Speed, Torque Profile)
-- **Model Your Org** restructured from hero slider + grouped cards to dashboard-first mixer layout
-- PillarCard headlines now show 0-100 health scores (colored by band) instead of raw values; raw values moved to subtext
-- PillarCard CTA changed from "← Details / → Back" to "Explore > / < Back" with hover bg-stone-50/50
-- Fidelity metric cards (6 FlippableMetricCards) always visible in More Metrics section, not gated by fidelity expand
-- ThreeFutures compacted: tighter padding, inline title + zeta range, smaller text for fixed-height container
-- PropagationDelay removed redundant card wrapper (parent container provides the card)
-- MetricDefinition category type extended: `'primary' | 'secondary' | 'lag' | 'response'`
+- EQ-style health chart (3 segmented columns) replaces radar/spider SVG
+- Rotary knob indicators on PillarCards replace progress bars
+- Company preset pills replace dropdown select
+- `decisionCycle` field on reference companies (removed `culturalAgility`)
+- 5 new methodology metric definitions (Lag + torque models)
+- 76 new unit tests: thermalLag, healthScores, contextHints (total: 178)
 
 ### Removed
-- **Damped harmonic oscillator** — `dampedResponse.ts`, `dampedResponse.test.ts`, `ChangeResponseTimeline.tsx`, `ThreeFutures.tsx` deleted
-- **`culturalAgility` store field** — removed from Zustand store, URL params (`&a=`), Company type, and all 6 reference companies
-- **`calcResponseHealth`** — removed from healthScores.ts (regime-specific labels no longer needed)
-- **Adaptability slider** — removed from InputStrip
-- Hero Levels slider (absorbed into InputStrip as one of 5 equal sliders)
-- Structure/Dynamics grouped input cards (replaced by two-row InputStrip with dividers)
-- "Advanced inputs" desktop toggle (all inputs always visible)
-- Radar/spider SVG chart (replaced by EQ segmented columns)
-- Preset dropdown select (replaced by pill buttons)
-- Progress bars on PillarCards (replaced by rotary knobs)
+- **Damped harmonic oscillator** — `dampedResponse.ts`, `ChangeResponseTimeline.tsx`, `ThreeFutures.tsx` deleted
+- **`culturalAgility` store field** — removed from Zustand store, URL params, Company type
+- **`calcResponseHealth`** — removed from healthScores.ts
 
 ## [1.1.0] — 2026-04-05
 

@@ -1,6 +1,6 @@
 {
-  "current_cycle": 4,
-  "enrichment_level": "sandbox",
+  "current_cycle": 5,
+  "enrichment_level": "validated",
   "reference_companies": [
     "valve",
     "nucor",

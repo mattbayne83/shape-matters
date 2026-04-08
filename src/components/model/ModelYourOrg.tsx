@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCompanyStore } from '../../store/useCompanyStore';
 import { calcOrgMetrics } from '../../lib/orgMetrics';
 import { calcDepthTax } from '../../lib/depthTax';
-import { calcTriangleGeometry, calcRestructuringImpact } from '../../lib/triangleGeometry';
-import { fidelityColor, metricColor } from '../../lib/fidelityColor';
+import { calcRestructuringImpact } from '../../lib/triangleGeometry';
+import { metricColor } from '../../lib/fidelityColor';
 import { InputStrip } from './InputStrip';
 import { MetricCard } from './MetricCard';
 import { FlippableMetricCard } from './FlippableMetricCard';
@@ -18,7 +18,6 @@ export function ModelYourOrg() {
 
   const tax = useMemo(() => calcDepthTax(levels, headcount, fidelityRate), [levels, headcount, fidelityRate]);
   const m = useMemo(() => calcOrgMetrics(levels, headcount, fidelityRate), [levels, headcount, fidelityRate]);
-  const geo = useMemo(() => calcTriangleGeometry(levels, headcount, fidelityRate), [levels, headcount, fidelityRate]);
   const restructure = useMemo(() => calcRestructuringImpact(levels, headcount, fidelityRate), [levels, headcount, fidelityRate]);
 
   return (
@@ -40,39 +39,39 @@ export function ModelYourOrg() {
           />
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] font-bold text-stone-700 uppercase tracking-wide bg-stone-100/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-stone-200/50">What if</span>
+              <span className="text-[10px] font-bold text-stone-700 uppercase tracking-wide bg-stone-100/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-stone-200/50">What If</span>
               <span className="text-[11px] text-stone-600 font-medium">
-                You removed a level ({restructure.currentLevels} → {restructure.proposedLevels}) with the same {headcount.toLocaleString()} employees
+                You reduced depth by one ({restructure.currentLevels} → {restructure.proposedLevels}) with the same {headcount.toLocaleString()} employees
               </span>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
-                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Pivot Speed</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold tracking-wide mb-1">Pivot Speed</div>
                 <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                   +{(restructure.agilityDelta * 100).toFixed(1)}%
                 </div>
-                <div className="text-[10px] text-stone-400 font-medium">faster pivots</div>
+                <div className="text-[10px] text-stone-400 font-medium">Faster pivots</div>
               </div>
               <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
-                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Inertia</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold tracking-wide mb-1">Inertia</div>
                 <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                   -{restructure.inertiaReduction.toFixed(0)}%
                 </div>
-                <div className="text-[10px] text-stone-400 font-medium">less rigidity</div>
+                <div className="text-[10px] text-stone-400 font-medium">Less rigidity</div>
               </div>
               <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
-                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Mgmt Tax</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold tracking-wide mb-1">Management Tax</div>
                 <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                   {restructure.managerRatioDelta < 0 ? '' : '+'}{restructure.managerRatioDelta.toFixed(1)}
                 </div>
-                <div className="text-[10px] text-stone-400 font-medium">{restructure.managerRatioDelta < 0 ? 'percentage points · leaner' : 'percentage points · more overhead'}</div>
+                <div className="text-[10px] text-stone-400 font-medium">{restructure.managerRatioDelta < 0 ? 'Points · leaner' : 'Points · more overhead'}</div>
               </div>
               <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
-                <div className="text-[10px] text-stone-500 uppercase font-semibold mb-1">Signal Fidelity</div>
+                <div className="text-[10px] text-stone-500 uppercase font-semibold tracking-wide mb-1">Fidelity</div>
                 <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">
                   +{restructure.fidelityGain.toFixed(1)}
                 </div>
-                <div className="text-[10px] text-stone-400 font-medium">percentage points · better signal</div>
+                <div className="text-[10px] text-stone-400 font-medium">Points · better signal</div>
               </div>
             </div>
           </div>
@@ -104,16 +103,7 @@ export function ModelYourOrg() {
               className="overflow-hidden"
             >
               <div className="flex flex-col gap-4 pt-3 pb-2">
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                  <FlippableMetricCard
-                    label="Signal Fidelity"
-                    value={`${tax.signalFidelity.toFixed(1)}%`}
-                    sub="one-way to top"
-                    color={fidelityColor(tax.signalFidelity, true)}
-                    infoHref="#methodology-signal-fidelity"
-                    minOut={0} maxOut={100} currentOut={tax.signalFidelity}
-                    inverseBest={false} bestLabel="Preserved" worstLabel="Distorted"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-5 gap-3">
                   <FlippableMetricCard
                     label="Decision Quality"
                     value={`${(tax.decisionQuality * 100).toFixed(1)}%`}
@@ -124,28 +114,9 @@ export function ModelYourOrg() {
                     inverseBest={false} bestLabel="High quality" worstLabel="Degraded"
                   />
                   <FlippableMetricCard
-                    label="Pivot Speed"
-                    value={geo.agilityScore.toFixed(2)}
-                    sub={geo.agilityScore > 0.5 ? 'Strong reach — directives land' : geo.agilityScore > 0.25 ? 'Moderate reach — signal fades' : 'Weak reach — directives lost'}
-                    color={metricColor(geo.agilityScore)}
-                    infoHref="#methodology-pivot-speed"
-                    minOut={0} maxOut={1} currentOut={geo.agilityScore}
-                    inverseBest={false} bestLabel="Agile" worstLabel="Rigid"
-                  />
-                  <FlippableMetricCard
-                    label="Decision Latency"
-                    value={tax.decisionLatency}
-                    unit=" days"
-                    sub={`${Math.round(tax.decisionsPerMonth).toLocaleString()} decisions/month`}
-                    color={metricColor(1 - Math.min((tax.decisionLatency - 3) / 42, 1))}
-                    infoHref="#methodology-decision-latency"
-                    minOut={0} maxOut={60} currentOut={tax.decisionLatency}
-                    inverseBest={true} bestLabel="Instant" worstLabel="Delayed"
-                  />
-                  <FlippableMetricCard
                     label="Management Tax"
                     value={`${m.managerRatio.toFixed(1)}%`}
-                    sub={m.managerRatio < 15 ? 'Lean — minimal overhead' : m.managerRatio < 30 ? 'Moderate levels of management' : 'Heavy — half the org manages'}
+                    sub={m.managerRatio < 15 ? 'Lean — minimal overhead' : m.managerRatio < 30 ? 'Moderate management overhead' : 'Heavy — half the org manages'}
                     color={metricColor(1 - Math.min(m.managerRatio / 50, 1))}
                     infoHref="#methodology-management-tax"
                     minOut={0} maxOut={50} currentOut={m.managerRatio}
@@ -160,12 +131,7 @@ export function ModelYourOrg() {
                     minOut={0} maxOut={100} currentOut={100 - tax.ninetyDayAccuracy}
                     inverseBest={true} bestLabel="Accurate" worstLabel="Drifted"
                   />
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <MetricCard label="Span of Control" value={m.avgSpan.toFixed(1)} sub="avg reports per manager" accent={metricColor(Math.min((m.avgSpan - 2) / 10, 1))} infoHref="#methodology-span-of-control" />
-                  <MetricCard label="Shape Gap" value={`${(geo.totalShapeGap * 100).toFixed(1)}%`} sub="triangle vs. actual" accent={metricColor(1 - Math.min(geo.totalShapeGap / 0.3, 1))} infoHref="#methodology-shape-gap" />
-                  <MetricCard label="Throughput" value={Math.round(tax.decisionsPerMonth).toLocaleString()} unit="/month" sub="at this org size" accent="#57534e" infoHref="#methodology-throughput" />
-                  <MetricCard label="Flatness Index" value={m.flatnessIndex.toFixed(2)} sub="Higher = flatter" accent="#57534e" infoHref="#methodology-flatness-index" />
                   <MetricCard label="Annual Comm Loss" value={`$${(m.annualCommLoss / 1000000).toFixed(1)}`} unit="M" sub="Ineffective comms cost" accent="#E05A1B" infoHref="#methodology-annual-comm-loss" />
                 </div>
               </div>

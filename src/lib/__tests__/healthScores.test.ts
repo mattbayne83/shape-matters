@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcLagHealth, calcResponseHealth, healthBandColor } from '../healthScores';
+import { calcLagHealth, healthBandColor } from '../healthScores';
 
 describe('calcLagHealth', () => {
   it('0 delay → score 100 (perfect)', () => {
@@ -41,64 +41,6 @@ describe('calcLagHealth', () => {
 
   it('negative delay clamped to 0 → score 100', () => {
     expect(calcLagHealth(-10).score).toBe(100);
-  });
-});
-
-describe('calcResponseHealth', () => {
-  it('ζ=1.0 (critically damped) → score 100 (Dialed In)', () => {
-    const result = calcResponseHealth(1.0, 'critically-damped');
-    expect(result.score).toBe(100);
-    expect(result.label).toBe('Dialed In');
-    expect(result.color).toBe('#44403c');
-  });
-
-  it('default org: ζ=0.63 under-damped → score 72 (Nimble)', () => {
-    const result = calcResponseHealth(0.63, 'under-damped');
-    expect(result.score).toBe(72);
-    expect(result.label).toBe('Nimble');
-  });
-
-  it('ζ=0.30 under-damped → score 31 (Fishtailing)', () => {
-    const result = calcResponseHealth(0.30, 'under-damped');
-    expect(result.score).toBe(31);
-    expect(result.label).toBe('Fishtailing');
-  });
-
-  it('ζ=0.50 under-damped → score 55 (Twitchy)', () => {
-    const result = calcResponseHealth(0.50, 'under-damped');
-    expect(result.score).toBe(55);
-    expect(result.label).toBe('Twitchy');
-  });
-
-  it('ζ=1.30 over-damped → score 81 (Steady)', () => {
-    const result = calcResponseHealth(1.30, 'over-damped');
-    expect(result.score).toBe(81);
-    expect(result.label).toBe('Steady');
-  });
-
-  it('ζ=1.50 over-damped → score 55 (Lumbering)', () => {
-    const result = calcResponseHealth(1.50, 'over-damped');
-    expect(result.score).toBe(55);
-    expect(result.label).toBe('Lumbering');
-  });
-
-  it('ζ=2.0 over-damped → score 9 (Stuck)', () => {
-    const result = calcResponseHealth(2.0, 'over-damped');
-    expect(result.score).toBe(9);
-    expect(result.label).toBe('Stuck');
-  });
-
-  it('symmetric: ζ=0.5 and ζ=1.5 produce the same score', () => {
-    const under = calcResponseHealth(0.5, 'under-damped');
-    const over = calcResponseHealth(1.5, 'over-damped');
-    expect(under.score).toBe(over.score);
-  });
-
-  it('under vs over-damped at same score get different labels', () => {
-    const under = calcResponseHealth(0.5, 'under-damped');
-    const over = calcResponseHealth(1.5, 'over-damped');
-    expect(under.label).toBe('Twitchy');
-    expect(over.label).toBe('Lumbering');
   });
 });
 

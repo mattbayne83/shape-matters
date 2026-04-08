@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Council Report — Agility Model Review</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fafaf9; color: #1c1917; line-height: 1.6; padding: 2rem; max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.25rem; font-weight: 700; margin: 2rem 0 0.75rem; color: #44403c; border-bottom: 2px solid #e7e5e4; padding-bottom: 0.5rem; }
+  h3 { font-size: 1rem; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+  p, li { font-size: 0.9375rem; color: #44403c; }
+  .meta { font-size: 0.8125rem; color: #a8a29e; margin-bottom: 2rem; }
+  .question-box { background: #fff; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+  .question-box .label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #a8a29e; margin-bottom: 0.5rem; }
+  .bug-demo { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 0.75rem 1rem; margin: 0.75rem 0; font-family: monospace; font-size: 0.8125rem; line-height: 1.8; }
+  .bug-demo .bad { color: #dc2626; font-weight: 700; }
+  .bug-demo .good { color: #16a34a; font-weight: 700; }
+  .verdict-box { background: #fff; border: 2px solid #dc2626; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+  .verdict-box .badge { display: inline-block; background: #dc2626; color: #fff; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 1rem; }
+  .rec-title { font-size: 1.25rem; font-weight: 800; color: #1c1917; margin-bottom: 0.5rem; }
+  .rec-body { font-size: 0.9375rem; color: #57534e; margin-bottom: 1rem; }
+  .rec-body strong { color: #1c1917; }
+  .agreement-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .agree-card, .clash-card { background: #fff; border: 1px solid #e7e5e4; border-radius: 10px; padding: 1rem; }
+  .agree-card { border-left: 3px solid #16a34a; }
+  .clash-card { border-left: 3px solid #d97706; }
+  .blind-card { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 1rem; margin: 0.5rem 0; font-size: 0.875rem; }
+  details { background: #fff; border: 1px solid #e7e5e4; border-radius: 10px; overflow: hidden; }
+  details + details { margin-top: 0.5rem; }
+  summary { padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  summary:hover { background: #fafaf9; }
+  summary .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .advisor-content { padding: 0 1rem 1rem; font-size: 0.875rem; color: #57534e; }
+  .advisor-content p { margin-bottom: 0.5rem; }
+  .advisor-content strong { color: #1c1917; }
+  .vote-bar { display: flex; gap: 0.25rem; margin: 1.5rem 0; }
+  .vote-bar .segment { flex: 1; height: 6px; border-radius: 3px; }
+  .vote-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: #a8a29e; margin-top: -0.75rem; margin-bottom: 1rem; }
+  .first-step { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1rem; }
+  .first-step .label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #16a34a; margin-bottom: 0.5rem; }
+  ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+  li { margin-bottom: 0.35rem; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e7e5e4; font-size: 0.75rem; color: #a8a29e; text-align: center; }
+  code { background: #f5f5f4; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.8125rem; }
+  @media (max-width: 640px) { .agreement-grid { grid-template-columns: 1fr; } body { padding: 1rem; } }
+</style>
+</head>
+<body>
+
+<h1>LLM Council Report</h1>
+<div class="meta">Agility Model Review — April 7, 2026 &bull; org-shape / Shape Matters</div>
+
+<div class="question-box">
+  <div class="label">The Bug</div>
+  <p>The Agility pillar uses a damped harmonic oscillator (<code>&zeta; = levels &times; DPL &times; &radic;headcount / 2k</code>). The physics are inverted: flat orgs score terribly, sluggish deep orgs score perfectly.</p>
+  <div class="bug-demo">
+    L=2, H=50, A=55 &rarr; &zeta;=0.02 &rarr; health=<span class="bad">10 "Spinning Out"</span> &larr; WRONG<br>
+    L=2, H=200, A=55 &rarr; &zeta;=0.04 &rarr; health=<span class="bad">11</span> &larr; WRONG<br>
+    L=3, H=5K, A=20 &rarr; &zeta;=0.87 &rarr; health=<span class="bad">96 "Dialed In"</span> &larr; WRONG (low agility scores high)<br>
+    <br>
+    Meanwhile, Pivot Speed (torque model) correctly scores flat orgs near <span class="good">1.0</span>
+  </div>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict-box">
+  <div class="badge">Council Verdict: Kill the Oscillator</div>
+  <div class="rec-title">Delete the damped harmonic oscillator. Promote Pivot Speed.</div>
+  <div class="rec-body">
+    The oscillator's physics are <strong>directionally inverted</strong> &mdash; less mass should mean faster settling, but the formula says less mass = more oscillation. This is not a calibration problem. No clamp, feedback term, or extension can fix a model whose core assumption contradicts organizational reality.
+  </div>
+  <div class="rec-body">
+    The torque/fidelity model (Pivot Speed) already produces correct scores. <strong>Promote it to be the sole third-pillar metric.</strong> Rename the pillar to something concrete &mdash; "Responsiveness" or "Change Response."
+  </div>
+  <div class="rec-body" style="font-size: 0.8125rem; color: #78716c;">
+    Do not clamp &zeta;. Do not add correction terms. Do not expand to coupled oscillators. Delete the code.
+  </div>
+
+  <div class="first-step">
+    <div class="label">The one thing to do first</div>
+    <p style="font-size: 0.875rem;">Check whether Agility and Pivot Speed use the same input variables. If they do, no model will make them independent &mdash; the answer is definitively one pillar, not two. Run the correlation before writing any code.</p>
+  </div>
+</div>
+
+<!-- AGREEMENT -->
+<h2>Advisor Alignment</h2>
+
+<p style="font-size: 0.8125rem; color: #78716c; margin-bottom: 0.5rem;">Peer review votes for strongest response (5 of 5 &rarr; The Outsider)</p>
+<div class="vote-bar">
+  <div class="segment" style="background: #0ea5e9;"></div>
+  <div class="segment" style="background: #0ea5e9;"></div>
+  <div class="segment" style="background: #0ea5e9;"></div>
+  <div class="segment" style="background: #0ea5e9;"></div>
+  <div class="segment" style="background: #0ea5e9;"></div>
+</div>
+<div class="vote-labels"><span>All 5 reviewers chose The Outsider's response</span><span>5/5</span></div>
+
+<div class="agreement-grid">
+  <div class="agree-card">
+    <h3 style="font-size: 0.8125rem; margin: 0 0 0.5rem;">&#10003; Universal Agreement</h3>
+    <ul style="font-size: 0.8125rem;">
+      <li>The oscillator physics are inverted &mdash; less mass should = faster settling, not more ringing</li>
+      <li>Clamping or patching cannot fix a directional error</li>
+      <li>"Agility" and "Pivot Speed" are indistinguishable to end users</li>
+      <li>The torque model already produces correct results</li>
+    </ul>
+  </div>
+  <div class="clash-card">
+    <h3 style="font-size: 0.8125rem; margin: 0 0 0.5rem;">&#9878; Key Tension</h3>
+    <ul style="font-size: 0.8125rem;">
+      <li><strong>Kill vs. Expand:</strong> 4 advisors say delete the oscillator entirely. The Expansionist says extend it into a coupled network. Peer reviews unanimously rejected the expansion &mdash; complexity multiplies failure modes.</li>
+      <li><strong>Ship now vs. Fix right:</strong> Executor wants a 10-min clamp. Council says clamping masks the inversion and destroys resolution for small orgs.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- BLIND SPOTS -->
+<h2>Blind Spots Caught in Peer Review</h2>
+
+<div class="blind-card">
+  <strong>1. Asymmetric health function needed.</strong> The Gaussian treats overdamped (slow but stable) and underdamped (chaotic) as equally bad. Organizationally, overdamped is far less dangerous. Any replacement must score asymmetrically.
+</div>
+<div class="blind-card">
+  <strong>2. No empirical validation.</strong> Nobody asked whether real org data supports any oscillator model. Model selection should follow data, not metaphor preference.
+</div>
+<div class="blind-card">
+  <strong>3. "Agility" is undefined for end users.</strong> If you can't explain it in one sentence to a VP, the model doesn't matter. Define the behavior before choosing the math.
+</div>
+<div class="blind-card">
+  <strong>4. Input independence.</strong> If the same inputs drive both Agility and Pivot Speed, no formula will make them independent. Two pillars measuring the same thing with different math is worse than one pillar measuring it correctly.
+</div>
+<div class="blind-card">
+  <strong>5. Graph-theoretic alternative.</strong> Shortest decision path through the org graph is simpler, more interpretable, and requires no physics metaphor at all.
+</div>
+
+<!-- ADVISOR RESPONSES -->
+<h2>Advisor Responses</h2>
+
+<details>
+  <summary><span class="dot" style="background: #dc2626;"></span> The Contrarian &mdash; "Kill it. Curve-fitting to vibes."</summary>
+  <div class="advisor-content">
+    <p>You've encoded "more layers = more stable" as an axiom. The feedback loop patch at L=2 adds exactly 1.0 &mdash; conveniently pushing to critical damping. That's not modeling, it's hand-tuning.</p>
+    <p>Two metrics measuring the same thing with contradictory outputs isn't nuance &mdash; it's a credibility problem. If Agility needs to exist separately, redefine it as change-absorption capacity (queuing model).</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #E05A1B;"></span> The First Principles Thinker &mdash; "Wrong phenomenon entirely"</summary>
+  <div class="advisor-content">
+    <p>Organizational agility isn't about oscillation decay &mdash; it's about response fidelity to a step input. That's a control system problem, not a resonance problem.</p>
+    <p>Replace with closed-loop settling time: how long until the org is within 5% of the new target. This naturally rewards short feedback paths (flat orgs) and penalizes deep hierarchies.</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #a855f7;"></span> The Expansionist &mdash; "Extend to coupled oscillator network"</summary>
+  <div class="advisor-content">
+    <p>The oscillator isn't broken, it's too small. Model the org as a coupled oscillator network with teams as nodes. Merge Agility + Pivot Speed into "Dynamic Response."</p>
+    <p><em>Peer review consensus: rejected. Complexity multiplies failure modes of an already-broken model. Over-engineering a broken metric.</em></p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #0ea5e9;"></span> The Outsider &mdash; "Metaphor is backwards" &#9733;</summary>
+  <div class="advisor-content">
+    <p>Fewer people = less inertia = faster settling in reality. But the formula says fewer people = less damping = more oscillation. The analogy is inverted.</p>
+    <p>Flip the framing: model "how quickly does the org reach steady state." Response time = f(layers, handoffs) / adaptability. Small flat orgs settle fast. Bureaucracies settle slow. Math matches intuition without floors or bonuses.</p>
+    <p>Also: "Agility" and "Pivot Speed" sound like the same thing to anyone without your internal definitions.</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #16a34a;"></span> The Executor &mdash; "Clamp and ship"</summary>
+  <div class="advisor-content">
+    <p>Add <code>Math.max(0.5, &zeta;)</code>. One-line change. Doesn't alter deep org scores. Tests that break are validating the bug.</p>
+    <p><em>Peer review consensus: rejected. Clamping masks the inversion, destroys diagnostic resolution for all small orgs (everything 0.0&ndash;0.5 maps to the same score).</em></p>
+  </div>
+</details>
+
+<div class="footer">
+  LLM Council &bull; April 7, 2026 &bull; Topic: Agility pillar physics model review<br>
+  5 advisors &bull; 5 peer reviews &bull; Chairman synthesis &bull; Full transcript: council-transcript-20260407-agility.md
+</div>
+
+</body>
+</html>

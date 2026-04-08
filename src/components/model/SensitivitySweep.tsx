@@ -52,7 +52,7 @@ export function SensitivitySweep({ levels, headcount, currentFidelityRate }: Pro
 
   return (
     <div className="flex-1 w-full flex items-center justify-center">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full flex-1" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Sensitivity chart showing ${currentRT.toFixed(1)}% round-trip fidelity at ${currentFidelityRate}% per-layer rate across ${levels} levels`}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full flex-1" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Sensitivity chart showing ${currentRT.toFixed(1)}% round-trip fidelity at ${currentFidelityRate}% per-layer rate across depth ${levels}`}>
         {/* Typical range shading */}
         <rect
           x={txMin} y={PAD.top}

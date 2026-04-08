@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Council Report — Pillar Naming</title>
+<style>
+  :root {
+    --bg: #FAFAFA;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --text: #1F2937;
+    --text-muted: #6B7280;
+    --accent: #4F46E5;
+    --accent-light: #EEF2FF;
+    --green: #059669;
+    --green-light: #ECFDF5;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --stone: #78716C;
+    --stone-light: #F5F5F4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text); }
+  h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .verdict-card {
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+  }
+  .verdict-card h2 { color: var(--accent); }
+  .recommendation-set {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .rec-pill {
+    text-align: center;
+    padding: 1.25rem 1rem;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+  }
+  .rec-pill.recommended {
+    border-color: var(--green);
+    background: var(--green-light);
+  }
+  .rec-pill.rejected {
+    border-color: var(--red);
+    background: var(--red-light);
+    opacity: 0.7;
+  }
+  .rec-pill .old { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .rec-pill .arrow { font-size: 1.25rem; color: var(--text-muted); margin: 0.25rem 0; }
+  .rec-pill .new { font-size: 1.35rem; font-weight: 700; }
+  .rec-pill.recommended .new { color: var(--green); }
+  .rec-pill.rejected .new { color: var(--red); text-decoration: line-through; }
+  .alt-set { margin-top: 0.75rem; padding: 0.75rem 1rem; background: var(--stone-light); border-radius: 8px; font-size: 0.875rem; color: var(--stone); }
+
+  /* Agreement grid */
+  .agreement-grid {
+    display: grid;
+    grid-template-columns: 140px repeat(3, 1fr);
+    gap: 2px;
+    margin: 1rem 0;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .agreement-grid .header { background: #F3F4F6; padding: 0.5rem 0.75rem; font-weight: 600; text-align: center; }
+  .agreement-grid .advisor-name { background: #F9FAFB; padding: 0.5rem 0.75rem; font-weight: 500; }
+  .agreement-grid .cell { padding: 0.5rem 0.75rem; text-align: center; background: white; }
+  .cell.approve { background: #ECFDF5; color: #059669; }
+  .cell.reject { background: #FEF2F2; color: #DC2626; }
+  .cell.partial { background: #FFFBEB; color: #D97706; }
+
+  /* Collapsible */
+  details { margin-bottom: 0.75rem; }
+  details summary {
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  details summary::before { content: '▶'; font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details summary::-webkit-details-marker { display: none; }
+  details .detail-body {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background: var(--surface);
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 0.5rem;
+  }
+  .badge-contrarian { background: #FEE2E2; color: #991B1B; }
+  .badge-first-principles { background: #DBEAFE; color: #1E40AF; }
+  .badge-expansionist { background: #FEF3C7; color: #92400E; }
+  .badge-outsider { background: #E0E7FF; color: #3730A3; }
+  .badge-executor { background: #D1FAE5; color: #065F46; }
+  p + p { margin-top: 0.75rem; }
+  strong { font-weight: 600; }
+  .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 600; margin-bottom: 0.5rem; }
+  .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+  .blind-spot { padding: 0.75rem 1rem; background: var(--amber-light); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; margin-bottom: 0.75rem; font-size: 0.875rem; }
+</style>
+</head>
+<body>
+
+<h1>LLM Council Verdict</h1>
+<p class="subtitle">Pillar dimension naming for Shape Matters (org-shape) &middot; April 7, 2026</p>
+
+<!-- Question -->
+<div class="card" style="background: #F9FAFB;">
+  <p class="section-label">The Question</p>
+  <p>Should the three physics-based pillar dimensions be renamed from <strong>Signal Fidelity / Propagation Lag / Change Response</strong> to the single-word names <strong>Clarity / Speed / Resilience</strong>?</p>
+</div>
+
+<!-- Verdict -->
+<div class="card verdict-card">
+  <h2>The Recommendation</h2>
+  <div class="recommendation-set">
+    <div class="rec-pill recommended">
+      <div class="old">Signal Fidelity</div>
+      <div class="arrow">&darr;</div>
+      <div class="new">Clarity</div>
+    </div>
+    <div class="rec-pill recommended">
+      <div class="old">Propagation Lag</div>
+      <div class="arrow">&darr;</div>
+      <div class="new">Latency</div>
+    </div>
+    <div class="rec-pill recommended">
+      <div class="old">Change Response</div>
+      <div class="arrow">&darr;</div>
+      <div class="new">Agility</div>
+    </div>
+  </div>
+  <div class="alt-set">
+    <strong>Practitioner variant:</strong> Fidelity, Latency, Agility &mdash; if the primary audience is consultants/org designers who will build fluency with the tool over multiple sessions.
+  </div>
+
+  <div class="recommendation-set" style="margin-top: 1.25rem;">
+    <div class="rec-pill rejected">
+      <div class="old">Proposed</div>
+      <div class="arrow">&darr;</div>
+      <div class="new">Speed</div>
+    </div>
+    <div class="rec-pill rejected">
+      <div class="old">Proposed</div>
+      <div class="arrow">&darr;</div>
+      <div class="new">Resilience</div>
+    </div>
+    <div style="display:flex; align-items:center; justify-content:center; font-size: 0.85rem; color: var(--text-muted); padding: 0.5rem;">
+      Rejected by council consensus
+    </div>
+  </div>
+</div>
+
+<!-- Agreement Grid -->
+<div class="card">
+  <h2>Advisor Alignment</h2>
+  <div class="agreement-grid">
+    <div class="header"></div>
+    <div class="header">Clarity</div>
+    <div class="header">Speed &rarr; Latency</div>
+    <div class="header">Resilience &rarr; Agility</div>
+
+    <div class="advisor-name">Contrarian</div>
+    <div class="cell reject">Reject &mdash; too vague</div>
+    <div class="cell reject">Reject &rarr; Latency</div>
+    <div class="cell reject">Reject &rarr; Responsiveness</div>
+
+    <div class="advisor-name">First Principles</div>
+    <div class="cell reject">Reject &rarr; Reach</div>
+    <div class="cell reject">Reject &rarr; Leverage</div>
+    <div class="cell partial">Partial &rarr; Agility</div>
+
+    <div class="advisor-name">Expansionist</div>
+    <div class="cell reject">Reject &rarr; Fidelity</div>
+    <div class="cell partial">Partial &rarr; Velocity</div>
+    <div class="cell reject">Reject &rarr; Responsiveness</div>
+
+    <div class="advisor-name">Outsider</div>
+    <div class="cell approve">Approve</div>
+    <div class="cell reject">Reject &mdash; directional</div>
+    <div class="cell reject">Reject &rarr; Agility</div>
+
+    <div class="advisor-name">Executor</div>
+    <div class="cell approve">Approve</div>
+    <div class="cell partial">Partial &mdash; UI fix</div>
+    <div class="cell reject">Reject &rarr; Agility</div>
+  </div>
+  <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">
+    <strong>Consensus:</strong> "Resilience" rejected unanimously (5/5). "Speed" rejected or flagged (4/5). "Clarity" split (2 approve, 3 reject). "Agility" endorsed by 3 advisors independently.
+  </p>
+</div>
+
+<!-- Where they agree / clash -->
+<div class="card">
+  <h2>Where the Council Agrees</h2>
+  <p><strong>"Resilience" is wrong.</strong> Every advisor flagged it independently. A highly damped oscillator that stalls on pivots is the opposite of resilient. The word carries "bouncing back from adversity" connotations that actively mislead users about what the model measures.</p>
+  <p><strong>"Speed" has a directional problem.</strong> The pillar measures <em>delay</em>, not speed. "Latency" is directionally unambiguous &mdash; high latency is always bad, no mental inversion required.</p>
+  <p><strong>Single-word compression is net positive</strong> if the words are right. No advisor argued for reverting to two-word names.</p>
+</div>
+
+<div class="card">
+  <h2>Where the Council Clashes</h2>
+  <p><strong>Fidelity vs. Clarity for Pillar 1.</strong> The Contrarian and Expansionist prefer "Fidelity" (precise, distinctive, hi-fi audio made it intuitive). The Outsider and Executor prefer "Clarity" (zero hops, instant recognition). The choice turns on primary audience: consultants lean Fidelity, executives lean Clarity.</p>
+</div>
+
+<!-- Blind spots -->
+<div class="card">
+  <h2>Blind Spots the Council Caught</h2>
+  <div class="blind-spot">
+    <strong>The UI's explanatory layer matters.</strong> Single-word names don't carry the full diagnostic weight alone. Subtitles and tooltips do real work. "Clarity" paired with "message survival across 5 relays" is different from "Clarity" standing alone.
+  </div>
+  <div class="blind-spot">
+    <strong>Audience segmentation was universally missed.</strong> C-suite executives need familiar, aspirational vocabulary. Consultants need vocabulary that maps to the model. These are different readers &mdash; the right names might differ by context.
+  </div>
+</div>
+
+<!-- First step -->
+<div class="card" style="border-left: 4px solid var(--green); background: var(--green-light);">
+  <h2 style="color: var(--green);">The One Thing to Do First</h2>
+  <p>Check your P2 pillar UI. Does it frame the metric as "speed" (higher = better) or "lag" (lower = better)? If the color coding treats high values as green, renaming to "Latency" requires a UI direction flip. Fix the directional convention before locking the name.</p>
+</div>
+
+<!-- Advisor details (collapsible) -->
+<h2 style="margin-top: 2rem; margin-bottom: 1rem;">Advisor Responses</h2>
+
+<details>
+  <summary>The Contrarian <span class="badge badge-contrarian">Voted strongest by all 5 reviewers</span></summary>
+  <div class="detail-body">
+    <p>The rename has a fatal flaw: none of these three words are specific enough to be diagnostic.</p>
+    <p>"Clarity" already means a dozen different things in business contexts &mdash; communication clarity, strategic clarity, role clarity. Attaching it to "percentage of message that survives hierarchical decay" requires explanation every single time.</p>
+    <p>"Speed" is generic to the point of meaninglessness. The actual insight &mdash; that delay scales quadratically, not linearly &mdash; is completely invisible. The word implies a linear problem with a simple fix.</p>
+    <p>"Resilience" is the most egregious mismatch. Resilience means ability to survive shocks and recover. This measures responsiveness to strategic pivots. A highly damped system that barely moves isn't resilient; it's sluggish.</p>
+    <p><strong>Alternative:</strong> Fidelity, Latency, Responsiveness &mdash; still single words, still accessible, but each points at the actual phenomenon.</p>
+  </div>
+</details>
+
+<details>
+  <summary>The First Principles Thinker <span class="badge badge-first-principles">Challenged the framing</span></summary>
+  <div class="detail-body">
+    <p>The real problem isn't naming &mdash; it's whether the single-word simplification is solving the wrong problem. The two-word names were wrong because they were technical, not because they were two words.</p>
+    <p>"Clarity" is dangerously misleading &mdash; implies the message was well-written, not that structural distortion degrades it. An executive will hear "Clarity" and think "we need better communication." Wrong diagnosis.</p>
+    <p><strong>Alternative:</strong> Reach, Leverage, Agility &mdash; each implicitly answers "what happens to strategy in your org?"</p>
+  </div>
+</details>
+
+<details>
+  <summary>The Expansionist <span class="badge badge-expansionist">Saw the branding opportunity</span></summary>
+  <div class="detail-body">
+    <p>Single words are the right move, but generic ones leave upside on the table. "Clarity/Speed/Resilience" are on every consulting deck already. They're descriptors, not anchors.</p>
+    <p>The bigger opportunity is owning words that feel invented for this context but are instantly understood. "Fidelity" is already intuitive (hi-fi audio). "Velocity" implies direction plus speed. "Responsiveness" captures the oscillation insight.</p>
+    <p><strong>Alternative:</strong> Fidelity, Velocity, Responsiveness &mdash; positions "Shape Matters" as a precision instrument, not another leadership framework.</p>
+  </div>
+</details>
+
+<details>
+  <summary>The Outsider <span class="badge badge-outsider">Fresh eyes on the labels</span></summary>
+  <div class="detail-body">
+    <p>"Clarity" works for pillar 1. "Speed" is wrong &mdash; it measures delay, not speed, creating directional ambiguity. A first-time user seeing "Speed: 47 days" will ask "47 days of what?"</p>
+    <p>"Resilience" is the biggest mismatch. These three words carry zero distinctiveness &mdash; every consulting deck already has a slide with exactly these three words.</p>
+    <p><strong>Alternative:</strong> Clarity, Reach/Lag, Agility/Adaptability</p>
+  </div>
+</details>
+
+<details>
+  <summary>The Executor <span class="badge badge-executor">Ship-focused pragmatist</span></summary>
+  <div class="detail-body">
+    <p>The rename works with one fix. A VP sees three numbers &mdash; with Clarity/Speed/Resilience they immediately know which to show their CEO.</p>
+    <p>Clarity is accurate. Speed has a directionality issue but works if the UI handles it. Replace Resilience with Agility &mdash; it maps directly to "how well does the org respond to a strategic pivot."</p>
+    <p><strong>Final answer:</strong> Clarity, Speed (mind directionality), Agility.</p>
+  </div>
+</details>
+
+<!-- Peer review highlights (collapsible) -->
+<details style="margin-top: 1.5rem;">
+  <summary>Peer Review Highlights</summary>
+  <div class="detail-body">
+    <p><strong>Unanimous strongest:</strong> The Contrarian &mdash; identified specific failure modes for each name with concrete alternatives.</p>
+    <p><strong>Biggest blind spots flagged:</strong> The Executor (3 reviewers) for shipping without diagnostic rigor; The First Principles Thinker (2 reviewers) for reframing the question instead of answering it.</p>
+    <p><strong>What all 5 reviews caught that advisors missed:</strong></p>
+    <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+      <li>The UI's explanatory layer (subtitles, tooltips) means single words don't need to carry full precision alone</li>
+      <li>Audience segmentation: executive dashboards vs. practitioner diagnostics may need different vocabulary</li>
+      <li>The single-word constraint itself was never challenged &mdash; two-word names were doing real work</li>
+    </ul>
+  </div>
+</details>
+
+<div class="footer">
+  LLM Council &middot; 5 advisors &middot; 5 peer reviews &middot; Chairman synthesis<br>
+  Counciled: Pillar dimension naming for Shape Matters (org-shape)<br>
+  April 7, 2026
+</div>
+
+</body>
+</html>

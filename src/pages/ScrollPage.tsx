@@ -72,32 +72,29 @@ export function ScrollPage() {
       {/* ─── HERO ─── */}
       <HeroSection />
 
-      {/* ─── THE PROBLEM (merged Problem + Math) ─── */}
+      {/* ─── THE TELEPHONE EFFECT (emotional lead) ─── */}
+      <SimulateSection />
+
+      {/* ─── THE PROBLEM (the math behind it) ─── */}
       <section id="problem" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
         <FadeIn className="max-w-5xl mx-auto">
           <div className={`${SECTION_LABEL} mb-3`}>The Problem</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-6">
-            Relays Destroy Signal
+            Why This Happens
           </h2>
           <div className="text-sm text-stone-700 leading-relaxed space-y-4 mb-8">
             <p>
-              In 1932, Frederic Bartlett published <em>Remembering</em>, a landmark study that
-              revealed how information degrades when passed sequentially between people. He asked
-              participants to read a short story — <em>The War of the Ghosts</em> — and reproduce it
-              from memory. The reproduced version was then passed to another participant, who read
-              and reproduced it in turn. This continued through a chain of 6-10 participants.
-            </p>
-            <p>
-              The results were striking: content shrank 40-50% by the 4th participant. Unfamiliar
-              elements were replaced — canoes became boats, hunting seals became fishing. But the
-              most important finding was the <em>contrast</em>: when the same person retold the story
-              over weeks, it stabilized. It was the <strong>handoff between people</strong> — the
-              relay — that destroyed signal.
+              What you just watched isn't a bug — it's physics. In 1932, Frederic Bartlett ran the
+              first controlled study of serial reproduction. He passed a short story through chains
+              of 6-10 people and measured what survived. Content shrank 40-50% by the 4th relay.
+              Unfamiliar details were replaced with familiar ones. But when the <em>same person</em>{' '}
+              retold the story over weeks, it stabilized. It was the{' '}
+              <strong>handoff between people</strong> — the relay — that destroyed signal.
             </p>
             <p>
               If each management layer retains roughly 80-85% of the information it receives, we
-              can model cumulative fidelity loss mathematically. At 82% per-layer retention, a
-              9-level organization retains only <strong>17% of the original signal</strong> by the
+              can model cumulative fidelity loss mathematically. At 82% per-layer retention, an
+              organization 9 layers deep retains only <strong>17% of the original signal</strong> by the
               time information reaches the CEO. Leaders in deep hierarchies are making strategic
               decisions based on <em>systematically degraded</em> information.
             </p>
@@ -107,30 +104,25 @@ export function ScrollPage() {
         </FadeIn>
       </section>
 
-      {/* ─── THE TELEPHONE EFFECT ─── */}
-      <SimulateSection />
-
-      {/* ─── THE EVIDENCE ─── */}
-      <section id="evidence" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
+      {/* ─── THE EVIDENCE (trimmed — Gemba + unified model only) ─── */}
+      <section id="evidence" className="py-16 md:py-24 px-6 md:px-12">
         <FadeIn className="max-w-5xl mx-auto">
           <div className={`${SECTION_LABEL} mb-3`}>The Evidence</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-6">
-            Three Disciplines, One Conclusion
+            They Already Knew
           </h2>
 
           <div className="text-sm text-stone-700 leading-relaxed space-y-4 mb-8">
             <p>
-              Toyota's leaders understood — decades before organizational theory formalized it —
-              that reports traveling up a hierarchy cannot substitute for direct observation. The
-              Gemba Walk is, in engineering terms, a{' '}
-              <strong>bypass circuit around the lossy relay chain</strong>. Instead of waiting for
-              information to percolate up through layers of management, leaders physically go to
-              where value is created and observe directly.
+              Toyota's leaders understood this decades before organizational theory formalized it.
+              Their solution — the Gemba Walk — sends leaders directly to where value is created,
+              bypassing every relay in the hierarchy. In engineering terms, it's a{' '}
+              <strong>bypass circuit around the lossy relay chain</strong>.
             </p>
             <p>
-              <strong>The meta-insight:</strong> if hierarchical communication were lossless, the
-              Gemba Walk would be unnecessary. Its very existence is an admission that tall
-              structures degrade information.
+              The meta-insight: if hierarchical communication were lossless, the Gemba Walk would
+              be unnecessary. <strong>Its very existence is an admission that tall structures
+              degrade information.</strong>
             </p>
           </div>
 
@@ -138,92 +130,22 @@ export function ScrollPage() {
             <GembaComparison />
           </div>
 
-          <div className="bg-stone-50 border border-stone-200 rounded-xl p-5">
-            <div className="text-sm font-extrabold text-stone-900 mb-1">
-              Deming's Quality Framework & the Gemba Walk
-            </div>
-            <div className="text-[11px] text-stone-500 mb-4">
-              Supporting evidence from W. Edwards Deming (1982) and the Toyota Production System
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-              <div className="bg-white rounded-lg p-3.5 border border-stone-200">
-                <div className="text-[11px] font-bold text-stone-900 uppercase mb-2.5">
-                  Deming's Points That Map to Shape Theory
-                </div>
-                <div className="text-xs text-stone-700 leading-relaxed space-y-1.5">
-                  <div>
-                    <span className="text-stone-900 font-bold">Point 8:</span>{' '}
-                    <strong>Drive out fear</strong> — Fear increases at each hierarchical layer.
-                    Subordinates filter information upward to avoid blame.
-                  </div>
-                  <div>
-                    <span className="text-stone-900 font-bold">Point 9:</span>{' '}
-                    <strong>Break down barriers</strong> — Hierarchical silos force lateral
-                    communication to route vertically, multiplying relay hops.
-                  </div>
-                  <div>
-                    <span className="text-stone-900 font-bold">Point 11:</span>{' '}
-                    <strong>Eliminate management by numbers</strong> — Aggregated KPIs climbing a
-                    tall hierarchy are lossy summaries.
-                  </div>
-                  <div>
-                    <span className="text-stone-900 font-bold">Point 12:</span>{' '}
-                    <strong>Remove barriers to pride</strong> — Deep hierarchies distance
-                    decision-makers from the people who understand the work.
-                  </div>
-                </div>
+          <div className="bg-white border border-stone-200 rounded-xl p-4">
+            <div className="font-mono text-sm text-stone-800 leading-loose space-y-0.5">
+              <div>
+                <span className="text-stone-400">Bartlett (1932): </span>Information degrades per
+                serial relay →{' '}
+                <span className="text-stone-900 font-bold">fidelity loss is structural</span>
               </div>
-              <div className="bg-white rounded-lg p-3.5 border border-stone-200">
-                <div className="text-[11px] font-bold text-stone-900 uppercase mb-2.5">
-                  The Gemba Walk as Bypass Circuit
-                </div>
-                <div className="text-xs text-stone-700 leading-relaxed space-y-1.5">
-                  <div>
-                    <span className="text-stone-900 font-bold">Go See</span> — Direct observation
-                    bypasses every relay. Fidelity = 100%.
-                  </div>
-                  <div>
-                    <span className="text-stone-900 font-bold">Ask Why</span> — First-person
-                    inquiry avoids the editorial filtering each layer adds.
-                  </div>
-                  <div>
-                    <span className="text-stone-900 font-bold">Show Respect</span> — Eliminates
-                    fear (Deming Point 8) that causes subordinates to distort upward communication.
-                  </div>
-                  <div className="mt-2.5 p-2 bg-stone-100 rounded text-[11px] text-stone-700">
-                    <strong className="text-stone-900">Key insight:</strong> In a flat org, the
-                    Gemba Walk is short or unnecessary — leadership is already close to the work.
-                  </div>
-                </div>
+              <div>
+                <span className="text-stone-400">Deming (1982):{'  '}</span>Every layer adds
+                variation + fear →{' '}
+                <span className="text-stone-900 font-bold">quality degrades with hierarchy depth</span>
               </div>
-            </div>
-
-            <div className="bg-white rounded-lg p-3.5 border border-stone-200">
-              <div className="text-[11px] font-bold text-stone-900 uppercase mb-2.5">
-                Unified Model — Bartlett + Deming + Shape Theory
-              </div>
-              <div className="font-mono text-xs text-stone-800 leading-loose space-y-0.5">
-                <div>
-                  <span className="text-stone-400">Bartlett (1932): </span>Information degrades per
-                  serial relay →{' '}
-                  <span className="text-stone-900 font-bold">fidelity loss is structural</span>
-                </div>
-                <div>
-                  <span className="text-stone-400">Deming (1982):{'  '}</span>Every layer adds
-                  variation + fear →{' '}
-                  <span className="text-stone-900 font-bold">quality degrades with hierarchy depth</span>
-                </div>
-                <div>
-                  <span className="text-stone-400">Toyota (1950s): </span>Gemba Walk invented to
-                  bypass hierarchy →{' '}
-                  <span className="text-stone-900 font-bold">hierarchy acknowledged as problem</span>
-                </div>
-                <div>
-                  <span className="text-stone-400">Shape Theory:{'   '}</span>Flatness Index
-                  predicts fidelity + productivity →{' '}
-                  <span className="text-stone-900 font-bold">testable hypothesis</span>
-                </div>
+              <div>
+                <span className="text-stone-400">Toyota (1950s): </span>Gemba Walk invented to
+                bypass hierarchy →{' '}
+                <span className="text-stone-900 font-bold">hierarchy acknowledged as problem</span>
               </div>
             </div>
           </div>
@@ -231,30 +153,39 @@ export function ScrollPage() {
       </section>
 
       {/* ─── THE PROOF ─── */}
-      <section id="proof" className="py-16 md:py-24 px-6 md:px-12">
+      <section id="proof" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
         <FadeIn className="max-w-5xl mx-auto">
           <div className={`${SECTION_LABEL} mb-3`}>The Proof</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
             Real Companies, Real Structures
           </h2>
           <p className="text-sm text-stone-500 mb-8 max-w-2xl">
-            Here&apos;s what compound signal decay looks like across 6 real companies — from Valve&apos;s
-            zero-relay flat structure to Amazon&apos;s 9-level hierarchy.
+            The model isn't hypothetical. Here's what compound signal decay looks like inside
+            6 real organizations — from Valve's zero-relay flat structure to Amazon's
+            9-layer hierarchy.
           </p>
           <ComparisonView />
         </FadeIn>
       </section>
 
-      {/* ─── MODEL YOUR ORG (merged Calculator + Depth Tax) ─── */}
+      {/* ─── TRANSITION DARE ─── */}
+      <section className="py-12 md:py-16 px-6 md:px-12">
+        <FadeIn className="max-w-3xl mx-auto text-center">
+          <p className="text-lg text-stone-500 font-medium italic">
+            Now it's your turn.
+          </p>
+        </FadeIn>
+      </section>
+
+      {/* ─── MODEL YOUR ORG ─── */}
       <section id="model" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
         <FadeIn className="max-w-5xl mx-auto">
           <div className={`${SECTION_LABEL} mb-3`}>Model Your Org</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
-            See Your Organization's Shape
+            How Much Signal Survives Your Structure?
           </h2>
           <p className="text-sm text-stone-500 mb-8">
-            Adjust levels, headcount, and fidelity rate to see how depth affects signal quality,
-            decision speed, and organizational agility.
+            Set depth, headcount, fidelity, cycle time, and adaptability. See what your structure actually does to your strategy.
           </p>
           <ModelYourOrg />
         </FadeIn>

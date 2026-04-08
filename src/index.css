@@ -257,6 +257,22 @@ input[type="range"].custom-slider:focus-visible::-moz-range-thumb {
   }
 }
 
+@keyframes eq-breathe {
+  0%,
+  100% {
+    box-shadow: var(--eq-glow-dim);
+  }
+
+  50% {
+    box-shadow: var(--eq-glow-bright);
+  }
+}
+
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
 @layer utilities {
   .animate-slide-glow {
     animation: slide-glow 6s ease-in-out infinite alternate;

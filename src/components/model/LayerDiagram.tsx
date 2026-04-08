@@ -26,7 +26,7 @@ export function LayerDiagram({ levels, fidelityRate, compact, inverted, hoverPul
   const labelColor = inverted ? 'text-stone-400' : 'text-stone-500';
 
   return (
-    <div className={`flex flex-col items-center ${gap} py-2`} role="img" aria-label={`Layer diagram showing signal fidelity across ${levels} levels at ${fidelityRate}% per-layer retention`}>
+    <div className={`flex flex-col items-center ${gap} py-2`} role="img" aria-label={`Layer diagram showing signal fidelity at depth ${levels} at ${fidelityRate}% per-layer retention`}>
       {layers.map((l, i) => {
         // Width = fidelity percentage (signal retained)
         // At L0 fidelity=100%, bar is full width. Deeper layers shrink.

@@ -34,7 +34,7 @@ export interface Company {
   source: string;
   sourceUrl?: string;
   decisionCycle?: number;     // days/layer (optional for backward compat)
-  culturalAgility?: number;   // 0-100 (optional for backward compat)
+  narrative?: string;         // human-readable "so what" one-liner for Proof section
 }
 
 export interface OrgMetrics {
@@ -122,18 +122,6 @@ export interface ThermalLagResult {
   marginalLayerCost: number;  // days saved by removing deepest layer
   lagRatio: number;           // actual / linear delay
   layerDelays: LayerDelay[];  // per-layer breakdown
-}
-
-// ── Damped Response (Pillar 3) ──────────────────────────────────────
-export type ResponseRegime = 'under-damped' | 'critically-damped' | 'over-damped';
-
-export interface DampedResponseResult {
-  dampingRatio: number;       // ζ (zeta)
-  naturalFrequency: number;   // ω₀
-  overshootPct: number;       // 0 for over-damped
-  settlingTimeWeeks: number;  // time to stay within 2% of target
-  regime: ResponseRegime;
-  regimeLabel: string;        // "Too Fast" | "Right-Sized" | "Too Slow"
 }
 
 // ── Relay Simulator ─────────────────────────────────────────────────

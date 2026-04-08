@@ -7,7 +7,6 @@ interface CompanyState {
   headcount: number;
   activeScenarioId: string | null;
   decisionCycle: number;       // days/layer (1-14, default 3)
-  culturalAgility: number;     // 0-100 (default 55)
   expandedPillar: 'fidelity' | 'lag' | 'response' | null;  // null = dashboard view
   advancedInputsOpen: boolean;
 }
@@ -18,20 +17,18 @@ interface CompanyActions {
   setHeadcount: (headcount: number) => void;
   setActiveScenarioId: (id: string | null) => void;
   setDecisionCycle: (d: number) => void;
-  setCulturalAgility: (a: number) => void;
   setExpandedPillar: (p: 'fidelity' | 'lag' | 'response' | null) => void;
   setAdvancedInputsOpen: (open: boolean) => void;
 }
 
-/** Apply ?l=&h=&f=&d=&a= URL params to the store. Returns true if any params were found. */
+/** Apply ?l=&h=&f=&d= URL params to the store. Returns true if any params were found. */
 function applyUrlParams(): boolean {
   const params = new URLSearchParams(window.location.search);
   const l = params.get('l');
   const h = params.get('h');
   const f = params.get('f');
   const d = params.get('d');
-  const a = params.get('a');
-  if (!l && !h && !f && !d && !a) return false;
+  if (!l && !h && !f && !d) return false;
 
   const state = useCompanyStore.getState();
   if (l) {
@@ -50,10 +47,6 @@ function applyUrlParams(): boolean {
     const cycle = Math.max(1, Math.min(14, Number(d)));
     if (!isNaN(cycle)) state.setDecisionCycle(cycle);
   }
-  if (a) {
-    const agility = Math.max(0, Math.min(100, Math.round(Number(a))));
-    if (!isNaN(agility)) state.setCulturalAgility(agility);
-  }
   return true;
 }
 
@@ -65,7 +58,6 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       headcount: 5000,
       activeScenarioId: 'innovation-proposal',
       decisionCycle: 3,
-      culturalAgility: 55,
       expandedPillar: null,
       advancedInputsOpen: false,
       setFidelityRate: (rate) => set({ fidelityRate: rate }),
@@ -73,7 +65,6 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       setHeadcount: (headcount) => set({ headcount }),
       setActiveScenarioId: (id) => set({ activeScenarioId: id }),
       setDecisionCycle: (d) => set({ decisionCycle: d }),
-      setCulturalAgility: (a) => set({ culturalAgility: a }),
       setExpandedPillar: (p) => set({ expandedPillar: p }),
       setAdvancedInputsOpen: (open) => set({ advancedInputsOpen: open }),
     }),
@@ -88,7 +79,6 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
         levels: state.levels,
         headcount: state.headcount,
         decisionCycle: state.decisionCycle,
-        culturalAgility: state.culturalAgility,
         // Excluded: activeScenarioId, expandedPillar, advancedInputsOpen
       }),
     }
@@ -101,10 +91,10 @@ applyUrlParams();
 
 /** Build a shareable URL from current store state. */
 export function buildShareUrl(): string {
-  const { levels, headcount, fidelityRate, decisionCycle, culturalAgility } =
+  const { levels, headcount, fidelityRate, decisionCycle } =
     useCompanyStore.getState();
   const url = new URL(window.location.href);
-  url.search = `?l=${levels}&h=${headcount}&f=${fidelityRate}&d=${decisionCycle}&a=${culturalAgility}`;
+  url.search = `?l=${levels}&h=${headcount}&f=${fidelityRate}&d=${decisionCycle}`;
   url.hash = 'model';
   return url.toString();
 }

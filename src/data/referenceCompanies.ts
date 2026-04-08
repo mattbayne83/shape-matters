@@ -13,8 +13,8 @@ export const REFERENCE_COMPANIES: Company[] = [
     color: '#dc2626',
     notes: 'No managers. Employees choose projects. Public handbook documents the flat structure.',
     source: 'Valve Employee Handbook; industry estimates',
+    narrative: 'Zero relays. Every person who spots a problem can fix it the same day.',
     decisionCycle: 1.5,
-    culturalAgility: 85,
   },
   {
     id: 'nucor',
@@ -26,10 +26,10 @@ export const REFERENCE_COMPANIES: Company[] = [
     archetype: 'flat',
     color: '#16a34a',
     notes: '4 levels: hourly → supervisor → dept manager → VP/GM → CEO. Each division runs its own P&L.',
+    narrative: 'A steelworker\'s safety concern reaches the CEO through 3 relays. Most of the signal survives.',
     source: 'SEC 10-K (2024); ResearchGate case study',
     sourceUrl: 'https://nucor.com/news-release/nucor-reports-results-for-the-fourth-quarter-and-full-year-2024-122964',
     decisionCycle: 2,
-    culturalAgility: 70,
   },
 
   // ── Tech Giants ───────────────────────────────────────────────────
@@ -43,10 +43,10 @@ export const REFERENCE_COMPANIES: Company[] = [
     archetype: 'tech',
     color: '#4285F4',
     notes: 'IC levels L3-L11. ~8 management hops from IC to CEO.',
+    narrative: 'An engineer\'s product insight passes through 7 managers before reaching anyone who sets strategy.',
     source: 'SEC 10-K (2024); levels.fyi',
     sourceUrl: 'https://www.levels.fyi/standard/',
     decisionCycle: 3.5,
-    culturalAgility: 55,
   },
 
   // ── Recently Flattened ────────────────────────────────────────────
@@ -60,10 +60,10 @@ export const REFERENCE_COMPANIES: Company[] = [
     archetype: 'flattened',
     color: '#3b82f6',
     notes: '2023 "Year of Efficiency" removed layers. Managers became ICs. Lean structure made permanent.',
+    narrative: 'Zuckerberg cut layers in 2023 and called it permanent. Signal fidelity jumped overnight.',
     source: 'SEC 10-K (2024); Meta Year of Efficiency blog post',
     sourceUrl: 'https://about.fb.com/news/2023/03/mark-zuckerberg-meta-year-of-efficiency/',
     decisionCycle: 2.5,
-    culturalAgility: 65,
   },
 
   // ── Experimental Models ───────────────────────────────────────────
@@ -77,10 +77,10 @@ export const REFERENCE_COMPANIES: Company[] = [
     archetype: 'experimental',
     color: '#7c3aed',
     notes: 'RenDanHeYi: 4,000+ micro-enterprises of ~20 people. 3 layers: platform → ME owner → entrepreneur.',
+    narrative: '75,000 employees organized as 4,000 startups. Customer feedback reaches a decision-maker in hours, not months.',
     source: 'INSEAD case study; Corporate Rebels; HBR',
     sourceUrl: 'https://knowledge.insead.edu/entrepreneurship/multinational-fuelled-thousands-entrepreneurs',
     decisionCycle: 1,
-    culturalAgility: 90,
   },
 
   // ── Tech Giants (deep end) ─────────────────────────────────────────
@@ -94,9 +94,9 @@ export const REFERENCE_COMPANIES: Company[] = [
     archetype: 'tech',
     color: '#ff9900',
     notes: 'Corporate levels L4-L12. L1-L3 are fulfillment. 9 management layers SDE to CEO.',
+    narrative: 'A warehouse safety report passes through 8 relays before reaching anyone who can change policy.',
     source: 'SEC 10-K (2024); levels.fyi',
     sourceUrl: 'https://www.levels.fyi/?compare=Amazon&track=Software+Engineer',
     decisionCycle: 3,
-    culturalAgility: 50,
   },
 ];

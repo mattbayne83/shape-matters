@@ -2,71 +2,78 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export type PillarId = 'fidelity' | 'lag' | 'response';
 
-/** Rotary knob indicator — 270° sweep from 7 o'clock to 5 o'clock */
-function Knob({ score, color, size = 36 }: { score: number; color: string; size?: number }) {
-  const r = (size - 4) / 2;
+const LED_COUNT = 13;
+const ARC_START = 135; // 7 o'clock
+const ARC_SWEEP = 270;
+
+/** LED Ring knob — 13 dots on a 270° arc with dark body and white pointer */
+function Knob({ score, color, size = 60 }: { score: number; color: string; size?: number }) {
   const cx = size / 2;
   const cy = size / 2;
-  const strokeW = 3;
-  const arcR = r - strokeW / 2;
-  const startAngle = 135;  // 7 o'clock
-  const sweep = 270;
-  const endAngle = startAngle + sweep;
-  const fillAngle = startAngle + (Math.min(Math.max(score, 0), 100) / 100) * sweep;
+  const ledR = size * 0.4; // radius for LED dot positions (leaves room for dot radius + glow)
+  const litCount = Math.round(Math.min(Math.max(score, 0), 100) / (100 / LED_COUNT));
 
   const toXY = (deg: number) => {
     const rad = (deg * Math.PI) / 180;
-    return [cx + arcR * Math.cos(rad), cy + arcR * Math.sin(rad)];
+    return [cx + ledR * Math.cos(rad), cy + ledR * Math.sin(rad)] as const;
   };
 
-  const arcPath = (from: number, to: number) => {
-    const [x1, y1] = toXY(from);
-    const [x2, y2] = toXY(to);
-    const large = to - from > 180 ? 1 : 0;
-    return `M${x1},${y1} A${arcR},${arcR} 0 ${large} 1 ${x2},${y2}`;
-  };
-
-  // Needle endpoint
-  const needleLen = arcR - 4;
-  const [nx, ny] = (() => {
-    const rad = (fillAngle * Math.PI) / 180;
-    return [cx + needleLen * Math.cos(rad), cy + needleLen * Math.sin(rad)];
-  })();
+  // Pointer angle — same arc mapping as LEDs
+  const pointerAngle = ARC_START + (Math.min(Math.max(score, 0), 100) / 100) * ARC_SWEEP;
+  const pointerLen = size * 0.22;
+  const pointerRad = (pointerAngle * Math.PI) / 180;
+  const px = cx + pointerLen * Math.cos(pointerRad);
+  const py = cy + pointerLen * Math.sin(pointerRad);
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="select-none shrink-0">
-      {/* Track */}
-      <path
-        d={arcPath(startAngle, endAngle)}
-        fill="none"
-        stroke="#e7e5e4"
-        strokeWidth={strokeW}
-        strokeLinecap="round"
-      />
-      {/* Fill */}
-      {score > 0 && (
-        <path
-          d={arcPath(startAngle, fillAngle)}
-          fill="none"
-          stroke={color}
-          strokeWidth={strokeW}
-          strokeLinecap="round"
-          className="transition-all duration-500"
-        />
-      )}
-      {/* Center dot */}
-      <circle cx={cx} cy={cy} r={3} fill="#d6d3d1" />
-      {/* Needle */}
+      <defs>
+        <filter id={`led-glow-${color.replace('#', '')}`} x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="0" stdDeviation="1.5" floodColor={color} floodOpacity="0.5" />
+        </filter>
+        <filter id="knob-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="1" stdDeviation="1" floodOpacity="0.12" />
+        </filter>
+      </defs>
+
+      {/* LED ring — 13 dots */}
+      {Array.from({ length: LED_COUNT }, (_, i) => {
+        const angle = ARC_START + (i / (LED_COUNT - 1)) * ARC_SWEEP;
+        const [lx, ly] = toXY(angle);
+        const isLit = i < litCount;
+
+        return (
+          <circle
+            key={i}
+            cx={lx}
+            cy={ly}
+            r={isLit ? size * 0.05 : size * 0.042}
+            fill={isLit ? color : '#e7e5e4'}
+            opacity={isLit ? 1 : 0.4}
+            filter={isLit ? `url(#led-glow-${color.replace('#', '')})` : undefined}
+            className="transition-all duration-500"
+          />
+        );
+      })}
+
+      {/* Knob body */}
+      <circle cx={cx} cy={cy} r={size * 0.28} fill="#44403c" filter="url(#knob-shadow)" />
+      <circle cx={cx} cy={cy} r={size * 0.25} fill="#57534e" />
+
+      {/* Pointer line */}
       <line
         x1={cx}
         y1={cy}
-        x2={nx}
-        y2={ny}
-        stroke={color}
-        strokeWidth={1.5}
+        x2={px}
+        y2={py}
+        stroke="white"
+        strokeWidth={2}
         strokeLinecap="round"
         className="transition-all duration-500"
       />
+
+      {/* Center dot */}
+      <circle cx={cx} cy={cy} r={size * 0.05} fill="#78716c" />
     </svg>
   );
 }
@@ -99,8 +106,8 @@ export function PillarCard({
     <button
       onClick={onToggle}
       className={`
-        relative w-full text-left rounded-xl border p-4
-        transition-all duration-300 cursor-pointer overflow-hidden
+        relative w-full text-left rounded-xl border
+        transition-all duration-300 cursor-pointer overflow-hidden flex
         ${isExpanded
           ? 'bg-white border-2 shadow-md z-10'
           : hasExpandedSibling
@@ -115,7 +122,8 @@ export function PillarCard({
         style={{ backgroundColor: accentColor }}
       />
 
-      <div className="flex items-start gap-3">
+      {/* Card content */}
+      <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-bold text-stone-500 uppercase tracking-wide mb-1 transition-colors">
             {label}
@@ -124,26 +132,25 @@ export function PillarCard({
             className="text-3xl font-extrabold font-mono tabular-nums leading-none mb-1 transition-colors"
             style={{ color: healthColor ?? accentColor }}
           >
-            {value}
+            {value}<span className="text-sm font-semibold text-stone-300 ml-0.5">/100</span>
           </p>
           <p className="text-[11px] text-stone-500 leading-snug">{sub}</p>
         </div>
-        <Knob score={score} color={healthColor ?? accentColor} />
+        <Knob score={score} color={healthColor ?? accentColor} size={72} />
       </div>
 
-      <div className={`flex items-center gap-1 mt-2.5 text-xs font-semibold transition-colors ${isExpanded ? '' : 'text-stone-500 group-hover:text-stone-600'}`}
-        style={isExpanded ? { color: accentColor } : {}}
+      {/* Explore / Back edge strip */}
+      <div
+        className={`flex items-center px-1.5 border-l transition-all duration-300 ${
+          isExpanded
+            ? 'bg-stone-50 border-stone-200'
+            : 'bg-stone-50/60 border-stone-100 hover:bg-stone-100/60'
+        }`}
       >
         {isExpanded ? (
-          <>
-            <ChevronLeft className="w-3.5 h-3.5" />
-            Back
-          </>
+          <ChevronLeft className="w-5 h-5" style={{ color: accentColor }} />
         ) : (
-          <>
-            Explore
-            <ChevronRight className="w-3.5 h-3.5" />
-          </>
+          <ChevronRight className="w-5 h-5 text-stone-400 animate-[nudge_2s_ease-in-out_infinite]" />
         )}
       </div>
     </button>

@@ -77,7 +77,7 @@ export function SignalCascade({ levels, fidelityRate, semantic, compact }: Signa
   const showFlow = !!flow && !prefersReducedMotion;
 
   return (
-    <svg viewBox="0 0 300 220" className="w-full h-full" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Signal cascade showing ${data[data.length - 1]?.f.toFixed(1) ?? 0}% fidelity remaining after ${levels} layers at ${fidelityRate}% per-layer retention`}>
+    <svg viewBox="0 0 300 220" className="w-full h-full" preserveAspectRatio="xMidYMid meet" role="img" aria-label={`Signal cascade showing ${data[data.length - 1]?.f.toFixed(1) ?? 0}% fidelity remaining at depth ${levels} at ${fidelityRate}% per-layer retention`}>
       {showFlow && <style>{flow.css}</style>}
 
       {/* ── Bars + Trapezoids ── */}

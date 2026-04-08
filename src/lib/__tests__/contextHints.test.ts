@@ -3,7 +3,6 @@ import {
   orgSizeHint,
   fidelityHint,
   decisionCycleHint,
-  culturalAgilityHint,
 } from '../contextHints';
 
 describe('orgSizeHint', () => {
@@ -89,24 +88,3 @@ describe('decisionCycleHint', () => {
   });
 });
 
-describe('culturalAgilityHint', () => {
-  it('returns rigid with settling weeks', () => {
-    expect(culturalAgilityHint(10, 42)).toBe('Rigid — settling time ~42wk');
-  });
-
-  it('returns resistant with settling weeks', () => {
-    expect(culturalAgilityHint(30, 28)).toBe('Resistant — settling time ~28wk');
-  });
-
-  it('returns moderate with settling weeks', () => {
-    expect(culturalAgilityHint(55, 14)).toBe('Moderate — settling time ~14wk');
-  });
-
-  it('returns adaptive with settling weeks', () => {
-    expect(culturalAgilityHint(70, 8)).toBe('Adaptive — settling time ~8wk');
-  });
-
-  it('returns highly agile with settling weeks', () => {
-    expect(culturalAgilityHint(90, 4)).toBe('Highly agile — settling time ~4wk');
-  });
-});

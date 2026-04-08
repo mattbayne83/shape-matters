@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Council Report — Section 5 Title &amp; Subtitle</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #fafaf9; color: #1c1917; line-height: 1.6; padding: 2rem; max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.25rem; }
+  h2 { font-size: 1.25rem; font-weight: 700; margin: 2rem 0 0.75rem; color: #44403c; border-bottom: 2px solid #e7e5e4; padding-bottom: 0.5rem; }
+  h3 { font-size: 1rem; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+  p, li { font-size: 0.9375rem; color: #44403c; }
+  .meta { font-size: 0.8125rem; color: #a8a29e; margin-bottom: 2rem; }
+  .question-box { background: #fff; border: 1px solid #e7e5e4; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+  .question-box .label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #a8a29e; margin-bottom: 0.5rem; }
+  .question-box .current { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 0.75rem 1rem; margin: 0.75rem 0; font-size: 0.875rem; }
+  .question-box .current .strike { text-decoration: line-through; color: #a8a29e; }
+  .verdict-box { background: #fff; border: 2px solid #E05A1B; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+  .verdict-box .badge { display: inline-block; background: #E05A1B; color: #fff; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 1rem; }
+  .rec-title { font-size: 1.5rem; font-weight: 800; color: #1c1917; margin-bottom: 0.25rem; font-family: Georgia, 'Times New Roman', serif; }
+  .rec-subtitle { font-size: 0.9375rem; color: #57534e; margin-bottom: 1.25rem; }
+  .rec-label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #a8a29e; }
+  .agreement-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .agree-card, .clash-card { background: #fff; border: 1px solid #e7e5e4; border-radius: 10px; padding: 1rem; }
+  .agree-card { border-left: 3px solid #16a34a; }
+  .clash-card { border-left: 3px solid #d97706; }
+  .agree-card .icon, .clash-card .icon { font-size: 1.25rem; margin-bottom: 0.5rem; }
+  .blind-card { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 1rem; margin: 0.5rem 0; }
+  .advisor-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin: 1rem 0; }
+  details { background: #fff; border: 1px solid #e7e5e4; border-radius: 10px; overflow: hidden; }
+  details + details { margin-top: 0.5rem; }
+  summary { padding: 0.75rem 1rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+  summary:hover { background: #fafaf9; }
+  summary .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .advisor-content { padding: 0 1rem 1rem; font-size: 0.875rem; color: #57534e; }
+  .advisor-content p { margin-bottom: 0.5rem; }
+  .advisor-content strong { color: #1c1917; }
+  .vote-bar { display: flex; gap: 0.25rem; margin: 1.5rem 0; }
+  .vote-bar .segment { flex: 1; height: 6px; border-radius: 3px; }
+  .vote-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: #a8a29e; margin-top: -0.75rem; margin-bottom: 1rem; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e7e5e4; font-size: 0.75rem; color: #a8a29e; text-align: center; }
+  .first-step { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1rem; }
+  .first-step .label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #16a34a; margin-bottom: 0.5rem; }
+  ul { padding-left: 1.25rem; margin: 0.5rem 0; }
+  li { margin-bottom: 0.35rem; }
+  @media (max-width: 640px) { .agreement-grid { grid-template-columns: 1fr; } body { padding: 1rem; } }
+</style>
+</head>
+<body>
+
+<h1>LLM Council Report</h1>
+<div class="meta">Section 5 Title &amp; Subtitle — April 7, 2026 &bull; org-shape / Shape Matters</div>
+
+<div class="question-box">
+  <div class="label">Question</div>
+  <p>Is <strong>"Look Inside Your Structure"</strong> the strongest title for the interactive Model Your Org section — the climactic moment where readers become participants?</p>
+  <div class="current">
+    <div class="strike" style="margin-bottom: 0.25rem;">Look Inside Your Structure</div>
+    <div class="strike">Depth, size, and culture create a signal profile unique to your org. This is what yours looks like.</div>
+  </div>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict-box">
+  <div class="badge">Council Recommendation</div>
+  <div class="rec-label">Title</div>
+  <div class="rec-title">How Much Signal Survives Your Structure?</div>
+  <div class="rec-label">Subtitle</div>
+  <div class="rec-subtitle">Set depth, headcount, fidelity, cycle time, and adaptability. See what your structure actually does to strategy.</div>
+  <div class="rec-label">Section Label</div>
+  <div class="rec-subtitle">Model Your Org <span style="color:#a8a29e;">(keep as-is — it's wayfinding, not copy)</span></div>
+
+  <div class="first-step">
+    <div class="label">The one thing to do first</div>
+    <p style="font-size: 0.875rem;">Replace the title and subtitle, then read Section 5 top-to-bottom in context with Sections 1–4. The callback to "signal survives" should land as a narrative loop closing. If it doesn't — fix the echo in Section 1, not Section 5.</p>
+  </div>
+</div>
+
+<!-- AGREEMENT / DISAGREEMENT -->
+<h2>Advisor Alignment</h2>
+
+<p style="font-size: 0.8125rem; color: #78716c; margin-bottom: 0.5rem;">Peer review votes for strongest response (5 of 5 → First Principles Thinker)</p>
+<div class="vote-bar">
+  <div class="segment" style="background: #E05A1B;" title="First Principles"></div>
+  <div class="segment" style="background: #E05A1B;" title="First Principles"></div>
+  <div class="segment" style="background: #E05A1B;" title="First Principles"></div>
+  <div class="segment" style="background: #E05A1B;" title="First Principles"></div>
+  <div class="segment" style="background: #E05A1B;" title="First Principles"></div>
+</div>
+<div class="vote-labels"><span>All 5 reviewers chose the First Principles Thinker's response</span><span>5/5</span></div>
+
+<div class="agreement-grid">
+  <div class="agree-card">
+    <div class="icon">&#10003;</div>
+    <h3 style="font-size: 0.8125rem; margin: 0 0 0.5rem;">Universal Agreement</h3>
+    <ul style="font-size: 0.8125rem;">
+      <li>"Look Inside" is too passive for this moment</li>
+      <li>Current subtitle over-explains and introduces unjustified jargon</li>
+      <li>Title needs to callback Section 1 and create an information gap</li>
+      <li>"Model Your Org" section label is fine</li>
+    </ul>
+  </div>
+  <div class="clash-card">
+    <div class="icon">&#9878;</div>
+    <h3 style="font-size: 0.8125rem; margin: 0 0 0.5rem;">Key Tensions</h3>
+    <ul style="font-size: 0.8125rem;">
+      <li><strong>Question vs. Command:</strong> Executor wants "Build Your Signal Profile" (directive). Council says the question creates a productive beat of discomfort.</li>
+      <li><strong>"Your Org" vs. "Your Structure":</strong> Warmer vs. more precise. Verdict: precision wins — four sections trained users to think structurally.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- BLIND SPOTS -->
+<h2>Blind Spots Caught in Peer Review</h2>
+
+<div class="blind-card">
+  <strong>1. Subtitle should preview the slider labels.</strong> Users need to know what they're about to do — "depth, headcount, fidelity, cycle time, adaptability" should appear so the interaction feels concrete before they touch anything.
+</div>
+<div class="blind-card">
+  <strong>2. User emotional state: "implicated, seeking agency."</strong> After four accusatory sections, the tool is the reward. Title should offer agency through interaction, not pile on more evidence.
+</div>
+<div class="blind-card">
+  <strong>3. "What Shape Are You?" breaks the tool's output.</strong> The tool produces three pillar scores, not a shape classification. The title would promise something the tool doesn't deliver — confusion at the moment you need trust.
+</div>
+
+<!-- ADVISOR RESPONSES -->
+<h2>Advisor Responses</h2>
+
+<details>
+  <summary><span class="dot" style="background: #dc2626;"></span> The Contrarian — "How Much of Your Strategy Actually Lands?"</summary>
+  <div class="advisor-content">
+    <p>"Look Inside" is passive — a museum placard, not a trigger. After four sections of escalating tension, it's deceleration at the moment of ignition. The subtitle is worse — explanatory text masquerading as a hook. "Signal profile" is jargon nobody knows.</p>
+    <p>The rejected "How Much of Your Strategy Actually Lands?" aims evidence at the reader's ego. Every executive believes their strategy is landing. This title says "prove it."</p>
+    <p><strong>Proposed subtitle:</strong> "Configure your org's real structure. See what survives the layers."</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #E05A1B;"></span> The First Principles Thinker — "How Much Signal Survives Your Org?" &#9733;</summary>
+  <div class="advisor-content">
+    <p>The real problem isn't the title — it's the transition mechanics. The job of Section 5 isn't to label what they're about to do, it's to make them feel the gap between what they know and what they don't know about their own org.</p>
+    <p><strong>Title:</strong> "How Much Signal Survives Your Org?" — direct callback to Section 1, implies a quantifiable answer they don't have, frames interaction as the only way to find out.</p>
+    <p><strong>Subtitle:</strong> "Set five parameters. See what your structure actually does to strategy, speed, and adaptability." Mechanical on purpose — simple input, concrete payoff.</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #a855f7;"></span> The Expansionist — "What Shape Are You?"</summary>
+  <div class="advisor-content">
+    <p>This is where passive agreement becomes personal stakes. "What Shape Are You?" is short, personal, provocative, and reframes the entire narrative as building toward THIS question.</p>
+    <p><strong>Subtitle:</strong> "Five inputs. Three scores. The physics of your organization — exposed."</p>
+    <p>The adjacent opportunity: this becomes the thing people say when they share it. Viral framing.</p>
+    <p><em>Peer review consensus: weakest response. Abandons physics vocabulary, BuzzFeed quiz tone, title promises a shape classification the tool doesn't deliver.</em></p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #0ea5e9;"></span> The Outsider — "How Much Signal Survives Your Structure?"</summary>
+  <div class="advisor-content">
+    <p>"Look Inside" is a dead phrase — anatomy textbook energy. Proposes "How Much Signal Survives Your Structure?" which directly references the core concept, frames the tool as personal reckoning, and "survives" has stakes.</p>
+    <p><strong>Key insight:</strong> "Your structure" is tighter than "your organization" and echoes the physics framing. This refinement was adopted in the final recommendation.</p>
+    <p><strong>Subtitle:</strong> "Set five sliders. See what your org actually delivers."</p>
+  </div>
+</details>
+
+<details>
+  <summary><span class="dot" style="background: #16a34a;"></span> The Executor — "Build Your Signal Profile"</summary>
+  <div class="advisor-content">
+    <p>"Fine" isn't enough at this transition. Proposes "Build Your Signal Profile" — active verb, "Build" means they're doing something now. Executives respond to directives, not invitations.</p>
+    <p><strong>Subtitle:</strong> "Set five inputs. See what your structure actually does to information."</p>
+    <p><em>Peer review note: Command vs. question tension. Council ruled the question creates a productive beat of discomfort that a command would skip.</em></p>
+  </div>
+</details>
+
+<!-- FOOTER -->
+<div class="footer">
+  LLM Council &bull; April 7, 2026 &bull; Topic: Section 5 title &amp; subtitle for org-shape (Shape Matters)<br>
+  5 advisors &bull; 5 peer reviews &bull; Chairman synthesis &bull; Full transcript: council-transcript-20260407-title.md
+</div>
+
+</body>
+</html>

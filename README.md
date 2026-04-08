@@ -19,9 +19,9 @@ Three cost channels of organizational depth:
 - **Interactive Fidelity Demo** — Animated visualization of signal decay across management layers
 - **Message Relay Simulator** — 5 scenario-driven simulations showing how messages distort through org levels with incentive annotations explaining *why* each layer reframes the signal
 - **Company Comparison** — 6 reference companies across 4 archetypes with shape metrics and signal fidelity
-- **Model Your Org** — Three-pillar diagnostic: Fidelity (signal decay), Lag (propagation delay), Response (change dynamics). 5 sliders, progressive disclosure. Explore each pillar's visualization independently.
+- **Model Your Org** — Three-pillar diagnostic: Fidelity (signal decay), Lag (propagation delay), Response (change dynamics). 4 sliders, progressive disclosure. Explore each pillar's visualization independently.
 - **Thermal Lag Model** — Fourier-inspired quadratic delay model showing how org depth compounds propagation time
-- **Damped Response Model** — Spring-mass-damper oscillator showing whether your org overshoots, stalls, or lands after a pivot
+- **Torque Model** — Physics-based pivot efficiency showing what fraction of the org actually receives a CEO directive
 - **Gemba Walk Analysis** — Illustrates direct observation vs. relay chain information loss
 
 ## Reference Companies (6)
@@ -80,18 +80,18 @@ src/
     depthTax      Depth tax model (signal, drift, decision costs)
     triangleGeometry  Shape gap, slope, gravity, agility calculations
     thermalLag    Thermal lag model (quadratic propagation delay, marginal cost)
-    dampedResponse Damped oscillator model (damping ratio, overshoot, settling time, step response)
+    healthScores  Unified 0-100 pillar health scoring (lag health, band colors)
     fidelityColor Gradient mapping utility (stone monochrome + ember semantic)
     styles        Tailwind class constants
     scrollToAnchor Smooth scroll utility for metric → methodology links
-    __tests__/    164 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor, signalRelay, thermalLag, dampedResponse)
+    __tests__/    178 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor, signalRelay, thermalLag, healthScores, contextHints)
   store/
-    useCompanyStore  Zustand persist store (levels, headcount, fidelityRate, decisionCycle, culturalAgility)
+    useCompanyStore  Zustand persist store (levels, headcount, fidelityRate, decisionCycle)
   data/
-    referenceCompanies  6 curated reference companies (with decisionCycle + culturalAgility)
+    referenceCompanies  6 curated reference companies (with decisionCycle)
     scenarios       5 relay simulation scenarios (safety, customer, innovation, strategy, operations)
   types/
-    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, ThermalLagResult, DampedResponseResult, Scenario, RelayLevel
+    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, ThermalLagResult, Scenario, RelayLevel
 ```
 
 ## Architecture

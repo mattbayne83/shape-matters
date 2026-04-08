@@ -14,6 +14,11 @@ function headcountToSlider(n: number): number {
   return ((Math.log(n) - LOG_MIN) / (LOG_MAX - LOG_MIN)) * 100;
 }
 
+interface SliderTick {
+  value: number;
+  label: string;
+}
+
 interface CompactSliderProps {
   id: string;
   label: string;
@@ -24,6 +29,12 @@ interface CompactSliderProps {
   step?: number;
   accent: 'ember' | 'warm-stone';
   onChange: (v: number) => void;
+  /** Optional hint word that changes with slider position */
+  hint?: string;
+  /** Optional endpoint labels: [minLabel, maxLabel] */
+  range?: [string, string];
+  /** Optional reference tick marks along the track */
+  ticks?: SliderTick[];
 }
 
 const ACCENT_COLORS = {
@@ -31,7 +42,7 @@ const ACCENT_COLORS = {
   'warm-stone': '#A8967A',
 } as const;
 
-function CompactSlider({ id, label, value, displayValue, min, max, step = 1, accent, onChange }: CompactSliderProps) {
+function CompactSlider({ id, label, value, displayValue, min, max, step = 1, accent, onChange, hint, range, ticks }: CompactSliderProps) {
   const pct = ((value - min) / (max - min)) * 100;
   const color = ACCENT_COLORS[accent];
 
@@ -41,9 +52,14 @@ function CompactSlider({ id, label, value, displayValue, min, max, step = 1, acc
         <label htmlFor={id} className="text-[10px] font-bold uppercase tracking-wide" style={{ color }}>
           {label}
         </label>
-        <span className="text-base font-extrabold font-mono tabular-nums text-stone-900">
-          {displayValue}
-        </span>
+        <div className="flex items-baseline gap-1.5">
+          {hint && (
+            <span className="text-[10px] font-medium text-stone-400">{hint}</span>
+          )}
+          <span className="text-base font-extrabold font-mono tabular-nums text-stone-900">
+            {displayValue}
+          </span>
+        </div>
       </div>
       <input
         id={id}
@@ -57,16 +73,39 @@ function CompactSlider({ id, label, value, displayValue, min, max, step = 1, acc
         style={{
           background: `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, #e7e5e4 ${pct}%, #e7e5e4 100%)`,
           borderRadius: 2,
-          // Thumb color via CSS custom property
           ['--thumb-color' as string]: color,
         }}
       />
+      <div className="relative h-3 mt-0.5">
+        {ticks ? ticks.map((tick) => {
+          const pos = ((tick.value - min) / (max - min)) * 100;
+          return (
+            <div key={tick.value} className="absolute flex flex-col items-center" style={{ left: `${pos}%`, transform: 'translateX(-50%)' }}>
+              <div className="w-px h-1.5 bg-stone-300" />
+              <span className="text-[8px] text-stone-400 whitespace-nowrap mt-px">{tick.label}</span>
+            </div>
+          );
+        }) : range && (
+          <>
+            <span className="absolute left-0 text-[9px] text-stone-400">{range[0]}</span>
+            <span className="absolute right-0 text-[9px] text-stone-400">{range[1]}</span>
+          </>
+        )}
+      </div>
       <style>{`
         #${id}::-webkit-slider-thumb { background: ${color}; }
         #${id}::-moz-range-thumb { background: ${color}; }
       `}</style>
     </div>
   );
+}
+
+function cycleHint(days: number): string {
+  if (days <= 1.5) return 'Rapid';
+  if (days <= 3) return 'Fast';
+  if (days <= 6) return 'Moderate';
+  if (days <= 10) return 'Slow';
+  return 'Glacial';
 }
 
 export function InputStrip() {
@@ -78,8 +117,6 @@ export function InputStrip() {
   const setFidelityRate = useCompanyStore((s) => s.setFidelityRate);
   const decisionCycle = useCompanyStore((s) => s.decisionCycle);
   const setDecisionCycle = useCompanyStore((s) => s.setDecisionCycle);
-  const culturalAgility = useCompanyStore((s) => s.culturalAgility);
-  const setCulturalAgility = useCompanyStore((s) => s.setCulturalAgility);
 
   const [hcSlider, setHcSlider] = useState(() => Math.round(headcountToSlider(headcount)));
   const [preset, setPreset] = useState('custom');
@@ -118,28 +155,17 @@ export function InputStrip() {
   return (
     <div className="bg-white border border-stone-200 rounded-xl shadow-sm">
       {/* ── Row 1: Sliders ── */}
-      <div className="flex items-end gap-4 p-3 px-4">
-        {/* ── Structure group ── */}
-        <div className="flex-1 min-w-0">
-          <div className="grid grid-cols-3 gap-x-4">
-            <CompactSlider id="is-levels" label="Levels" value={levels} displayValue={String(levels)} min={1} max={15} accent="ember" onChange={handleLevels} />
-            <CompactSlider id="is-size" label="Size" value={hcSlider} displayValue={formatHeadcount(headcount)} min={0} max={100} accent="ember" onChange={handleHeadcount} />
-            <CompactSlider id="is-fidelity" label="Fidelity" value={fidelityRate} displayValue={`${fidelityRate}%`} min={50} max={98} accent="ember" onChange={setFidelityRate} />
-          </div>
-        </div>
+      <div className="grid grid-cols-[1fr_1fr_1fr_auto_1fr] items-end gap-x-4 p-3 px-4">
+        <CompactSlider id="is-levels" label="Depth" value={levels} displayValue={String(levels)} min={1} max={15} accent="ember" onChange={handleLevels} range={['Flat', 'Deep']} />
+        <CompactSlider id="is-size" label="Headcount" value={hcSlider} displayValue={formatHeadcount(headcount)} min={0} max={100} accent="ember" onChange={handleHeadcount} range={['50', '500K']} />
+        <CompactSlider id="is-fidelity" label="Fidelity/Layer" value={fidelityRate} displayValue={`${fidelityRate}%`} min={50} max={98} accent="ember" onChange={setFidelityRate} ticks={[{ value: 70, label: 'Low trust' }, { value: 82, label: 'Typical' }, { value: 93, label: 'High trust' }]} />
 
         {/* ── Divider ── */}
         <div className="self-stretch flex items-center py-1">
           <div className="w-px h-full bg-stone-200" />
         </div>
 
-        {/* ── Dynamics group ── */}
-        <div className="flex-1 min-w-0 max-w-[280px]">
-          <div className="grid grid-cols-2 gap-x-4">
-            <CompactSlider id="is-cycle" label="Cycle" value={decisionCycle} displayValue={`${decisionCycle}d`} min={1} max={14} step={0.5} accent="warm-stone" onChange={setDecisionCycle} />
-            <CompactSlider id="is-agility" label="Agility" value={culturalAgility} displayValue={String(culturalAgility)} min={0} max={100} accent="warm-stone" onChange={setCulturalAgility} />
-          </div>
-        </div>
+        <CompactSlider id="is-cycle" label="Cycle Time" value={decisionCycle} displayValue={`${Math.round(decisionCycle)}d`} min={1} max={14} step={0.5} accent="warm-stone" onChange={setDecisionCycle} hint={cycleHint(decisionCycle)} ticks={[{ value: 2, label: 'Startup' }, { value: 4, label: 'Tech' }, { value: 7, label: 'Enterprise' }]} />
       </div>
 
       {/* ── Row 2: Presets + share ── */}

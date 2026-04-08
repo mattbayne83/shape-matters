@@ -8,17 +8,15 @@ interface RadarChartProps {
 
 const PILLARS = [
   { key: 'fidelity', label: 'Fidelity' },
-  { key: 'lag', label: 'Lag' },
-  { key: 'response', label: 'Response' },
+  { key: 'lag', label: 'Latency' },
+  { key: 'response', label: 'Agility' },
 ] as const;
 
 const SEGMENTS = 10;
 const SEG_GAP = 3;
 
-// Per-segment color ramp: green at bottom → amber → ember → red at top
-// This mimics a classic VU/EQ meter
 const SEG_COLORS = [
-  '#44403c', // 0-10   stone-700 (baseline)
+  '#44403c', // 0-10   stone-700
   '#44403c', // 10-20  stone-700
   '#57534e', // 20-30  stone-600
   '#78716c', // 30-40  stone-500
@@ -27,30 +25,32 @@ const SEG_COLORS = [
   '#F4A261', // 60-70  ember-light
   '#F4A261', // 70-80  ember-light
   '#E05A1B', // 80-90  ember
-  '#dc2626', // 90-100 red-600 (redline)
+  '#dc2626', // 90-100 red-600
 ];
 
 export function RadarChart({ fidelity, lagHealth, responseHealth }: RadarChartProps) {
   const scores = [fidelity, lagHealth, responseHealth];
 
   return (
-    <div className="flex items-end justify-center gap-10 w-full h-full px-8 py-6 relative">
-      {/* Scale markers — left edge */}
-      <div className="absolute left-2 flex flex-col justify-between text-[8px] font-mono text-stone-300 select-none" style={{ top: 44, bottom: 36 }}>
-        <span>100</span>
-        <span>0</span>
-      </div>
-
+    <div className="flex items-stretch justify-center gap-3 w-full h-full px-6 py-4">
       {PILLARS.map((pillar, i) => {
         const score = scores[i];
         const headlineColor = healthBandColor(score);
         const filledCount = Math.round(score / 10);
 
         return (
-          <div key={pillar.key} className="flex flex-col items-center gap-3 flex-1 max-w-[100px]">
+          <div
+            key={pillar.key}
+            className="flex-1 max-w-[180px] bg-white border border-stone-200 rounded-xl shadow-sm flex flex-col items-center gap-2 px-3 py-4"
+          >
+            {/* Label */}
+            <span className="text-[9px] font-bold text-stone-400 uppercase tracking-widest shrink-0">
+              {pillar.label}
+            </span>
+
             {/* Score */}
             <span
-              className="text-2xl font-extrabold font-mono tabular-nums leading-none"
+              className="text-4xl font-extrabold font-mono tabular-nums leading-none shrink-0"
               style={{ color: headlineColor }}
             >
               {score}
@@ -58,33 +58,35 @@ export function RadarChart({ fidelity, lagHealth, responseHealth }: RadarChartPr
 
             {/* EQ column */}
             <div
-              className="w-full flex flex-col-reverse"
+              className="w-full flex-1 flex flex-col-reverse min-h-0"
               style={{ gap: SEG_GAP }}
             >
               {Array.from({ length: SEGMENTS }, (_, seg) => {
                 const isFilled = seg < filledCount;
                 const isTop = seg === filledCount - 1 && filledCount > 0;
+                const color = SEG_COLORS[seg];
 
                 return (
                   <div
                     key={seg}
-                    className="w-full transition-all duration-300"
+                    className="w-full flex-1 rounded"
                     style={{
-                      height: 14,
-                      borderRadius: 3,
-                      backgroundColor: isFilled ? SEG_COLORS[seg] : '#f5f5f4',
+                      backgroundColor: isFilled ? color : '#f5f5f4',
                       opacity: isFilled ? 1 : 0.4,
-                      boxShadow: isTop ? `0 0 8px ${SEG_COLORS[seg]}55` : 'none',
+                      transition: `background-color 300ms ease-out, opacity 300ms ease-out`,
+                      transitionDelay: `${seg * 40}ms`,
+                      ...(isTop
+                        ? {
+                            ['--eq-glow-dim' as string]: `0 0 8px ${color}55`,
+                            ['--eq-glow-bright' as string]: `0 0 14px ${color}88`,
+                            animation: 'eq-breathe 2s ease-in-out infinite',
+                          }
+                        : { boxShadow: 'none' }),
                     }}
                   />
                 );
               })}
             </div>
-
-            {/* Label */}
-            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
-              {pillar.label}
-            </span>
           </div>
         );
       })}

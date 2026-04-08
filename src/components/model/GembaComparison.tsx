@@ -8,7 +8,7 @@ export function GembaComparison() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="group bg-stone-50 border border-stone-200 rounded-xl p-4 transition-shadow duration-300 hover:shadow-md">
           <div className={`${SECTION_LABEL} mb-2 text-stone-900`}>
-            Without Gemba Walk (9 levels)
+            Without Gemba Walk (9 deep)
           </div>
           <div className="bg-white border border-stone-200 rounded-xl p-6 relative overflow-hidden group">
             <div className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Standard Communication</div>
@@ -29,7 +29,7 @@ export function GembaComparison() {
           </div>
           <div className="text-center mt-2">
             <span className="text-lg font-bold font-mono tabular-nums text-white">100%</span>
-            <span className="text-[10px] text-stone-400 ml-1">fidelity at every level</span>
+            <span className="text-[10px] text-stone-400 ml-1">fidelity at every layer</span>
           </div>
         </div>
       </div>

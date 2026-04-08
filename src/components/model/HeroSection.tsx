@@ -58,11 +58,11 @@ export function HeroSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          {/* Card 1: Signal Fidelity */}
+          {/* Card 1: Fidelity */}
           <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[200px]">
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
-                Signal Fidelity
+                Fidelity
               </div>
               <div className="flex items-baseline justify-between mb-1">
                 <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums text-stone-900">
@@ -74,8 +74,8 @@ export function HeroSection() {
                 </div>
               </div>
               <div className="flex justify-between text-[10px] text-stone-500 mb-3">
-                <span>{flat.name} · {flat.levels} level</span>
-                <span>{deep.name} · {deep.levels} levels</span>
+                <span>{flat.name} · {flat.levels} deep</span>
+                <span>{deep.name} · {deep.levels} deep</span>
               </div>
             </div>
             <div>
@@ -148,8 +148,8 @@ export function HeroSection() {
                 </div>
               </div>
               <div className="flex justify-between text-[10px] text-stone-500 mb-3">
-                <span>{flat.name} · {flat.levels} level</span>
-                <span>{deep.name} · {deep.levels} levels</span>
+                <span>{flat.name} · {flat.levels} deep</span>
+                <span>{deep.name} · {deep.levels} deep</span>
               </div>
             </div>
             <div>

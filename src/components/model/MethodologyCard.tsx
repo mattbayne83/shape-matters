@@ -1,7 +1,14 @@
 import type { MetricDefinition } from '../../data/methodologyMetrics';
 
+const BADGE_STYLES: Record<MetricDefinition['category'], { stripe: string; badge: string; label: string }> = {
+  fidelity: { stripe: 'bg-ember', badge: 'bg-ember/10 text-ember', label: 'Fidelity' },
+  latency: { stripe: 'bg-warm-stone', badge: 'bg-warm-stone/10 text-warm-stone', label: 'Latency' },
+  agility: { stripe: 'bg-ember', badge: 'bg-ember/10 text-ember', label: 'Agility' },
+  supplementary: { stripe: 'bg-stone-400', badge: 'bg-stone-100 text-stone-400', label: 'Supplementary' },
+};
+
 export function MethodologyCard({ id, title, formula, description, constants, category }: MetricDefinition) {
-  const isPrimary = category === 'primary';
+  const style = BADGE_STYLES[category];
 
   return (
     <div
@@ -9,7 +16,7 @@ export function MethodologyCard({ id, title, formula, description, constants, ca
       className="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden scroll-mt-24 flex flex-col hover:shadow-lg hover:shadow-stone-200/50 hover:-translate-y-1 transition-all duration-300"
     >
       {/* Category stripe */}
-      <div className={`h-1 ${isPrimary ? 'bg-ember' : 'bg-warm-stone'}`} />
+      <div className={`h-1 ${style.stripe}`} />
 
       <div className="p-4 flex flex-col flex-1">
         {/* Header row: title + badge */}
@@ -18,12 +25,9 @@ export function MethodologyCard({ id, title, formula, description, constants, ca
             {title}
           </h4>
           <span
-            className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full whitespace-nowrap ml-2 ${isPrimary
-                ? 'bg-ember/10 text-ember'
-                : 'bg-stone-100 text-stone-400'
-              }`}
+            className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full whitespace-nowrap ml-2 ${style.badge}`}
           >
-            {isPrimary ? 'Primary' : 'Secondary'}
+            {style.label}
           </span>
         </div>
 
@@ -35,7 +39,7 @@ export function MethodologyCard({ id, title, formula, description, constants, ca
           )}
         </div>
 
-        {/* Description / "flavor text" */}
+        {/* Description */}
         <p className="text-sm text-stone-500 leading-relaxed mt-2 flex-1">
           {description}
         </p>

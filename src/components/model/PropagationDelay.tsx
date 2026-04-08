@@ -30,13 +30,13 @@ export function PropagationDelay({ levels, decisionCycle }: PropagationDelayProp
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <h3 className="text-[11px] font-bold text-stone-500 uppercase tracking-wide mb-1 shrink-0">
-        Propagation Delay
+        Latency
       </h3>
       <p className="text-sm text-stone-400 mb-4 shrink-0">
         How long a strategic signal takes to reach each layer
       </p>
 
-      <div className="space-y-3 flex-1 min-h-0 flex flex-col justify-center px-4">
+      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-center gap-3 px-4">
         {delays.map((d) => {
           const widthPct = maxDelay > 0
             ? Math.max(1, (d.cumulativeDelay / maxDelay) * 100)
@@ -44,10 +44,10 @@ export function PropagationDelay({ levels, decisionCycle }: PropagationDelayProp
 
           return (
             <div key={d.layer} className="flex items-center gap-3">
-              <span className="text-xs font-mono text-stone-400 w-28 shrink-0 text-right">
+              <span className="text-xs font-mono text-stone-400 w-28 shrink-0 text-right truncate">
                 L{d.layer} · {d.role}
               </span>
-              <div className="flex-1 h-8 bg-stone-100 rounded relative overflow-hidden shadow-inner">
+              <div className={`flex-1 ${levels > 6 ? 'h-6' : 'h-8'} bg-stone-100 rounded relative overflow-hidden shadow-inner`}>
                 <div
                   className="h-full rounded transition-all duration-500 ease-out shadow-sm"
                   style={{
@@ -65,7 +65,7 @@ export function PropagationDelay({ levels, decisionCycle }: PropagationDelayProp
       </div>
 
       {levels > 1 && (
-        <p className="text-sm text-stone-500 mt-4 pt-3 border-t border-stone-100">
+        <p className="text-sm text-stone-500 mt-auto pt-3 border-t border-stone-100 shrink-0">
           Removing 1 layer saves{' '}
           <span className="font-bold font-mono text-stone-700">
             {Math.round(marginalCost)} days

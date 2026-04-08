@@ -2,8 +2,10 @@ import { METHODOLOGY_METRICS } from '../../data/methodologyMetrics';
 import { MethodologyCard } from './MethodologyCard';
 import { Prose } from '../ui/Prose';
 
-const primary = METHODOLOGY_METRICS.filter((m) => m.category === 'primary');
-const secondary = METHODOLOGY_METRICS.filter((m) => m.category === 'secondary');
+const fidelity = METHODOLOGY_METRICS.filter((m) => m.category === 'fidelity');
+const latency = METHODOLOGY_METRICS.filter((m) => m.category === 'latency');
+const agility = METHODOLOGY_METRICS.filter((m) => m.category === 'agility');
+const supplementary = METHODOLOGY_METRICS.filter((m) => m.category === 'supplementary');
 
 export function MethodologySection() {
   return (
@@ -19,22 +21,42 @@ export function MethodologySection() {
         </p>
       </Prose>
 
-      {/* ── Primary Metrics Grid ── */}
+      {/* ── Fidelity Pillar ── */}
       <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-8 mb-3">
-        Primary Metrics
+        Fidelity
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-        {primary.map((m) => (
+        {fidelity.map((m) => (
           <MethodologyCard key={m.id} {...m} />
         ))}
       </div>
 
-      {/* ── Secondary Metrics Grid ── */}
+      {/* ── Latency Pillar ── */}
       <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-10 mb-3">
-        Secondary Metrics
+        Latency
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-        {secondary.map((m) => (
+        {latency.map((m) => (
+          <MethodologyCard key={m.id} {...m} />
+        ))}
+      </div>
+
+      {/* ── Agility Pillar ── */}
+      <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-10 mb-3">
+        Agility
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        {agility.map((m) => (
+          <MethodologyCard key={m.id} {...m} />
+        ))}
+      </div>
+
+      {/* ── Supplementary Metrics ── */}
+      <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-10 mb-3">
+        Supplementary Metrics
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        {supplementary.map((m) => (
           <MethodologyCard key={m.id} {...m} />
         ))}
       </div>
@@ -56,10 +78,6 @@ export function MethodologySection() {
           <div>
             <span className="text-stone-400">Center of Mass{'         '}</span> = Σ(k·n<sub>k</sub>) / N{' '}
             <span className="text-stone-400 text-xs">weighted average layer position</span>
-          </div>
-          <div>
-            <span className="text-stone-400">Round-trip Fidelity{'    '}</span> = r<sup>2(L-1)</sup>{' '}
-            <span className="text-stone-400 text-xs">signal up + decision back down</span>
           </div>
         </div>
       </div>

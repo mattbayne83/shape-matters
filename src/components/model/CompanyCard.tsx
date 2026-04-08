@@ -54,7 +54,7 @@ export function CompanyCard({ company, fidelityRate }: CompanyCardProps) {
 
       <div className="border-t border-stone-200 pt-3 mb-3">
         <div className={`${SECTION_LABEL} mb-2`}>
-          Signal Fidelity
+          Fidelity
         </div>
         <div className="flex items-baseline justify-between mb-1">
           <div className="text-[10px] text-stone-500">Up (IC → CEO)</div>
@@ -97,7 +97,13 @@ export function CompanyCard({ company, fidelityRate }: CompanyCardProps) {
         </div>
       </div>
 
-      <div className="text-[10px] text-stone-500 mt-3 italic">{company.notes}</div>
+      {company.narrative && (
+        <div className="text-xs text-stone-700 font-medium mt-3 leading-relaxed">
+          {company.narrative}
+        </div>
+      )}
+
+      <div className="text-[10px] text-stone-500 mt-2 italic">{company.notes}</div>
 
       {company.source && (
         <div className="mt-2 pt-2 border-t border-stone-100 flex items-center gap-1">

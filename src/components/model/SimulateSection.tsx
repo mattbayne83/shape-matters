@@ -30,7 +30,7 @@ export function SimulateSection() {
               <div className="flex items-baseline justify-between mb-3">
                 <div>
                   <label htmlFor="sim-levels" className="text-sm font-bold text-stone-900 uppercase tracking-wide">
-                    Levels
+                    Depth
                   </label>
                   <div className="text-xs text-stone-500 mt-1">Adjust depth of hierarchy</div>
                 </div>
@@ -48,7 +48,7 @@ export function SimulateSection() {
                 aria-valuenow={levels}
                 aria-valuemin={2}
                 aria-valuemax={12}
-                aria-valuetext={`${levels} levels`}
+                aria-valuetext={`Depth: ${levels}`}
                 className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
               />
             </div>

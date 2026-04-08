@@ -36,17 +36,3 @@ export function decisionCycleHint(decisionCycle: number, levels: number): string
   else label = 'Glacial';
   return `${label} — ${totalDays}d CEO → front line`;
 }
-
-export function culturalAgilityHint(
-  culturalAgility: number,
-  settlingWeeks: number,
-): string {
-  const weeks = Math.round(settlingWeeks);
-  let label: string;
-  if (culturalAgility <= 20) label = 'Rigid';
-  else if (culturalAgility <= 40) label = 'Resistant';
-  else if (culturalAgility <= 60) label = 'Moderate';
-  else if (culturalAgility <= 80) label = 'Adaptive';
-  else label = 'Highly agile';
-  return `${label} — settling time ~${weeks}wk`;
-}

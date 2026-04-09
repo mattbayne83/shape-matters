@@ -7,10 +7,11 @@ const ARC_START = 135; // 7 o'clock
 const ARC_SWEEP = 270;
 
 /** LED Ring knob — 13 dots on a 270° arc with dark body and white pointer */
-function Knob({ score, color, size = 60, className }: { score: number; color: string; size?: number; className?: string }) {
+function Knob({ score, color }: { score: number; color: string }) {
+  const size = 60; // viewBox coordinate space (SVG scales to container via width/height 100%)
   const cx = size / 2;
   const cy = size / 2;
-  const ledR = size * 0.4; // radius for LED dot positions (leaves room for dot radius + glow)
+  const ledR = size * 0.4;
   const litCount = Math.round(Math.min(Math.max(score, 0), 100) / (100 / LED_COUNT));
 
   const toXY = (deg: number) => {
@@ -18,7 +19,6 @@ function Knob({ score, color, size = 60, className }: { score: number; color: st
     return [cx + ledR * Math.cos(rad), cy + ledR * Math.sin(rad)] as const;
   };
 
-  // Pointer angle — same arc mapping as LEDs
   const pointerAngle = ARC_START + (Math.min(Math.max(score, 0), 100) / 100) * ARC_SWEEP;
   const pointerLen = size * 0.22;
   const pointerRad = (pointerAngle * Math.PI) / 180;
@@ -26,7 +26,7 @@ function Knob({ score, color, size = 60, className }: { score: number; color: st
   const py = cy + pointerLen * Math.sin(pointerRad);
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={`select-none shrink-0 ${className ?? ''}`}>
+    <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`} className="select-none shrink-0">
       <defs>
         <filter id={`led-glow-${color.replace('#', '')}`} x="-50%" y="-50%" width="200%" height="200%">
           <feDropShadow dx="0" dy="0" stdDeviation="1.5" floodColor={color} floodOpacity="0.5" />
@@ -143,8 +143,9 @@ export function PillarCard({
           </p>
           <p className="text-[11px] text-stone-500 leading-snug">{sub}</p>
         </div>
-        <Knob score={score} color={healthColor ?? accentColor} size={56} className="sm:hidden" />
-        <Knob score={score} color={healthColor ?? accentColor} size={72} className="hidden sm:block" />
+        <div className="w-14 h-14 sm:w-[72px] sm:h-[72px]">
+          <Knob score={score} color={healthColor ?? accentColor} />
+        </div>
       </div>
 
       {/* Explore / Back edge strip */}

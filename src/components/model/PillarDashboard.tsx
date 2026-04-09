@@ -170,7 +170,6 @@ export function PillarDashboard() {
 
       {/* ── Right column: 3 stacked pillar cards ── */}
       <div className="flex flex-col gap-2 order-last lg:order-first">
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-stone-400">Structure</span>
         <PillarCard
           id="fidelity"
           label="Fidelity"
@@ -197,7 +196,6 @@ export function PillarDashboard() {
           hasExpandedSibling={expandedPillar !== null && expandedPillar !== 'lag'}
           onToggle={() => togglePillar('lag')}
         />
-        <span className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-ember/70">Design Lever</span>
         <PillarCard
           id="autonomy"
           label="Autonomy"

@@ -11,11 +11,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - `teamDecisionMix` field on reference companies (Valve 0%, Nucor 60%, Google 50%, Meta 30%, Haier 80%, Amazon 70%)
 - `?tm=` URL parameter for shareable team-routing state
 - **Signal-decay congestion model** (engine internal) — `CONGESTION_GAMMA=0.1` in torque calculation, per-hop `r_eff = r × (1 - γ × n_k/N_max)`
-- **Pillar category labels** — "Structure" above Fidelity + Lag, "Design Lever" above Autonomy
+- **MiniEQ component** (`src/components/model/MiniEQ.tsx`) — 5-segment inline VU meter column, same color ramp as RadarChart. Used in redesigned CompanyCard.
 - 11 new unit tests (total: 200 across 10 files)
 
 ### Changed
-- **Mobile-responsive Model section** — PillarDashboard detail panel renders above cards on mobile (was below, off-screen); auto-scrolls into view on pillar expand. PillarCard knobs shrink to 56px on mobile (72px desktop) with tighter padding. What-If grid stacks single-column on small screens (was 2-col with orphan). InputStrip Tier 3 (compare pills) scrolls horizontally on narrow viewports.
+- **Proof section redesigned** — CompanyCard now leads with 3 pillar health scores (Fidelity/Latency/Autonomy) + mini EQ columns, round-trip fidelity punchline, narrative. Removed: LayerDiagram, Avg Span, Flatness, Manager Ratio, IC count, section labels.
+- **AuthoritySpectrum intro animation** — health band segments wipe left→right, "You" dot bounces in, company dots stagger, metrics fade up. Keyframe names include inputs for restart on slider change. Respects `prefers-reduced-motion`.
+- **Pillar category labels removed** — "Structure" and "Design Lever" labels above PillarCards deleted (redundant with card labels + EQ chart).
+- **PillarCard knob uses single SVG** — CSS-sized container (`w-14 sm:w-[72px]`) with `width/height: 100%` SVG. Fixes duplicate filter ID bug that killed LED glow on mobile.
+- **Mobile-responsive Model section** — PillarDashboard detail panel renders above cards on mobile (was below, off-screen); auto-scrolls into view on pillar expand. PillarCard tighter padding on mobile. What-If grid stacks single-column on small screens (was 2-col with orphan). InputStrip Tier 3 (compare pills) scrolls horizontally on narrow viewports.
 - **InputStrip redesigned** as three-tier "org designer workbench": collapsed context bar (structure) → 4-column lever grid → benchmark presets. All lever sliders now use ember accent. Company presets highlight changed sliders with a 1.5s pulse animation. `advancedInputsOpen` renamed to `contextExpanded`.
 - DCI recalibrated: Valve 95→92 (informal hierarchies), Amazon 40→72 (Bryar & Carr literature)
 - Model section subheading updated: "Structure determines fidelity and speed. Authority distribution is your lever."

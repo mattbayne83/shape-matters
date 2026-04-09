@@ -106,7 +106,9 @@ Shared inputs across sections:
 - `MethodologyCard` — "Pokemon card" metric definition: category stripe, badge, formula block, description
 - `MethodologySection` — Full methodology section: card grids + prose (geometry, classification, assumptions, sources)
 - `SensitivitySweep` — Fidelity sensitivity SVG chart
-- `ComparisonView` — 6 companies, archetype filter pills
+- `ComparisonView` — 6 companies in responsive grid (1→2→3 col)
+- `CompanyCard` (~119 lines) — Pillar-score-first company card: header (name + era + context line), 3-cell pillar strip (Fidelity/Latency/Autonomy health scores + MiniEQ columns), round-trip fidelity punchline, narrative, source with external link. Computes all 3 pillar scores per company.
+- `MiniEQ` (~41 lines) — 5-segment inline VU meter column. Same color ramp as RadarChart (stone-700 → ember). Top filled segment gets glow. Used in CompanyCard.
 
 ### Signal Relay Engine (`src/lib/signalRelay.ts`)
 - `applyRelayTransforms(message, level)` — progressive regex-based message distortion for custom messages (currently unused, available for future use)
@@ -156,7 +158,9 @@ Shared inputs across sections:
 - **RadarChart is NOT a radar chart** — despite the filename, it renders EQ-style segmented columns. The name is historical. Don't add SVG spider/polygon logic.
 - **PillarCard has a Knob sub-component** — inline SVG rotary knob (270° arc). Uses `score` prop (0-100 number) not `value` (string). Both must be passed from PillarDashboard.
 - **FlippableMetricCards always render in More Metrics** — not gated by `expandedPillar`. The auto-open linkage was removed.
-- **LayerDiagram `bottomUp`** — reverses render order (L0 at bottom). Used by GembaComparison only; CompanyCard uses default top-down.
+- **LayerDiagram `bottomUp`** — reverses render order (L0 at bottom). Used by GembaComparison only.
+- **CompanyCard no longer uses LayerDiagram** — redesigned with pillar scores + MiniEQ. Computes lag and autonomy scores internally using `company.decisionCycle` and `company.dci` (falls back to defaults 3 and 50).
+- **MiniEQ segment count is fixed at 5** — no configurable `segments` prop. Color ramp is hardcoded to match RadarChart's first 5 of 10 VU segments.
 - **Shareable URL uses query params** (`?l=9&h=150000&f=82&d=3`), NOT hash params — hash is reserved for section anchors
 - **`applyUrlParams()` runs twice** — once at module scope (first-visit), once via `onRehydrateStorage` (overrides persist rehydration). This is intentional.
 - **`expandedPillar` is NOT persisted** — always start at radar view (all collapsed) on reload.

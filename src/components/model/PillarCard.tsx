@@ -7,7 +7,7 @@ const ARC_START = 135; // 7 o'clock
 const ARC_SWEEP = 270;
 
 /** LED Ring knob — 13 dots on a 270° arc with dark body and white pointer */
-function Knob({ score, color, size = 60 }: { score: number; color: string; size?: number }) {
+function Knob({ score, color, size = 60, className }: { score: number; color: string; size?: number; className?: string }) {
   const cx = size / 2;
   const cy = size / 2;
   const ledR = size * 0.4; // radius for LED dot positions (leaves room for dot radius + glow)
@@ -26,7 +26,7 @@ function Knob({ score, color, size = 60 }: { score: number; color: string; size?
   const py = cy + pointerLen * Math.sin(pointerRad);
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="select-none shrink-0">
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={`select-none shrink-0 ${className ?? ''}`}>
       <defs>
         <filter id={`led-glow-${color.replace('#', '')}`} x="-50%" y="-50%" width="200%" height="200%">
           <feDropShadow dx="0" dy="0" stdDeviation="1.5" floodColor={color} floodOpacity="0.5" />
@@ -125,13 +125,13 @@ export function PillarCard({
       />
 
       {/* Card content */}
-      <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
+      <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 flex-1 min-w-0">
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-bold text-stone-500 uppercase tracking-wide mb-1 transition-colors">
             {label}
           </p>
           <p
-            className="text-3xl font-extrabold font-mono tabular-nums leading-none mb-1 transition-colors"
+            className="text-2xl sm:text-3xl font-extrabold font-mono tabular-nums leading-none mb-1 transition-colors"
             style={{ color: healthColor ?? accentColor }}
           >
             {value}<span className="text-sm font-semibold text-stone-300 ml-0.5">/100</span>
@@ -143,7 +143,8 @@ export function PillarCard({
           </p>
           <p className="text-[11px] text-stone-500 leading-snug">{sub}</p>
         </div>
-        <Knob score={score} color={healthColor ?? accentColor} size={72} />
+        <Knob score={score} color={healthColor ?? accentColor} size={56} className="sm:hidden" />
+        <Knob score={score} color={healthColor ?? accentColor} size={72} className="hidden sm:block" />
       </div>
 
       {/* Explore / Back edge strip */}

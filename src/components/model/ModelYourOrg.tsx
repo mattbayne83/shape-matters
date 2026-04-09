@@ -36,7 +36,7 @@ export function ModelYourOrg() {
 
       {/* ── What-If / Restructuring Impact ── */}
       {restructure && (
-        <div className="bg-orange-50/80 backdrop-blur-md border-2 rounded-xl p-4 relative overflow-hidden animate-what-if-border transition-colors duration-700">
+        <div className="bg-orange-50/80 backdrop-blur-md border-2 rounded-xl p-3 sm:p-4 relative overflow-hidden animate-what-if-border transition-colors duration-700">
           <div
             className="absolute -inset-[100%] animate-slide-glow pointer-events-none opacity-100"
             style={{
@@ -44,13 +44,13 @@ export function ModelYourOrg() {
             }}
           />
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3">
               <span className="text-[10px] font-bold text-stone-700 uppercase tracking-wide bg-stone-100/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-stone-200/50">What If</span>
-              <span className="text-[11px] text-stone-600 font-medium">
+              <span className="text-[10px] sm:text-[11px] text-stone-600 font-medium">
                 You reduced depth by one ({restructure.currentLevels} → {restructure.proposedLevels}) and empowered ICs (DCI +15)
               </span>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
               <div className="bg-white/60 backdrop-blur-md border border-white/60 shadow-sm rounded-lg px-3 py-2.5 text-center">
                 <div className="text-[10px] text-stone-500 uppercase font-semibold tracking-wide mb-1">Pivot Speed</div>
                 <div className="text-2xl font-bold font-mono tabular-nums text-stone-900 drop-shadow-sm">

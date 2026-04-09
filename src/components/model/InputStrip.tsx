@@ -249,14 +249,14 @@ export function InputStrip() {
       </div>
 
       {/* ── Tier 3: Benchmarks + Share ── */}
-      <div className="flex items-center gap-1.5 px-4 py-2 border-t border-stone-100">
-        <span className="text-[10px] font-bold uppercase tracking-wide text-stone-400 mr-1">Compare</span>
+      <div className="flex items-center gap-1.5 px-4 py-2 border-t border-stone-100 overflow-x-auto">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-stone-400 mr-1 shrink-0">Compare</span>
         {REFERENCE_COMPANIES.map((c) => (
           <button
             key={c.id}
             onClick={() => handlePresetChange(c.id)}
             className={`
-              text-[10px] font-medium px-2.5 py-0.5 rounded-full border cursor-pointer
+              text-[10px] font-medium px-2.5 py-0.5 rounded-full border cursor-pointer shrink-0
               transition-all duration-200
               ${preset === c.id
                 ? 'bg-stone-800 text-white border-stone-800 shadow-sm'
@@ -267,12 +267,12 @@ export function InputStrip() {
           </button>
         ))}
 
-        <div className="flex-1" />
+        <div className="flex-1 min-w-2" />
 
         <button
           onClick={handleCopyLink}
           className={`
-            flex items-center gap-1 text-[10px] font-medium px-2.5 py-0.5 rounded-full border cursor-pointer
+            flex items-center gap-1 text-[10px] font-medium px-2.5 py-0.5 rounded-full border cursor-pointer shrink-0
             transition-all duration-200
             ${copied
               ? 'bg-green-50 text-green-700 border-green-200'

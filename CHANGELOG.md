@@ -15,6 +15,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 - 11 new unit tests (total: 200 across 10 files)
 
 ### Changed
+- **Mobile-responsive Model section** — PillarDashboard detail panel renders above cards on mobile (was below, off-screen); auto-scrolls into view on pillar expand. PillarCard knobs shrink to 56px on mobile (72px desktop) with tighter padding. What-If grid stacks single-column on small screens (was 2-col with orphan). InputStrip Tier 3 (compare pills) scrolls horizontally on narrow viewports.
 - **InputStrip redesigned** as three-tier "org designer workbench": collapsed context bar (structure) → 4-column lever grid → benchmark presets. All lever sliders now use ember accent. Company presets highlight changed sliders with a 1.5s pulse animation. `advancedInputsOpen` renamed to `contextExpanded`.
 - DCI recalibrated: Valve 95→92 (informal hierarchies), Amazon 40→72 (Bryar & Carr literature)
 - Model section subheading updated: "Structure determines fidelity and speed. Authority distribution is your lever."

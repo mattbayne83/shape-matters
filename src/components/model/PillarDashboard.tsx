@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCompanyStore } from '../../store/useCompanyStore';
 import { calcOrgMetrics } from '../../lib/orgMetrics';
@@ -61,13 +61,26 @@ export function PillarDashboard() {
     setExpandedPillar(expandedPillar === id ? null : id);
   }
 
+  // On mobile, scroll the detail panel into view when a pillar expands
+  const detailRef = useRef<HTMLDivElement>(null);
+  const prevExpanded = useRef(expandedPillar);
+  useEffect(() => {
+    if (expandedPillar && expandedPillar !== prevExpanded.current && detailRef.current) {
+      const isLg = window.matchMedia('(min-width: 1024px)').matches;
+      if (!isLg) {
+        detailRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+    prevExpanded.current = expandedPillar;
+  }, [expandedPillar]);
+
   return (
     <div
       className="grid grid-cols-1 lg:grid-cols-[3fr_7fr] gap-3"
       ref={containerRef}
     >
       {/* ── Detail column: Radar OR expanded content ── */}
-      <div className="order-last relative min-h-[400px] lg:min-h-0">
+      <div className="order-first lg:order-last relative min-h-[280px] lg:min-h-0" ref={detailRef}>
         <div
           className="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden w-full h-full flex flex-col lg:absolute lg:inset-0 transition-all duration-300"
           style={expandedPillar ? {
@@ -156,7 +169,7 @@ export function PillarDashboard() {
       </div>
 
       {/* ── Right column: 3 stacked pillar cards ── */}
-      <div className="flex flex-col gap-2 order-first">
+      <div className="flex flex-col gap-2 order-last lg:order-first">
         <span className="text-[10px] font-semibold uppercase tracking-widest text-stone-400">Structure</span>
         <PillarCard
           id="fidelity"

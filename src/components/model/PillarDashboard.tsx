@@ -14,6 +14,7 @@ import { DotTimeline } from './DotTimeline';
 import { AuthoritySpectrum } from './AuthoritySpectrum';
 import { RadarChart } from './RadarChart';
 import { calcAutonomyScore } from '../../lib/autonomy';
+import { calcBlendedScores } from '../../lib/blendedModel';
 
 const FADE = { duration: 0.3, ease: [0.22, 1, 0.36, 1] } as const;
 
@@ -23,6 +24,7 @@ export function PillarDashboard() {
   const fidelityRate = useCompanyStore((s) => s.fidelityRate);
   const decisionCycle = useCompanyStore((s) => s.decisionCycle);
   const dci = useCompanyStore((s) => s.dci);
+  const teamDecisionMix = useCompanyStore((s) => s.teamDecisionMix);
   const expandedPillar = useCompanyStore((s) => s.expandedPillar);
   const setExpandedPillar = useCompanyStore((s) => s.setExpandedPillar);
 
@@ -31,9 +33,21 @@ export function PillarDashboard() {
   const lagHealth = useMemo(() => calcLagHealth(lag.totalDelay), [lag.totalDelay]);
 
   const fidelityScore = Math.round(m.fidelityAtTopPct);
-  const fidelityHealthColor = healthBandColor(fidelityScore);
   const autonomy = useMemo(() => calcAutonomyScore(dci, levels), [dci, levels]);
-  const autonomyHealthColor = healthBandColor(autonomy.score);
+
+  // Blended model: when teamDecisionMix > 0, compute blended scores
+  const blended = useMemo(() => calcBlendedScores({
+    levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix,
+  }), [levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix]);
+
+  // Use blended scores when active, monolithic otherwise
+  const displayFidelity = blended.isBlended ? blended.fidelity : fidelityScore;
+  const displayLag = blended.isBlended ? blended.lag : lagHealth.score;
+  const displayAutonomy = blended.isBlended ? blended.autonomy : autonomy.score;
+
+  const fidelityHealthColor = healthBandColor(displayFidelity);
+  const autonomyHealthColor = healthBandColor(displayAutonomy);
+  const lagDisplayHealth = blended.isBlended ? { score: displayLag, label: lagHealth.label, color: healthBandColor(displayLag) } : lagHealth;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -71,7 +85,7 @@ export function PillarDashboard() {
               transition={FADE}
               className="w-full h-full flex items-center justify-center p-4"
             >
-              <RadarChart fidelity={fidelityScore} lagHealth={lagHealth.score} autonomyHealth={autonomy.score} />
+              <RadarChart fidelity={displayFidelity} lagHealth={displayLag} autonomyHealth={displayAutonomy} />
             </motion.div>
           )}
 
@@ -84,14 +98,14 @@ export function PillarDashboard() {
               transition={FADE}
               className="p-4 h-full flex flex-col overflow-hidden"
             >
+              <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center mb-3 shrink-0">
+                Signal Fidelity
+              </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0 relative">
                 {/* Divider Line (Desktop only) */}
-                <div className="hidden lg:block absolute left-1/2 top-4 bottom-4 w-px bg-stone-100" />
-                
+                <div className="hidden lg:block absolute left-1/2 top-0 bottom-4 w-px bg-stone-100" />
+
                 <div className="flex flex-col items-center justify-center min-h-0 px-2 lg:pr-6">
-                  <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wide mb-4 self-center shrink-0">
-                    Signal Cascade
-                  </div>
                   <div className="flex-1 min-h-0 w-full flex items-center justify-center">
                     <SignalCascade levels={levels} fidelityRate={fidelityRate} semantic />
                   </div>
@@ -115,6 +129,9 @@ export function PillarDashboard() {
               transition={FADE}
               className="p-4 h-full flex flex-col overflow-hidden"
             >
+              <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center mb-3 shrink-0">
+                Propagation Delay
+              </div>
               <DotTimeline levels={levels} decisionCycle={decisionCycle} />
             </motion.div>
           )}
@@ -128,7 +145,10 @@ export function PillarDashboard() {
               transition={FADE}
               className="p-4 h-full flex flex-col overflow-hidden"
             >
-              <AuthoritySpectrum dci={dci} levels={levels} />
+              <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center mb-3 shrink-0">
+                Autonomy Spectrum
+              </div>
+              <AuthoritySpectrum dci={dci} levels={levels} displayScore={displayAutonomy} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -137,14 +157,16 @@ export function PillarDashboard() {
 
       {/* ── Right column: 3 stacked pillar cards ── */}
       <div className="flex flex-col gap-2 order-first">
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-stone-400">Structure</span>
         <PillarCard
           id="fidelity"
           label="Fidelity"
-          value={`${fidelityScore}`}
-          score={fidelityScore}
+          value={`${displayFidelity}`}
+          score={displayFidelity}
           sub={`${m.fidelityAtTopPct.toFixed(1)}% · ${levels - 1} relays`}
           accentColor="#E05A1B"
           healthColor={fidelityHealthColor}
+
           isExpanded={expandedPillar === 'fidelity'}
           hasExpandedSibling={expandedPillar !== null && expandedPillar !== 'fidelity'}
           onToggle={() => togglePillar('fidelity')}
@@ -152,23 +174,26 @@ export function PillarDashboard() {
         <PillarCard
           id="lag"
           label="Latency"
-          value={`${lagHealth.score}`}
-          score={lagHealth.score}
-          sub={`${lag.totalDelay}d · ${lagHealth.label}`}
+          value={`${displayLag}`}
+          score={displayLag}
+          sub={`${lag.totalDelay}d · ${lagDisplayHealth.label}`}
           accentColor="#E05A1B"
-          healthColor={lagHealth.color}
+          healthColor={lagDisplayHealth.color}
+
           isExpanded={expandedPillar === 'lag'}
           hasExpandedSibling={expandedPillar !== null && expandedPillar !== 'lag'}
           onToggle={() => togglePillar('lag')}
         />
+        <span className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-ember/70">Design Lever</span>
         <PillarCard
           id="autonomy"
           label="Autonomy"
-          value={`${autonomy.score}`}
-          score={autonomy.score}
+          value={`${displayAutonomy}`}
+          score={displayAutonomy}
           sub={`DCI ${dci}% · ${autonomy.label}`}
           accentColor="#A8967A"
           healthColor={autonomyHealthColor}
+
           isExpanded={expandedPillar === 'autonomy'}
           hasExpandedSibling={expandedPillar !== null && expandedPillar !== 'autonomy'}
           onToggle={() => togglePillar('autonomy')}

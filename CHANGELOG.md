@@ -5,6 +5,47 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- **Blended decision model** (`src/lib/blendedModel.ts`) — team-path vs hierarchy blending with `teamDecisionMix` parameter (0-100%). Amazon at 70:30 blend = Fresh (74 HP) vs monolithic Expired (15 HP).
+- **Team Autonomy slider** in Tier 2 lever grid — always visible alongside Signal Clarity, Decision Speed, and Decision Rights
+- `teamDecisionMix` field on reference companies (Valve 0%, Nucor 60%, Google 50%, Meta 30%, Haier 80%, Amazon 70%)
+- `?tm=` URL parameter for shareable team-routing state
+- **Signal-decay congestion model** (engine internal) — `CONGESTION_GAMMA=0.1` in torque calculation, per-hop `r_eff = r × (1 - γ × n_k/N_max)`
+- **Pillar category labels** — "Structure" above Fidelity + Lag, "Design Lever" above Autonomy
+- 11 new unit tests (total: 200 across 10 files)
+
+### Changed
+- **InputStrip redesigned** as three-tier "org designer workbench": collapsed context bar (structure) → 4-column lever grid → benchmark presets. All lever sliders now use ember accent. Company presets highlight changed sliders with a 1.5s pulse animation. `advancedInputsOpen` renamed to `contextExpanded`.
+- DCI recalibrated: Valve 95→92 (informal hierarchies), Amazon 40→72 (Bryar & Carr literature)
+- Model section subheading updated: "Structure determines fidelity and speed. Authority distribution is your lever."
+- Torque calculation now uses per-hop congestion-adjusted fidelity (CEO torque ~10% lower for geometric distributions)
+- **Slider labels renamed** for MECE intuitiveness: Fidelity/Layer → Signal Clarity, Cycle Time → Decision Speed, Authority → Decision Rights, Team Routing → Team Autonomy
+- **InputStrip preset animation** changed from ember border pulse to 0.5s settle animation (scale bounce + opacity)
+- **AuthoritySpectrum redesigned** with 5-segment health band track (Expired→Live), score-based positioning for all dots, prominent "You" indicator (24px dot with ring glow)
+- **Pillar expanded panel titles standardized** — all rendered in PillarDashboard at consistent position, removed from DotTimeline, RoundTripFidelity, and AuthoritySpectrum
+- **Context bar click target** expanded to full row width (was only "Edit" label)
+- **Decision Speed tick marks** respaced: Fast (1d) / Moderate (4d) / Slow (10d) — fixes label collision
+- Delta badges removed from pillar cards (scores reflect blend directly)
+
+## [1.3.0] — 2026-04-08
+
+### Added
+- **Autonomy pillar** — replaces Response/Agility pillar with Decision-Centrality Index (DCI) model
+  - `src/lib/autonomy.ts` — `calcAutonomyScore(dci, levels)`: DCI × depth discount (log(3)/log(L)), 0-100 health score
+  - DCI slider (0-100, "Authority") in InputStrip with CEO-led/Balanced/Distributed tick marks
+  - `?ci=` URL parameter for shareable DCI state
+  - `dci` field persisted in Zustand store (default 50)
+  - `AutonomyResult` type added to `src/types/index.ts`
+  - `autonomy.test.ts` — 11 new unit tests (total: 189 across 9 files)
+  - DCI values added to all 6 reference companies (Valve 95, Nucor 82, Google 58, Meta 28, Haier 88, Amazon 40)
+- **Fidelity-Agility correlation fix** — DCI slider breaks the prior algebraic redundancy between Fidelity and Agility pillars (backlog item resolved via Option A)
+
+### Changed
+- Third pillar renamed from "Response" / "Agility" to "Autonomy" across all components
+- `expandedPillar` union type updated: `'response'` → `'autonomy'`
+- RadarChart columns: Fidelity, Lag, Autonomy (was Response)
+- InputStrip now has 5 sliders in 3 groups (was 4 sliders in 2 groups)
+
 ## [1.2.0] — 2026-04-08
 
 ### Added

@@ -26,6 +26,15 @@ export function fidelityHint(fidelityRate: number): string {
   return 'Exceptional — near-lossless relay';
 }
 
+export function teamMixHint(mix: number): string {
+  if (mix === 0) return 'Fully hierarchical';
+  if (mix <= 20) return 'Mostly escalated';
+  if (mix <= 40) return 'Centralized';
+  if (mix <= 60) return 'Hybrid';
+  if (mix <= 80) return 'Team-first';
+  return 'Fully autonomous';
+}
+
 export function decisionCycleHint(decisionCycle: number, levels: number): string {
   if (levels <= 1) return 'Flat — no relay layers';
   const totalDays = Math.round(decisionCycle * (levels - 1));

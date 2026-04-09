@@ -101,7 +101,7 @@ echo ""
 
 # ── Run Claude Code ──────────────────────────────────────────────────
 cd "$PROJECT_DIR"
-claude -p "$(cat "$PROMPT_FILE")" --allowedTools "Bash(readonly=false),Read,Write,Glob,Grep,WebSearch,WebFetch"
+claude -p "$(cat "$PROMPT_FILE")" --allowedTools "Bash,Read,Write,Glob,Grep,WebSearch,WebFetch"
 
 # ── Post-cycle: verify output ────────────────────────────────────────
 echo ""

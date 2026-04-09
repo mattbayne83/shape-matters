@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Council Report — Cycle 5 Findings</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafaf8; color: #1c1917; line-height: 1.6; }
+  .container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  header { border-bottom: 3px solid #E05A1B; padding-bottom: 1.5rem; margin-bottom: 2rem; }
+  header h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+  header .meta { color: #78716c; font-size: 0.875rem; margin-top: 0.5rem; }
+
+  .question-box { background: #f5f5f4; border-left: 4px solid #E05A1B; padding: 1.25rem 1.5rem; border-radius: 0 8px 8px 0; margin-bottom: 2rem; }
+  .question-box p { font-size: 0.95rem; color: #44403c; }
+
+  .verdict { background: white; border: 1px solid #e7e5e4; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .verdict h2 { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.35rem; color: #E05A1B; margin-bottom: 1rem; letter-spacing: -0.01em; }
+  .verdict h3 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: #1c1917; }
+  .verdict p, .verdict li { font-size: 0.925rem; color: #44403c; }
+  .verdict ul { padding-left: 1.25rem; }
+  .verdict li { margin-bottom: 0.35rem; }
+  .verdict ol { padding-left: 1.25rem; }
+  .verdict ol li { margin-bottom: 0.5rem; }
+
+  .do-first { background: #fef3ec; border: 2px solid #E05A1B; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+  .do-first h3 { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.1rem; color: #E05A1B; margin-bottom: 0.5rem; }
+  .do-first p { font-size: 0.925rem; color: #44403c; }
+
+  .alignment-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 2rem; }
+  .advisor-row { display: grid; grid-template-columns: 140px 1fr; align-items: center; background: white; border: 1px solid #e7e5e4; border-radius: 8px; padding: 0.75rem 1rem; gap: 1rem; }
+  .advisor-name { font-weight: 600; font-size: 0.85rem; color: #1c1917; }
+  .position-bar { display: flex; gap: 0.35rem; align-items: center; }
+  .pill { display: inline-block; font-size: 0.7rem; font-weight: 500; padding: 0.2rem 0.6rem; border-radius: 99px; white-space: nowrap; }
+  .pill-ship { background: #dcfce7; color: #166534; }
+  .pill-engine { background: #e0e7ff; color: #3730a3; }
+  .pill-doc { background: #f5f5f4; color: #78716c; }
+  .pill-stop { background: #fef2f2; color: #991b1b; }
+  .pill-caution { background: #fef9c3; color: #854d0e; }
+
+  details { background: white; border: 1px solid #e7e5e4; border-radius: 8px; margin-bottom: 0.75rem; }
+  details summary { padding: 0.875rem 1rem; font-weight: 600; font-size: 0.9rem; cursor: pointer; color: #1c1917; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+  details summary::before { content: '▸'; color: #a8a29e; font-size: 0.8rem; transition: transform 0.15s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details .content { padding: 0 1rem 1rem; font-size: 0.875rem; color: #57534e; line-height: 1.65; }
+  details .content p { margin-bottom: 0.75rem; }
+
+  .section-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #a8a29e; margin-bottom: 0.5rem; }
+
+  footer { border-top: 1px solid #e7e5e4; padding-top: 1rem; margin-top: 2rem; color: #a8a29e; font-size: 0.75rem; text-align: center; }
+
+  strong { color: #1c1917; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Council Report — Cycle 5 Autoresearch Findings</h1>
+  <div class="meta">2026-04-09 &middot; org-shape / Shape Matters &middot; 5 advisors, 5 peer reviews</div>
+</header>
+
+<div class="question-box">
+  <p><strong>The question:</strong> Are the Cycle 5 findings (signal-decay congestion, DCI sole decorrelation, two-pizza blended model, &beta;(L) power law, DCI calibration) theoretically sound, practically implementable, and worth pursuing? Which should be prioritized for UI vs kept as theoretical backing?</p>
+</div>
+
+<!-- ── DO FIRST ── -->
+<div class="do-first">
+  <h3>The One Thing to Do First</h3>
+  <p><strong>Build the blended model UI with the <code>teamDecisionMix</code> parameter.</strong> This transforms org-shape from a diagnostic tool ("your org is broken, here's a score") into a design tool ("here's what happens if you route decisions differently"). It's the only Cycle 5 finding that changes what a user <em>does</em> after seeing the output.</p>
+</div>
+
+<!-- ── VERDICT ── -->
+<div class="verdict">
+  <h2>Chairman's Verdict</h2>
+
+  <h3>Where the Council Agrees</h3>
+  <ul>
+    <li><strong>The blended model (Finding 3) is the most important output of Cycle 5.</strong> All five advisors converged. "Amazon looks broken at 9 layers, but two-pizza teams route 70% of decisions through 2-layer paths, so effective health is 74 not 15." That's a story worth shipping.</li>
+    <li><strong>Findings 1, 4, and 5 are engine internals, not UI features.</strong> Congestion model, HHI generalization, and DCI recalibrations make the engine more accurate but exposing them adds complexity without insight.</li>
+    <li><strong>Five autoresearch cycles have reached diminishing returns.</strong> "Overfitting the engine while interface questions remain unsolved." The research phase needs a hard stop.</li>
+  </ul>
+
+  <h3>Where the Council Clashes</h3>
+  <p><strong>Is the pillar degeneracy (Finding 2) a crisis or expected behavior?</strong></p>
+  <p>The Contrarian calls it a bug &mdash; if fidelity and authority-agility are perfectly correlated at uniform DCI, three pillars is really two. The peer reviews pushed back hard: fidelity and authority-agility co-moving under uniform conditions is <em>empirically expected</em>. DCI (autonomy) IS the independent axis. The two co-moving pillars reflect reality, not a defect.</p>
+  <p><strong>Resolution:</strong> The degeneracy isn't a bug &mdash; but the Contrarian has a residual point: if users see two pillars always moving together, they'll wonder why there are three. The UI needs to frame autonomy as the <em>design lever</em> while fidelity and lag are <em>structural consequences</em>.</p>
+
+  <p style="margin-top: 1rem;"><strong>Is the congestion model (Finding 1) valuable or overfitting?</strong></p>
+  <p>The Expansionist sees a publishable empirical law. The Executor sees a correction on a correction. Resolution: keep it in the engine, don't expose it, don't publish until there's theoretical justification for why &gamma; scales with depth.</p>
+
+  <h3>Blind Spots the Council Caught</h3>
+  <ul>
+    <li><strong>Validation gap:</strong> Six reference companies is interpolation, not validation. The model has never been tested against a real restructuring outcome. One adversarial case would be worth more than another research cycle.</li>
+    <li><strong>Audience comprehension:</strong> If the target user (VP, org designer) can't explain the output in a meeting, theoretical soundness is irrelevant. The blended model is the only finding that maps to how leaders think.</li>
+    <li><strong>Sample size is the structural risk</strong>, not pillar degeneracy. Six data points can't support the parametric claims being made.</li>
+  </ul>
+
+  <h3>The Recommendation</h3>
+  <ol>
+    <li><strong>DCI recalibrations (Finding 5)</strong> &mdash; Apply immediately. Half a day. No UI changes.</li>
+    <li><strong>Blended model UI (Finding 3)</strong> &mdash; The headline feature. <code>teamDecisionMix</code> slider showing before/after health scores.</li>
+    <li><strong>Congestion &amp; HHI (Findings 1, 4)</strong> &mdash; Merge into engine. No UI exposure. Document in tech docs.</li>
+    <li><strong>Pillar presentation</strong> &mdash; Reframe: Fidelity &amp; Lag are structural consequences, Autonomy is the design lever. Labeling change, not rewrite.</li>
+    <li><strong>No Cycle 6 autoresearch.</strong> Next investment: validation (adversarial case study) or UI/UX.</li>
+  </ol>
+</div>
+
+<!-- ── ADVISOR ALIGNMENT ── -->
+<div class="section-label">Advisor Positions</div>
+<div class="alignment-grid">
+  <div class="advisor-row">
+    <div class="advisor-name">Contrarian</div>
+    <div class="position-bar">
+      <span class="pill pill-stop">Fix degeneracy first</span>
+      <span class="pill pill-caution">Blended model is dangerous</span>
+    </div>
+  </div>
+  <div class="advisor-row">
+    <div class="advisor-name">First Principles</div>
+    <div class="position-bar">
+      <span class="pill pill-ship">Ship blended model</span>
+      <span class="pill pill-stop">Stop researching</span>
+    </div>
+  </div>
+  <div class="advisor-row">
+    <div class="advisor-name">Expansionist</div>
+    <div class="position-bar">
+      <span class="pill pill-ship">Ship blended model</span>
+      <span class="pill pill-engine">Congestion viz</span>
+    </div>
+  </div>
+  <div class="advisor-row">
+    <div class="advisor-name">Outsider</div>
+    <div class="position-bar">
+      <span class="pill pill-ship">Ship blended model</span>
+      <span class="pill pill-doc">DCI recalibration</span>
+    </div>
+  </div>
+  <div class="advisor-row">
+    <div class="advisor-name">Executor</div>
+    <div class="position-bar">
+      <span class="pill pill-doc">DCI recal first</span>
+      <span class="pill pill-ship">Blended model second</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── PEER REVIEW HIGHLIGHTS ── -->
+<div class="section-label">Peer Review Highlights</div>
+<details>
+  <summary>Peer Review Summary</summary>
+  <div class="content">
+    <p><strong>Unanimous strongest:</strong> First Principles Thinker &mdash; "overfitting engine while interface unsolved" was the sharpest diagnosis.</p>
+    <p><strong>Unanimous biggest blind spot:</strong> The Contrarian (3 reviews) and Expansionist (2 reviews). The Contrarian misdiagnosed the degeneracy as a bug; the Expansionist was enthusiastic about outputs without questioning input soundness.</p>
+    <p><strong>Universal gap:</strong> All five peer reviews flagged the same thing: <strong>6 reference companies is not validation.</strong> The model needs adversarial testing against real restructuring outcomes, not more engine refinement.</p>
+  </div>
+</details>
+
+<!-- ── ADVISOR RESPONSES ── -->
+<div class="section-label" style="margin-top: 1.5rem;">Full Advisor Responses</div>
+
+<details>
+  <summary>The Contrarian</summary>
+  <div class="content">
+    <p>Finding 2 is a red flag, not a finding. Spearman &rho; = 1.0 between fidelity and authority-agility at uniform DCI means your model has a structural degeneracy. You've documented a bug and called it a discovery. The fact that only DCI variance breaks the correlation means your three-pillar model is actually a two-pillar model with a cosmetic third axis.</p>
+    <p>The congestion model is curve-fitting dressed as theory &mdash; &gamma; &asymp; 0.175 + 0.024L has no organizational interpretation. The two-pizza model is the most dangerous finding &mdash; it gives people a knob to confirm their priors.</p>
+    <p>Finding 4 is solid math but irrelevant to UI. Finding 5 adjustments are trivially small.</p>
+    <p><strong>Priority:</strong> Fix the pillar degeneracy before adding features.</p>
+  </div>
+</details>
+
+<details>
+  <summary>The First Principles Thinker</summary>
+  <div class="content">
+    <p>The core question isn't "are these findings sound?" It's: does this tool need more mathematical precision, or does it need to be more useful?</p>
+    <p>Finding 2 reveals structural redundancy &mdash; three pillars is actually two unless DCI variance exists. Finding 3 (blended model) is the real product. Findings 1, 4, 5 are calibration work.</p>
+    <p><strong>Red flag:</strong> Five cycles of autoresearch on a presentation tool. Diminishing returns are visible &mdash; overfitting the engine while interface questions remain unsolved.</p>
+    <p><strong>Priority:</strong> Build blended model UI. Fix pillar redundancy. Stop researching.</p>
+  </div>
+</details>
+
+<details>
+  <summary>The Expansionist</summary>
+  <div class="content">
+    <p>The blended model is the breakout finding. <code>teamDecisionMix</code> turns org-shape from academic curiosity into something a VP of Engineering would use to argue for structural change.</p>
+    <p>The congestion model is undervalued &mdash; &gamma; scaling with depth is an empirical law about organizational bandwidth saturation. Potentially publishable.</p>
+    <p>DCI variance as sole decorrelation is elegant. Use it to simplify UI &mdash; make DCI the primary "personality" slider.</p>
+    <p><strong>Priority:</strong> Blended model UI &gt; congestion viz &gt; DCI as primary slider.</p>
+  </div>
+</details>
+
+<details>
+  <summary>The Outsider</summary>
+  <div class="content">
+    <p>"I don't know what half of this means, and that's the finding." &gamma;, &beta;(L), and HHI are not things product leaders will engage with. They'll nod politely and never open the tool again.</p>
+    <p>The two-pizza blended model is the only finding that speaks human. DCI recalibration is low-effort, high-trust.</p>
+    <p><strong>Red flag:</strong> Five research cycles and still finding pillars are redundant suggests the model's core dimensionality might be simpler than three pillars.</p>
+  </div>
+</details>
+
+<details>
+  <summary>The Executor</summary>
+  <div class="content">
+    <p>Monday morning list: (1) Ship DCI recalibration &mdash; half a day. (2) Ship blended model &mdash; 2-3 days, headline feature. (3) Congestion and &beta;(L) as engine internals. (4) DCI decorrelation is diagnostic, not feature.</p>
+    <p><strong>Red flag:</strong> Congestion model's &gamma; varying with L means fitting a correction to a correction.</p>
+  </div>
+</details>
+
+<footer>
+  Council session on 2026-04-09 &middot; Topic: org-shape Cycle 5 Autoresearch Findings &middot; 5 advisors &middot; 5 peer reviews &middot; Adapted from Karpathy's LLM Council
+</footer>
+
+</div>
+</body>
+</html>

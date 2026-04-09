@@ -8,8 +8,9 @@ interface CompanyState {
   activeScenarioId: string | null;
   decisionCycle: number;       // days/layer (1-14, default 3)
   dci: number;
+  teamDecisionMix: number;  // 0-100, default 0 (monolithic)
   expandedPillar: 'fidelity' | 'lag' | 'autonomy' | null;  // null = dashboard view
-  advancedInputsOpen: boolean;
+  contextExpanded: boolean;
 }
 
 interface CompanyActions {
@@ -19,8 +20,9 @@ interface CompanyActions {
   setActiveScenarioId: (id: string | null) => void;
   setDecisionCycle: (d: number) => void;
   setDci: (dci: number) => void;
+  setTeamDecisionMix: (mix: number) => void;
   setExpandedPillar: (p: 'fidelity' | 'lag' | 'autonomy' | null) => void;
-  setAdvancedInputsOpen: (open: boolean) => void;
+  setContextExpanded: (open: boolean) => void;
 }
 
 /** Apply ?l=&h=&f=&d= URL params to the store. Returns true if any params were found. */
@@ -31,7 +33,8 @@ function applyUrlParams(): boolean {
   const f = params.get('f');
   const d = params.get('d');
   const ci = params.get('ci');
-  if (!l && !h && !f && !d && !ci) return false;
+  const tm = params.get('tm');
+  if (!l && !h && !f && !d && !ci && !tm) return false;
 
   const state = useCompanyStore.getState();
   if (l) {
@@ -54,6 +57,10 @@ function applyUrlParams(): boolean {
     const dci = Math.max(0, Math.min(100, Math.round(Number(ci))));
     if (!isNaN(dci)) state.setDci(dci);
   }
+  if (tm) {
+    const mix = Math.max(0, Math.min(100, Math.round(Number(tm))));
+    if (!isNaN(mix)) state.setTeamDecisionMix(mix);
+  }
   return true;
 }
 
@@ -66,16 +73,18 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       activeScenarioId: 'innovation-proposal',
       decisionCycle: 3,
       dci: 50,
+      teamDecisionMix: 0,
       expandedPillar: null,
-      advancedInputsOpen: false,
+      contextExpanded: false,
       setFidelityRate: (rate) => set({ fidelityRate: rate }),
       setLevels: (levels) => set({ levels }),
       setHeadcount: (headcount) => set({ headcount }),
       setActiveScenarioId: (id) => set({ activeScenarioId: id }),
       setDecisionCycle: (d) => set({ decisionCycle: d }),
       setDci: (dci) => set({ dci }),
+      setTeamDecisionMix: (teamDecisionMix) => set({ teamDecisionMix }),
       setExpandedPillar: (p) => set({ expandedPillar: p }),
-      setAdvancedInputsOpen: (open) => set({ advancedInputsOpen: open }),
+      setContextExpanded: (open) => set({ contextExpanded: open }),
     }),
     {
       name: 'org-shape-storage',
@@ -89,7 +98,8 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
         headcount: state.headcount,
         decisionCycle: state.decisionCycle,
         dci: state.dci,
-        // Excluded: activeScenarioId, expandedPillar, advancedInputsOpen
+        teamDecisionMix: state.teamDecisionMix,
+        // Excluded: activeScenarioId, expandedPillar, contextExpanded
       }),
     }
   )
@@ -101,10 +111,10 @@ applyUrlParams();
 
 /** Build a shareable URL from current store state. */
 export function buildShareUrl(): string {
-  const { levels, headcount, fidelityRate, decisionCycle, dci } =
+  const { levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix } =
     useCompanyStore.getState();
   const url = new URL(window.location.href);
-  url.search = `?l=${levels}&h=${headcount}&f=${fidelityRate}&d=${decisionCycle}&ci=${dci}`;
+  url.search = `?l=${levels}&h=${headcount}&f=${fidelityRate}&d=${decisionCycle}&ci=${dci}${teamDecisionMix > 0 ? `&tm=${teamDecisionMix}` : ''}`;
   url.hash = 'model';
   return url.toString();
 }

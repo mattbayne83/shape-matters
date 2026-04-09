@@ -86,6 +86,7 @@ interface PillarCardProps {
   sub: string;
   accentColor: string;
   healthColor?: string;
+  delta?: number;         // blended - monolithic delta (shown as badge when nonzero)
   isExpanded: boolean;
   hasExpandedSibling?: boolean;
   onToggle: () => void;
@@ -98,6 +99,7 @@ export function PillarCard({
   sub,
   accentColor,
   healthColor,
+  delta,
   isExpanded,
   hasExpandedSibling,
   onToggle,
@@ -133,6 +135,11 @@ export function PillarCard({
             style={{ color: healthColor ?? accentColor }}
           >
             {value}<span className="text-sm font-semibold text-stone-300 ml-0.5">/100</span>
+            {delta != null && delta !== 0 && (
+              <span className={`ml-1.5 text-xs font-bold ${delta > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                {delta > 0 ? '+' : ''}{delta}
+              </span>
+            )}
           </p>
           <p className="text-[11px] text-stone-500 leading-snug">{sub}</p>
         </div>

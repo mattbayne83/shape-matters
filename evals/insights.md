@@ -48,3 +48,31 @@
 17. **McKinsey's "3 layers for agile" independently validates the structural speed limit formula.** `L_max` at d≥2 = 3 layers; at d≈1 = 6 layers. Amazon's two-pizza teams (L=2 operational cells) bypass the L=9 chain by architecture. Strongest external validation across all cycles.
 
 18. **Cycle-time reduction is the highest-ROI lever for deep orgs.** 10% cycle reduction yields 0.38 levels of health improvement for Amazon vs 0.17 for Nucor. Deep orgs are on the steep part of the lag-health exponential curve — explains why Amazon/Google invest in CI/CD over restructuring.
+
+### Cycle 5 — 2026-04-09
+
+1. **DCI variance is the sole decorrelation mechanism.** At uniform DCI (any value 0-100),
+   fidelity and authority-agility have Spearman ρ = 1.0. Decorrelation is entirely injected by
+   DCI heterogeneity. This resolves the Cycle 1-2 redundancy concern: the F-A correlation is
+   not a model flaw but an accurate reflection of uniform-authority orgs. The DCI slider is
+   the surgical fix. (H2)
+
+2. **The two-pizza blended model transforms Amazon from Expired (15 HP) to Fresh (74 HP).**
+   The monolithic model is a worst-case bound that assumes all decisions traverse the full
+   hierarchy. Real organizations route 60-80% of decisions through short paths (L=2-3). The
+   blend ratio `p` is a new parameter: Amazon at 70:30 blend is Fresh; it needs ≥83% team
+   decisions for Live. This explains how Amazon functions at L=9 without organizational paralysis.
+   (H3)
+
+3. **Signal-decay congestion is the first correction that actually works on uniform distributions.**
+   The per-layer fidelity model `r_eff = r(1-γ×n_k/N_max)` reduces the Uni/Geo divergence from
+   2.3× to ~1.5× at L=9, unlike the log-form correction proved inert in Cycle 4. The trade-off:
+   γ > 0 also reduces geometric CEO torque. (H1)
+
+4. **β(L) = 0.158 × (L-4)^0.683 completes the HHI half-life generalization.** The phase
+   transition at L=4 = ceil(h_base) is structurally meaningful: below the half-life ceiling,
+   all distributions behave similarly. The 10-point curve resolves Cycle 4's inconclusive
+   two-point fit. (H4)
+
+---
+

@@ -15,10 +15,6 @@ export function RoundTripFidelity({ levels, fidelityRate }: RoundTripFidelityPro
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-4 px-2">
-      <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wide shrink-0">
-        Round-Trip Fidelity
-      </div>
-
       <div className="text-center">
         <span
           className="text-5xl font-extrabold font-mono tabular-nums leading-none"

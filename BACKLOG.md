@@ -8,6 +8,8 @@ _Nothing active._
 
 ## Next Up
 
+**Research pause** — Council recommends validation (adversarial case study) or UI work over further engine refinement (2026-04-09).
+
 ### 🔴 High Priority
 
 **Fidelity cliff + safety margin indicator**
@@ -17,10 +19,6 @@ _Source: Research cycles 1, 2_
 **Signal half-life "effective layers" display**
 In the Fidelity pillar, show `h = log(2)/|log(r)|` (effective layers at >50% pivot efficiency) and the resulting broadcast zone. At 82%, h=3.49 — Amazon layers 4-9 are in the broadcast zone.
 _Source: Research cycle 2_
-
-**Acknowledge or fix the Fidelity-Agility correlation**
-CEO torque algebraically = `r^(L-1)` for real orgs — identical to signal fidelity. Options: (A) add Decision-Centrality Index slider to break the redundancy, (B) merge pillars, (C) add correlation disclaimer. Option A is richest; Option C is minimum honest fix.
-_Source: Research cycles 1, 2, 3_
 
 ### 🟠 Medium Priority
 
@@ -48,6 +46,8 @@ _Source: Research cycle 1_
 
 ## Recently Added
 
+- Blended model with teamDecisionMix parameter (two-pizza model) (2026-04-09)
+- v1.3.0: Autonomy pillar with DCI slider — fixes Fidelity-Agility correlation (Option A) (2026-04-08)
 - Recursive autoresearch eval system (`evals/`) — cycles 1-4 complete (2026-04-08)
 - v1.2.0: Torque Profile visualization, slider tick marks, dashboard-first layout
 - v1.1.0: Message Relay Simulator (5 scenarios)

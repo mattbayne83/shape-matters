@@ -203,3 +203,53 @@ The key insight is that organizational agility is not a structural property alon
 2. **Bidirectional torque** — Model bottom-up torque (innovation from ICs) separately from top-down torque (strategic pivots from CEO).
 3. **Variable fidelity per layer** — Aligns with P0 backlog item "Variable Fidelity Rate" and Deming's Point 8 (fear increases filtering at higher levels).
 4. **Torque-to-inertia ratio** — Angular acceleration α = τ/I as a compound "responsiveness" score.
+
+---
+
+## Signal-Decay Congestion (v1.4.0)
+
+Large layers degrade signal transmission more than small layers.
+
+**Formula**: `r_eff(k→k+1) = r × (1 - γ × n_k / N_max)`
+
+Where:
+- `r` = base per-layer fidelity rate
+- `γ` = congestion coefficient (hardcoded at 0.1)
+- `n_k` = employee count at transmitting layer k
+- `N_max` = largest layer count
+
+**Effect**: CEO torque drops ~10% for geometric distributions. The frontline layer (largest) gets the strongest congestion penalty; upper layers (smaller) are nearly unaffected.
+
+**γ scaling**: Convergence γ ≈ 0.175 + 0.024L (from Cycle 5 research). Not exposed in UI.
+
+---
+
+## HHI Half-Life Generalization (Theoretical)
+
+For non-geometric employee distributions, the half-life formula requires correction:
+
+```
+h_corr(L, r, HHI) = h_base(r) × (HHI_geo(L) / HHI)^β(L)
+where h_base = log(2)/|log(r)|
+      β(L) = 0                           if L ≤ ceil(h_base)
+      β(L) = 0.158 × (L - ceil(h_base))^0.683   if L > ceil(h_base)
+```
+
+Phase transition at L = ceil(h_base) ≈ 4: below this depth, all distributions behave similarly.
+
+**Note**: Not implemented in code. The tool only uses geometric distributions via `employeesPerLayer()`. Documented for theoretical completeness (Cycle 5, Finding 4).
+
+---
+
+## Blended Decision Model (v1.4.0)
+
+Real organizations route decisions through multiple path lengths.
+
+**Formula**: `blended_score(pillar) = p × pillar(L_team, d_team) + (1-p) × pillar(L, d)`
+
+Where:
+- `p` = teamDecisionMix / 100 (0 = monolithic, 100 = all team)
+- `L_team` = min(L, 2) (two-pizza team depth)
+- `d_team` = d × 0.5 (team decisions are faster)
+
+**Key result**: Amazon at 70:30 blend = Fresh (74 HP) vs monolithic Expired (15 HP). Deep orgs benefit most from team-level decision routing.

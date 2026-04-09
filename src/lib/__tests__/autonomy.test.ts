@@ -9,8 +9,8 @@ describe('calcAutonomyScore', () => {
   });
 
   it('discounts DCI at L=9 (depth discount 0.5)', () => {
-    const result = calcAutonomyScore(40, 9);
-    expect(result.score).toBe(20);
+    const result = calcAutonomyScore(72, 9);
+    expect(result.score).toBe(36);
     expect(result.depthDiscount).toBeCloseTo(0.5, 2);
   });
 
@@ -19,15 +19,15 @@ describe('calcAutonomyScore', () => {
     expect(result.score).toBe(100);
   });
 
-  it('validates Finding 15: Amazon (L=9, DCI=40) beats Meta (L=6, DCI=28)', () => {
-    const amazon = calcAutonomyScore(40, 9);
+  it('validates Finding 15: Amazon (L=9, DCI=72) beats Meta (L=6, DCI=28)', () => {
+    const amazon = calcAutonomyScore(72, 9);
     const meta = calcAutonomyScore(28, 6);
     expect(amazon.score).toBeGreaterThan(meta.score);
   });
 
   it('returns correct crossover floor', () => {
     // At L=9, discount=0.5, floor = 50/0.5 = 100
-    const result = calcAutonomyScore(40, 9);
+    const result = calcAutonomyScore(72, 9);
     expect(result.crossoverFloor).toBeCloseTo(100, 0);
   });
 
@@ -58,15 +58,15 @@ describe('calcAutonomyScore', () => {
   it('produces correct reference company ranking', () => {
     const haier = calcAutonomyScore(88, 3);     // 88 × 1.0 = 88
     const nucor = calcAutonomyScore(82, 4);     // 82 × 0.79 = 65
+    const amazon = calcAutonomyScore(72, 9);    // 72 × 0.5 = 36
     const google = calcAutonomyScore(58, 8);    // 58 × 0.53 = 31
-    const amazon = calcAutonomyScore(40, 9);    // 40 × 0.5 = 20
     const meta = calcAutonomyScore(28, 6);      // 28 × 0.61 = 17
     const oneok = calcAutonomyScore(22, 6);     // 22 × 0.61 = 13
 
     expect(oneok.score).toBeLessThan(meta.score);
-    expect(meta.score).toBeLessThan(amazon.score);
-    expect(amazon.score).toBeLessThan(google.score);
-    expect(google.score).toBeLessThan(nucor.score);
+    expect(meta.score).toBeLessThan(google.score);
+    expect(google.score).toBeLessThan(amazon.score);
+    expect(amazon.score).toBeLessThan(nucor.score);
     expect(nucor.score).toBeLessThan(haier.score);
   });
 

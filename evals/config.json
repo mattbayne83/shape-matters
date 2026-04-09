@@ -1,6 +1,8 @@
 {
-  "current_cycle": 5,
-  "enrichment_level": "validated",
+  "current_cycle": 6,
+  "enrichment_level": "full",
+  "status": "paused",
+  "pause_reason": "Council recommends validation or UI work over further engine refinement (2026-04-09)",
   "reference_companies": [
     "valve",
     "nucor",

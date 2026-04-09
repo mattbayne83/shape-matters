@@ -35,6 +35,7 @@ export interface Company {
   sourceUrl?: string;
   decisionCycle?: number;     // days/layer (optional for backward compat)
   dci?: number;                 // Decision-Centrality Index (0-100, optional for backward compat)
+  teamDecisionMix?: number;   // default team-routing % when selected as preset (0-100)
   narrative?: string;         // human-readable "so what" one-liner for Proof section
 }
 
@@ -158,4 +159,15 @@ export interface AutonomyResult {
   crossoverFloor: number;       // minimum DCI to score above 50
   label: string;                // health band label
   color: string;                // health band color
+}
+
+// ── Blended Model (Team vs Monolithic) ───────────────────────────────
+export interface BlendedScores {
+  fidelity: number;      // 0-100
+  lag: number;           // 0-100
+  autonomy: number;      // 0-100
+  isBlended: boolean;    // true when teamDecisionMix > 0
+  monoFidelity: number;  // monolithic fidelity (for delta display)
+  monoLag: number;       // monolithic lag health
+  monoAutonomy: number;  // monolithic autonomy
 }

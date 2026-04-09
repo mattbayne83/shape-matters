@@ -88,10 +88,7 @@ export function DotTimeline({ levels, decisionCycle }: DotTimelineProps) {
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      <h3 className="text-[11px] font-bold text-stone-500 uppercase tracking-wide mb-1 shrink-0">
-        Propagation Delay
-      </h3>
-      <p className="text-sm text-stone-400 mb-2 shrink-0">
+      <p className="text-[11px] text-stone-400 mb-2 shrink-0">
         How long a strategic signal takes to reach each layer
       </p>
 

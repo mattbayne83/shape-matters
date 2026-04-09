@@ -185,7 +185,7 @@ export function ScrollPage() {
             How Much Signal Survives Your Structure?
           </h2>
           <p className="text-sm text-stone-500 mb-8">
-            Set depth, headcount, fidelity, cycle time, and adaptability. See what your structure actually does to your strategy.
+            Structure determines fidelity and speed. Authority distribution is your lever.
           </p>
           <ModelYourOrg />
         </FadeIn>

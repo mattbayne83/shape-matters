@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Share2, Check } from 'lucide-react';
+import { Share2, Check, ChevronDown } from 'lucide-react';
 import { useCompanyStore, buildShareUrl } from '../../store/useCompanyStore';
 import { REFERENCE_COMPANIES } from '../../data/referenceCompanies';
+import { teamMixHint } from '../../lib/contextHints';
 
 const LOG_MIN = Math.log(50);
 const LOG_MAX = Math.log(500_000);
@@ -76,11 +77,14 @@ function CompactSlider({ id, label, value, displayValue, min, max, step = 1, acc
           ['--thumb-color' as string]: color,
         }}
       />
-      <div className="relative h-3 mt-0.5">
+      <div className="relative h-3 mt-0.5 overflow-visible">
         {ticks ? ticks.map((tick) => {
           const pos = ((tick.value - min) / (max - min)) * 100;
+          const align = pos <= 10 ? 'left' : pos >= 90 ? 'right' : 'center';
+          const transform = align === 'left' ? 'translateX(0)' : align === 'right' ? 'translateX(-100%)' : 'translateX(-50%)';
+          const tickAlign = align === 'left' ? 'items-start' : align === 'right' ? 'items-end' : 'items-center';
           return (
-            <div key={tick.value} className="absolute flex flex-col items-center" style={{ left: `${pos}%`, transform: 'translateX(-50%)' }}>
+            <div key={tick.value} className={`absolute flex flex-col ${tickAlign}`} style={{ left: `${pos}%`, transform }}>
               <div className="w-px h-1.5 bg-stone-300" />
               <span className="text-[8px] text-stone-400 whitespace-nowrap mt-px">{tick.label}</span>
             </div>
@@ -127,10 +131,15 @@ export function InputStrip() {
   const setDecisionCycle = useCompanyStore((s) => s.setDecisionCycle);
   const dci = useCompanyStore((s) => s.dci);
   const setDci = useCompanyStore((s) => s.setDci);
+  const teamDecisionMix = useCompanyStore((s) => s.teamDecisionMix);
+  const setTeamDecisionMix = useCompanyStore((s) => s.setTeamDecisionMix);
+  const contextExpanded = useCompanyStore((s) => s.contextExpanded);
+  const setContextExpanded = useCompanyStore((s) => s.setContextExpanded);
 
   const [hcSlider, setHcSlider] = useState(() => Math.round(headcountToSlider(headcount)));
   const [preset, setPreset] = useState('custom');
   const [copied, setCopied] = useState(false);
+  const [changedLevers, setChangedLevers] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setHcSlider(Math.round(headcountToSlider(headcount)));
@@ -147,12 +156,33 @@ export function InputStrip() {
     if (id === 'custom') return;
     const company = REFERENCE_COMPANIES.find((c) => c.id === id);
     if (!company) return;
+
+    // Snapshot current lever values BEFORE applying
+    const prev = {
+      decisionCycle: useCompanyStore.getState().decisionCycle,
+      dci: useCompanyStore.getState().dci,
+      teamDecisionMix: useCompanyStore.getState().teamDecisionMix,
+    };
+
+    // Apply all values immediately
     storeLevels(company.levels);
     const pos = Math.round(headcountToSlider(company.employees));
     setHcSlider(pos);
     storeHeadcount(sliderToHeadcount(pos));
     if (company.decisionCycle != null) setDecisionCycle(company.decisionCycle);
     if (company.dci != null) setDci(company.dci);
+    if (company.teamDecisionMix != null) setTeamDecisionMix(company.teamDecisionMix);
+
+    // Track which levers changed for settle animation
+    const changed = new Set<string>();
+    if (company.decisionCycle != null && company.decisionCycle !== prev.decisionCycle) changed.add('cycle');
+    if (company.dci != null && company.dci !== prev.dci) changed.add('authority');
+    if (company.teamDecisionMix != null && company.teamDecisionMix !== prev.teamDecisionMix) changed.add('team-mix');
+
+    if (changed.size > 0) {
+      setChangedLevers(changed);
+      setTimeout(() => setChangedLevers(new Set()), 600);
+    }
   };
 
   const handleLevels = (v: number) => { setPreset('custom'); storeLevels(v); };
@@ -164,45 +194,61 @@ export function InputStrip() {
 
   const formatHeadcount = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K` : String(n);
 
+  // Brief settle animation class — gentle scale bounce on changed levers
+  const settleClass = (leverId: string) =>
+    changedLevers.has(leverId) ? 'animate-[settle_0.5s_cubic-bezier(0.34,1.56,0.64,1)]' : '';
+
   return (
-    <div className="bg-white border border-stone-200 rounded-xl shadow-sm">
-      {/* ── Row 1: Sliders ── */}
-      <div className="grid grid-cols-[1fr_1fr_1fr_auto_1fr_auto_1fr] items-end gap-x-4 p-3 px-4">
-        <CompactSlider id="is-levels" label="Depth" value={levels} displayValue={String(levels)} min={1} max={15} accent="ember" onChange={handleLevels} range={['Flat', 'Deep']} />
-        <CompactSlider id="is-size" label="Headcount" value={hcSlider} displayValue={formatHeadcount(headcount)} min={0} max={100} accent="ember" onChange={handleHeadcount} range={['50', '500K']} />
-        <CompactSlider id="is-fidelity" label="Fidelity/Layer" value={fidelityRate} displayValue={`${fidelityRate}%`} min={50} max={98} accent="ember" onChange={setFidelityRate} ticks={[{ value: 70, label: 'Low trust' }, { value: 82, label: 'Typical' }, { value: 93, label: 'High trust' }]} />
+    <div className="bg-white border border-stone-200 rounded-xl shadow-sm overflow-hidden">
+      {/* ── Tier 1: Context Bar ── */}
+      <div className="bg-stone-50 border-b border-stone-200">
+        {/* Collapsed summary — entire row is clickable */}
+        <button
+          onClick={() => setContextExpanded(!contextExpanded)}
+          className="flex items-center gap-3 px-4 py-2.5 w-full cursor-pointer hover:bg-stone-100/50 transition-colors"
+        >
+          <span className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Your Org</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] font-bold uppercase tracking-wide text-stone-500">Depth</span>
+            <span className="text-sm font-extrabold font-mono tabular-nums text-stone-900">{levels}</span>
+          </div>
+          <div className="w-px h-3.5 bg-stone-300" />
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] font-bold uppercase tracking-wide text-stone-500">Headcount</span>
+            <span className="text-sm font-extrabold font-mono tabular-nums text-stone-900">{formatHeadcount(headcount)}</span>
+          </div>
+          <span className="ml-auto flex items-center gap-1 text-[10px] text-stone-400">
+            Edit
+            <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${contextExpanded ? 'rotate-180' : ''}`} />
+          </span>
+        </button>
 
-        {/* ── Divider ── */}
-        <div className="self-stretch flex items-center py-1">
-          <div className="w-px h-full bg-stone-200" />
-        </div>
-
-        <CompactSlider id="is-cycle" label="Cycle Time" value={decisionCycle} displayValue={`${Math.round(decisionCycle)}d`} min={1} max={14} step={0.5} accent="warm-stone" onChange={setDecisionCycle} hint={cycleHint(decisionCycle)} ticks={[{ value: 2, label: 'Startup' }, { value: 4, label: 'Tech' }, { value: 7, label: 'Enterprise' }]} />
-
-        {/* ── Divider ── */}
-        <div className="self-stretch flex items-center py-1">
-          <div className="w-px h-full bg-stone-200" />
-        </div>
-
-        <CompactSlider
-          id="is-dci"
-          label="Authority"
-          value={dci}
-          displayValue={`${dci}%`}
-          min={0}
-          max={100}
-          accent="warm-stone"
-          onChange={(v) => { setPreset('custom'); setDci(v); }}
-          hint={dciHint(dci)}
-          ticks={[
-            { value: 20, label: 'CEO-led' },
-            { value: 50, label: 'Balanced' },
-            { value: 80, label: 'IC-led' },
-          ]}
-        />
+        {/* Expanded structure sliders */}
+        {contextExpanded && (
+          <div className="grid grid-cols-2 gap-x-6 px-4 pb-3 pt-1">
+            <CompactSlider id="is-levels" label="Depth" value={levels} displayValue={String(levels)} min={1} max={15} accent="warm-stone" onChange={handleLevels} range={['Flat', 'Deep']} />
+            <CompactSlider id="is-size" label="Headcount" value={hcSlider} displayValue={formatHeadcount(headcount)} min={0} max={100} accent="warm-stone" onChange={handleHeadcount} range={['50', '500K']} />
+          </div>
+        )}
       </div>
 
-      {/* ── Row 2: Presets + share ── */}
+      {/* ── Tier 2: Lever Sliders ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-4 p-4">
+        <div className={`rounded-lg ${settleClass('fidelity')}`}>
+          <CompactSlider id="is-fidelity" label="Signal Clarity" value={fidelityRate} displayValue={`${fidelityRate}%`} min={50} max={98} accent="ember" onChange={(v) => { setPreset('custom'); setFidelityRate(v); }} ticks={[{ value: 70, label: 'Low trust' }, { value: 82, label: 'Typical' }, { value: 93, label: 'High trust' }]} />
+        </div>
+        <div className={`rounded-lg ${settleClass('cycle')}`}>
+          <CompactSlider id="is-cycle" label="Decision Speed" value={decisionCycle} displayValue={`${Math.round(decisionCycle)}d`} min={1} max={14} step={0.5} accent="ember" onChange={(v) => { setPreset('custom'); setDecisionCycle(v); }} hint={cycleHint(decisionCycle)} ticks={[{ value: 1, label: 'Fast' }, { value: 4, label: 'Moderate' }, { value: 10, label: 'Slow' }]} />
+        </div>
+        <div className={`rounded-lg ${settleClass('authority')}`}>
+          <CompactSlider id="is-dci" label="Decision Rights" value={dci} displayValue={`${dci}%`} min={0} max={100} accent="ember" onChange={(v) => { setPreset('custom'); setDci(v); }} hint={dciHint(dci)} ticks={[{ value: 20, label: 'CEO-led' }, { value: 50, label: 'Balanced' }, { value: 80, label: 'IC-led' }]} />
+        </div>
+        <div className={`rounded-lg ${settleClass('team-mix')}`}>
+          <CompactSlider id="is-team-mix" label="Team Autonomy" value={teamDecisionMix} displayValue={`${teamDecisionMix}%`} min={0} max={100} accent="ember" onChange={(v) => { setPreset('custom'); setTeamDecisionMix(v); }} hint={teamMixHint(teamDecisionMix)} ticks={[{ value: 0, label: 'Hierarchical' }, { value: 50, label: 'Hybrid' }, { value: 100, label: 'Autonomous' }]} />
+        </div>
+      </div>
+
+      {/* ── Tier 3: Benchmarks + Share ── */}
       <div className="flex items-center gap-1.5 px-4 py-2 border-t border-stone-100">
         <span className="text-[10px] font-bold uppercase tracking-wide text-stone-400 mr-1">Compare</span>
         {REFERENCE_COMPANIES.map((c) => (
@@ -223,7 +269,6 @@ export function InputStrip() {
 
         <div className="flex-1" />
 
-        {/* ── Share button ── */}
         <button
           onClick={handleCopyLink}
           className={`

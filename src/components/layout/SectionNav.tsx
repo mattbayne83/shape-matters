@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
 const SECTIONS = [
-  { id: 'problem', label: 'Problem' },
   { id: 'simulate', label: 'Simulate' },
+  { id: 'problem', label: 'Problem' },
   { id: 'evidence', label: 'Evidence' },
   { id: 'proof', label: 'Proof' },
   { id: 'model', label: 'Model' },

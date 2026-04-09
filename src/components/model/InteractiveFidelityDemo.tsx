@@ -49,8 +49,20 @@ export function InteractiveFidelityDemo() {
                 aria-valuemin={1}
                 aria-valuemax={15}
                 aria-valuetext={`Depth: ${levels}`}
-                className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
+                className="w-full custom-slider focus:outline-none"
+                style={{
+                  background: `linear-gradient(to right, #E05A1B 0%, #E05A1B ${((levels - 1) / 14) * 100}%, #e7e5e4 ${((levels - 1) / 14) * 100}%, #e7e5e4 100%)`,
+                  borderRadius: 2,
+                }}
               />
+              <style>{`
+                #demo-levels::-webkit-slider-thumb { background: #E05A1B; }
+                #demo-levels::-moz-range-thumb { background: #E05A1B; }
+              `}</style>
+              <div className="relative h-3 mt-0.5">
+                <span className="absolute left-0 text-[9px] text-stone-400">Flat</span>
+                <span className="absolute right-0 text-[9px] text-stone-400">Deep</span>
+              </div>
             </div>
 
             <div>
@@ -71,8 +83,31 @@ export function InteractiveFidelityDemo() {
                 aria-valuemin={50}
                 aria-valuemax={98}
                 aria-valuetext={`${rate}% per-layer fidelity`}
-                className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-stone-700"
+                className="w-full custom-slider focus:outline-none"
+                style={{
+                  background: `linear-gradient(to right, #44403c 0%, #44403c ${((rate - 50) / 48) * 100}%, #e7e5e4 ${((rate - 50) / 48) * 100}%, #e7e5e4 100%)`,
+                  borderRadius: 2,
+                }}
               />
+              <style>{`
+                #demo-fidelity::-webkit-slider-thumb { background: #44403c; }
+                #demo-fidelity::-moz-range-thumb { background: #44403c; }
+              `}</style>
+              <div className="relative h-3 mt-0.5">
+                {[
+                  { value: 70, label: 'Low trust' },
+                  { value: 82, label: 'Typical' },
+                  { value: 93, label: 'High trust' },
+                ].map((tick) => {
+                  const pos = ((tick.value - 50) / 48) * 100;
+                  return (
+                    <div key={tick.value} className="absolute flex flex-col items-center" style={{ left: `${pos}%`, transform: 'translateX(-50%)' }}>
+                      <div className="w-px h-1.5 bg-stone-300" />
+                      <span className="text-[8px] text-stone-400 whitespace-nowrap mt-px">{tick.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

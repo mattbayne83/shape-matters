@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCompanyStore } from '../../store/useCompanyStore';
 import { calcOrgMetrics } from '../../lib/orgMetrics';
 import { calcThermalLag } from '../../lib/thermalLag';
-import { calcTriangleGeometry } from '../../lib/triangleGeometry';
 
 import { calcLagHealth, healthBandColor } from '../../lib/healthScores';
 import { PillarCard } from './PillarCard';
@@ -12,8 +11,9 @@ import { SignalCascade } from './SignalCascade';
 import { RoundTripFidelity } from './RoundTripFidelity';
 
 import { DotTimeline } from './DotTimeline';
-import { TorqueProfile } from './TorqueProfile';
+import { AuthoritySpectrum } from './AuthoritySpectrum';
 import { RadarChart } from './RadarChart';
+import { calcAutonomyScore } from '../../lib/autonomy';
 
 const FADE = { duration: 0.3, ease: [0.22, 1, 0.36, 1] } as const;
 
@@ -22,25 +22,25 @@ export function PillarDashboard() {
   const headcount = useCompanyStore((s) => s.headcount);
   const fidelityRate = useCompanyStore((s) => s.fidelityRate);
   const decisionCycle = useCompanyStore((s) => s.decisionCycle);
+  const dci = useCompanyStore((s) => s.dci);
   const expandedPillar = useCompanyStore((s) => s.expandedPillar);
   const setExpandedPillar = useCompanyStore((s) => s.setExpandedPillar);
 
   const m = useMemo(() => calcOrgMetrics(levels, headcount, fidelityRate), [levels, headcount, fidelityRate]);
-  const geo = useMemo(() => calcTriangleGeometry(levels, headcount, fidelityRate), [levels, headcount, fidelityRate]);
   const lag = useMemo(() => calcThermalLag(levels, decisionCycle), [levels, decisionCycle]);
   const lagHealth = useMemo(() => calcLagHealth(lag.totalDelay), [lag.totalDelay]);
 
   const fidelityScore = Math.round(m.fidelityAtTopPct);
   const fidelityHealthColor = healthBandColor(fidelityScore);
-  const agilityScore = Math.round(geo.agilityScore * 100);
-  const agilityHealthColor = healthBandColor(agilityScore);
+  const autonomy = useMemo(() => calcAutonomyScore(dci, levels), [dci, levels]);
+  const autonomyHealthColor = healthBandColor(autonomy.score);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const PILLAR_ACCENTS: Record<PillarId, string> = {
     fidelity: '#E05A1B',
     lag: '#E05A1B',
-    response: '#E05A1B',
+    autonomy: '#A8967A',
   };
 
   function togglePillar(id: PillarId) {
@@ -71,11 +71,7 @@ export function PillarDashboard() {
               transition={FADE}
               className="w-full h-full flex items-center justify-center p-4"
             >
-              <RadarChart
-                fidelity={fidelityScore}
-                lagHealth={lagHealth.score}
-                responseHealth={agilityScore}
-              />
+              <RadarChart fidelity={fidelityScore} lagHealth={lagHealth.score} autonomyHealth={autonomy.score} />
             </motion.div>
           )}
 
@@ -123,22 +119,16 @@ export function PillarDashboard() {
             </motion.div>
           )}
 
-          {expandedPillar === 'response' && (
+          {expandedPillar === 'autonomy' && (
             <motion.div
-              key="response"
+              key="autonomy"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={FADE}
               className="p-4 h-full flex flex-col overflow-hidden"
             >
-               <div className="flex-1 min-h-0 flex flex-col justify-center">
-                 <TorqueProfile
-                   levels={levels}
-                   torqueProfile={geo.torqueProfile}
-                   agilityScore={geo.agilityScore}
-                 />
-               </div>
+              <AuthoritySpectrum dci={dci} levels={levels} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -172,16 +162,16 @@ export function PillarDashboard() {
           onToggle={() => togglePillar('lag')}
         />
         <PillarCard
-          id="response"
-          label="Agility"
-          value={`${agilityScore}`}
-          score={agilityScore}
-          sub={`${(geo.agilityScore * 100).toFixed(1)}% of signal reaches front line`}
-          accentColor="#E05A1B"
-          healthColor={agilityHealthColor}
-          isExpanded={expandedPillar === 'response'}
-          hasExpandedSibling={expandedPillar !== null && expandedPillar !== 'response'}
-          onToggle={() => togglePillar('response')}
+          id="autonomy"
+          label="Autonomy"
+          value={`${autonomy.score}`}
+          score={autonomy.score}
+          sub={`DCI ${dci}% · ${autonomy.label}`}
+          accentColor="#A8967A"
+          healthColor={autonomyHealthColor}
+          isExpanded={expandedPillar === 'autonomy'}
+          hasExpandedSibling={expandedPillar !== null && expandedPillar !== 'autonomy'}
+          onToggle={() => togglePillar('autonomy')}
         />
       </div>
     </div>

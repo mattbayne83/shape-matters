@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export type PillarId = 'fidelity' | 'lag' | 'response';
+export type PillarId = 'fidelity' | 'lag' | 'autonomy';
 
 const LED_COUNT = 13;
 const ARC_START = 135; // 7 o'clock

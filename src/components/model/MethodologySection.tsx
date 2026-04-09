@@ -4,7 +4,7 @@ import { Prose } from '../ui/Prose';
 
 const fidelity = METHODOLOGY_METRICS.filter((m) => m.category === 'fidelity');
 const latency = METHODOLOGY_METRICS.filter((m) => m.category === 'latency');
-const agility = METHODOLOGY_METRICS.filter((m) => m.category === 'agility');
+const autonomy = METHODOLOGY_METRICS.filter((m) => m.category === 'autonomy');
 const supplementary = METHODOLOGY_METRICS.filter((m) => m.category === 'supplementary');
 
 export function MethodologySection() {
@@ -41,12 +41,12 @@ export function MethodologySection() {
         ))}
       </div>
 
-      {/* ── Agility Pillar ── */}
+      {/* ── Autonomy Pillar ── */}
       <div className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-10 mb-3">
-        Agility
+        Autonomy
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-        {agility.map((m) => (
+        {autonomy.map((m) => (
           <MethodologyCard key={m.id} {...m} />
         ))}
       </div>
@@ -135,6 +135,14 @@ export function MethodologySection() {
             layers. Real organizations have variable spans. The Shape Gap metric quantifies
             structural deviation from this idealized linear hierarchy.
           </li>
+          <li>
+            <strong>Decision-Centrality Index (DCI) is self-assessed</strong> — The DCI slider
+            (0–100) reflects how much decision authority reaches individual contributors.
+            Reference company values are estimates based on publicly reported organizational
+            models (e.g., Haier's microenterprise structure, Nucor's team-level P&amp;L authority).
+            The depth discount formula log(3)/log(L) assumes coordination overhead grows
+            logarithmically with depth.
+          </li>
         </ul>
 
         <h3>Data Sources</h3>
@@ -182,6 +190,16 @@ export function MethodologySection() {
               <td>Organizational communication network studies</td>
               <td>2024</td>
             </tr>
+            <tr>
+              <td><a href="https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/the-five-trademarks-of-agile-organizations" target="_blank" rel="noopener noreferrer">McKinsey &amp; Company</a></td>
+              <td>Five trademarks of agile organizations, "3 layers" structural finding</td>
+              <td>2018</td>
+            </tr>
+            <tr>
+              <td><a href="https://knowledge.insead.edu/entrepreneurship/multinational-fuelled-thousands-entrepreneurs" target="_blank" rel="noopener noreferrer">INSEAD / Corporate Rebels</a></td>
+              <td>Haier RenDanHeYi model, microenterprise authority distribution</td>
+              <td>2018</td>
+            </tr>
           </tbody>
         </table>
 
@@ -195,6 +213,12 @@ export function MethodologySection() {
             <strong>The model assumes serial communication</strong> — Real organizations use
             parallel, skip-level, and informal channels that may partially compensate for
             hierarchical fidelity loss.
+          </li>
+          <li>
+            <strong>DCI is a single-axis simplification</strong> — Real decision authority
+            varies by domain (engineering vs. budget vs. hiring), by level, and by team.
+            The DCI slider captures an organization-wide average. Two orgs with identical
+            DCI scores may distribute authority very differently across functions.
           </li>
         </ul>
       </Prose>

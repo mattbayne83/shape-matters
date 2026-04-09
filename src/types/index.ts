@@ -34,6 +34,7 @@ export interface Company {
   source: string;
   sourceUrl?: string;
   decisionCycle?: number;     // days/layer (optional for backward compat)
+  dci?: number;                 // Decision-Centrality Index (0-100, optional for backward compat)
   narrative?: string;         // human-readable "so what" one-liner for Proof section
 }
 
@@ -148,4 +149,13 @@ export interface HealthScore {
   score: number;          // 0-100, rounded integer
   label: string;          // "Live", "Nimble", "Stuck", etc.
   color: string;          // Hex color for the score band
+}
+
+// ── Autonomy (Pillar 3) ───────────────────────────────────────────
+export interface AutonomyResult {
+  score: number;                // 0-100 health score
+  depthDiscount: number;        // log(3) / log(L) — 1.0 at L=3, 0.5 at L=9
+  crossoverFloor: number;       // minimum DCI to score above 50
+  label: string;                // health band label
+  color: string;                // health band color
 }

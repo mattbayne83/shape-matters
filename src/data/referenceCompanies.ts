@@ -15,6 +15,7 @@ export const REFERENCE_COMPANIES: Company[] = [
     source: 'Valve Employee Handbook; industry estimates',
     narrative: 'Zero relays. Every person who spots a problem can fix it the same day.',
     decisionCycle: 1.5,
+    dci: 95,   // No managers — full self-direction
   },
   {
     id: 'nucor',
@@ -30,6 +31,7 @@ export const REFERENCE_COMPANIES: Company[] = [
     source: 'SEC 10-K (2024); ResearchGate case study',
     sourceUrl: 'https://nucor.com/news-release/nucor-reports-results-for-the-fourth-quarter-and-full-year-2024-122964',
     decisionCycle: 2,
+    dci: 82,   // Steel teams have full P&L authority
   },
 
   // ── Tech Giants ───────────────────────────────────────────────────
@@ -47,6 +49,7 @@ export const REFERENCE_COMPANIES: Company[] = [
     source: 'SEC 10-K (2024); levels.fyi',
     sourceUrl: 'https://www.levels.fyi/standard/',
     decisionCycle: 3.5,
+    dci: 58,   // 20% time, IC-driven OKRs, but strong hierarchy
   },
 
   // ── Recently Flattened ────────────────────────────────────────────
@@ -64,6 +67,7 @@ export const REFERENCE_COMPANIES: Company[] = [
     source: 'SEC 10-K (2024); Meta Year of Efficiency blog post',
     sourceUrl: 'https://about.fb.com/news/2023/03/mark-zuckerberg-meta-year-of-efficiency/',
     decisionCycle: 2.5,
+    dci: 28,   // Centralized product decisions, IC execution
   },
 
   // ── Experimental Models ───────────────────────────────────────────
@@ -81,6 +85,7 @@ export const REFERENCE_COMPANIES: Company[] = [
     source: 'INSEAD case study; Corporate Rebels; HBR',
     sourceUrl: 'https://knowledge.insead.edu/entrepreneurship/multinational-fuelled-thousands-entrepreneurs',
     decisionCycle: 1,
+    dci: 88,   // Microenterprise model — ICs run as independent units
   },
 
   // ── Tech Giants (deep end) ─────────────────────────────────────────
@@ -98,5 +103,6 @@ export const REFERENCE_COMPANIES: Company[] = [
     source: 'SEC 10-K (2024); levels.fyi',
     sourceUrl: 'https://www.levels.fyi/?compare=Amazon&track=Software+Engineer',
     decisionCycle: 3,
+    dci: 40,   // Two-pizza teams offset by strong top-down mandate culture
   },
 ];

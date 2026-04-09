@@ -7,7 +7,8 @@ interface CompanyState {
   headcount: number;
   activeScenarioId: string | null;
   decisionCycle: number;       // days/layer (1-14, default 3)
-  expandedPillar: 'fidelity' | 'lag' | 'response' | null;  // null = dashboard view
+  dci: number;
+  expandedPillar: 'fidelity' | 'lag' | 'autonomy' | null;  // null = dashboard view
   advancedInputsOpen: boolean;
 }
 
@@ -17,7 +18,8 @@ interface CompanyActions {
   setHeadcount: (headcount: number) => void;
   setActiveScenarioId: (id: string | null) => void;
   setDecisionCycle: (d: number) => void;
-  setExpandedPillar: (p: 'fidelity' | 'lag' | 'response' | null) => void;
+  setDci: (dci: number) => void;
+  setExpandedPillar: (p: 'fidelity' | 'lag' | 'autonomy' | null) => void;
   setAdvancedInputsOpen: (open: boolean) => void;
 }
 
@@ -28,7 +30,8 @@ function applyUrlParams(): boolean {
   const h = params.get('h');
   const f = params.get('f');
   const d = params.get('d');
-  if (!l && !h && !f && !d) return false;
+  const ci = params.get('ci');
+  if (!l && !h && !f && !d && !ci) return false;
 
   const state = useCompanyStore.getState();
   if (l) {
@@ -47,6 +50,10 @@ function applyUrlParams(): boolean {
     const cycle = Math.max(1, Math.min(14, Number(d)));
     if (!isNaN(cycle)) state.setDecisionCycle(cycle);
   }
+  if (ci) {
+    const dci = Math.max(0, Math.min(100, Math.round(Number(ci))));
+    if (!isNaN(dci)) state.setDci(dci);
+  }
   return true;
 }
 
@@ -58,6 +65,7 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       headcount: 5000,
       activeScenarioId: 'innovation-proposal',
       decisionCycle: 3,
+      dci: 50,
       expandedPillar: null,
       advancedInputsOpen: false,
       setFidelityRate: (rate) => set({ fidelityRate: rate }),
@@ -65,6 +73,7 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       setHeadcount: (headcount) => set({ headcount }),
       setActiveScenarioId: (id) => set({ activeScenarioId: id }),
       setDecisionCycle: (d) => set({ decisionCycle: d }),
+      setDci: (dci) => set({ dci }),
       setExpandedPillar: (p) => set({ expandedPillar: p }),
       setAdvancedInputsOpen: (open) => set({ advancedInputsOpen: open }),
     }),
@@ -79,6 +88,7 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
         levels: state.levels,
         headcount: state.headcount,
         decisionCycle: state.decisionCycle,
+        dci: state.dci,
         // Excluded: activeScenarioId, expandedPillar, advancedInputsOpen
       }),
     }
@@ -91,10 +101,10 @@ applyUrlParams();
 
 /** Build a shareable URL from current store state. */
 export function buildShareUrl(): string {
-  const { levels, headcount, fidelityRate, decisionCycle } =
+  const { levels, headcount, fidelityRate, decisionCycle, dci } =
     useCompanyStore.getState();
   const url = new URL(window.location.href);
-  url.search = `?l=${levels}&h=${headcount}&f=${fidelityRate}&d=${decisionCycle}`;
+  url.search = `?l=${levels}&h=${headcount}&f=${fidelityRate}&d=${decisionCycle}&ci=${dci}`;
   url.hash = 'model';
   return url.toString();
 }

@@ -49,8 +49,20 @@ export function SimulateSection() {
                 aria-valuemin={2}
                 aria-valuemax={12}
                 aria-valuetext={`Depth: ${levels}`}
-                className="w-full h-3 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-ember focus:outline-none focus:ring-2 focus:ring-ember/30"
+                className="w-full custom-slider focus:outline-none"
+                style={{
+                  background: `linear-gradient(to right, #E05A1B 0%, #E05A1B ${((levels - 2) / 10) * 100}%, #e7e5e4 ${((levels - 2) / 10) * 100}%, #e7e5e4 100%)`,
+                  borderRadius: 2,
+                }}
               />
+              <style>{`
+                #sim-levels::-webkit-slider-thumb { background: #E05A1B; }
+                #sim-levels::-moz-range-thumb { background: #E05A1B; }
+              `}</style>
+              <div className="relative h-3 mt-0.5">
+                <span className="absolute left-0 text-[9px] text-stone-400">Flat</span>
+                <span className="absolute right-0 text-[9px] text-stone-400">Deep</span>
+              </div>
             </div>
           </div>
 

@@ -41,9 +41,13 @@ Three cost channels of organizational depth:
 | Round-trip Fidelity | r^(2(L-1)) |
 | Avg Span of Control | N^(1/L) |
 | Flatness Index | Span / L |
-| Decision Latency | 2(L-1) x t_relay |
+| Propagation Delay | d × (L-1)² |
+| Signal Half-life | log(2) / \|log(r)\| layers |
+| Min Viable Fidelity Rate | 0.05^(1/(2(L-1))) |
+| Structural Speed Limit | L_max = floor(1 + sqrt(16.25/d)) |
+| Effective Depth Ratio | effective_layers / total_layers |
 
-Where r = per-layer retention rate, L = levels, N = total employees.
+Where r = per-layer retention rate, L = levels, N = total employees, d = decision cycle (days/layer).
 
 ## Tech Stack
 
@@ -57,12 +61,13 @@ Where r = per-layer retention rate, L = levels, N = total employees.
 
 ```bash
 npm install
-npm run dev       # Start dev server (Vite HMR)
-npm run build     # TypeScript check + production build
-npm run lint      # ESLint
-npm run test      # Vitest (single run)
+npm run dev        # Start dev server (Vite HMR)
+npm run build      # TypeScript check + production build
+npm run lint       # ESLint
+npm run test       # Vitest (single run)
 npm run test:watch # Vitest (watch mode)
-npm run preview   # Preview production build locally
+npm run preview    # Preview production build locally
+npm run eval       # Run next autoresearch cycle
 ```
 
 ## Project Structure

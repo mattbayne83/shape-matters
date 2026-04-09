@@ -6,7 +6,7 @@ export interface MetricDefinition {
   formula: ReactNode;
   description: string;
   constants?: string;
-  category: 'fidelity' | 'latency' | 'agility' | 'supplementary';
+  category: 'fidelity' | 'latency' | 'autonomy' | 'supplementary';
 }
 
 export const METHODOLOGY_METRICS: MetricDefinition[] = [
@@ -57,23 +57,15 @@ export const METHODOLOGY_METRICS: MetricDefinition[] = [
     category: 'latency',
   },
 
-  // ── Agility Pillar ──
+  // ── Autonomy Pillar ──
   {
-    id: 'methodology-pivot-speed',
-    title: 'Pivot Speed (Agility Score)',
-    formula: <>(1/N) × Σ n<sub>k</sub> × r<sup>(L-1-k)</sup></>,
+    id: 'methodology-autonomy-score',
+    title: 'Autonomy Score',
+    formula: <>min(DCI × log(3) / log(L), 100)</>,
     description:
-      'The fraction of the organization effectively reached by a CEO directive. Based on rotational torque: each layer receives a signal degraded by fidelity rate r, weighted by the number of people at that layer. At 82% fidelity and 6 levels, only 74% of the org effectively receives the directive. Flat orgs score near 100%; deep orgs with low fidelity score below 30%.',
-    constants: 'n_k = headcount at layer k, r = fidelity rate, L = depth',
-    category: 'agility',
-  },
-  {
-    id: 'methodology-torque-profile',
-    title: 'Torque Profile',
-    formula: <>τ(origin) = (1/N) × Σ n<sub>k</sub> × r<sup>|origin-k|</sup></>,
-    description:
-      'Pivot efficiency by origin layer — shows who can actually move the org. The CEO has the lowest efficiency because the signal must traverse the most layers to reach the largest population (ICs at the base). ICs have the highest local efficiency but almost no upward reach. The shape of the profile reveals centralization: flat profiles mean change can originate anywhere; steep profiles mean only the top can pivot the org.',
-    category: 'agility',
+      'Measures effective decision authority after structural coordination overhead. Each additional layer adds network connections (up, down, and lateral) that erode formal empowerment. At 3 levels, DCI passes through undiminished. At 9 levels, half of formal authority is consumed by coordination. Based on Decision-Centrality Index research showing rank inversions at DCI≥35 for deep organizations.',
+    constants: 'DCI = Decision-Centrality Index (0-100), L = depth',
+    category: 'autonomy',
   },
 
   // ── Supplementary Metrics ──

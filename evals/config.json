@@ -1,0 +1,16 @@
+{
+  "current_cycle": 5,
+  "enrichment_level": "validated",
+  "reference_companies": [
+    "valve",
+    "nucor",
+    "google",
+    "meta-2024",
+    "haier",
+    "amazon"
+  ],
+  "model_params": {
+    "default_fidelity_rate": 82,
+    "default_decision_cycle": 3
+  }
+}

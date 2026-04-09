@@ -3,7 +3,7 @@ import type { MetricDefinition } from '../../data/methodologyMetrics';
 const BADGE_STYLES: Record<MetricDefinition['category'], { stripe: string; badge: string; label: string }> = {
   fidelity: { stripe: 'bg-ember', badge: 'bg-ember/10 text-ember', label: 'Fidelity' },
   latency: { stripe: 'bg-warm-stone', badge: 'bg-warm-stone/10 text-warm-stone', label: 'Latency' },
-  agility: { stripe: 'bg-ember', badge: 'bg-ember/10 text-ember', label: 'Agility' },
+  autonomy: { stripe: 'bg-warm-stone', badge: 'bg-warm-stone/10 text-warm-stone', label: 'Autonomy' },
   supplementary: { stripe: 'bg-stone-400', badge: 'bg-stone-100 text-stone-400', label: 'Supplementary' },
 };
 

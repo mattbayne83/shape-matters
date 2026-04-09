@@ -57,7 +57,8 @@ Single-page scroll layout in `src/pages/ScrollPage.tsx`. Navigation via anchor l
 - `src/components/ui/` — Prose, FadeIn, GeometricHero
 - `src/pages/` — ScrollPage (single entry page)
 - `src/types/` — TypeScript interfaces (Company, OrgMetrics, DepthTaxResult, TriangleGeometry, RestructuringImpact, ThermalLagResult, HealthScore, Scenario, RelayLevel, ScenarioCategory)
-- `docs/` — THEORY_BRIEF.md, TORQUE_MODEL.md
+- `docs/` — THEORY_BRIEF.md, TORQUE_MODEL.md, PHYSICS_MODELS.md, BAHCALL_LOONSHOTS.md
+- `evals/` — Recursive autoresearch system (see below)
 
 ### Zustand Store (`useCompanyStore`)
 Shared inputs across sections:
@@ -165,6 +166,45 @@ Shared inputs across sections:
 - **Scenario relay levels are hand-authored** — 5 scenarios × 8 levels each. Custom message engine (`applyRelayTransforms`) exists but is not currently wired to the UI.
 - **Agility pillar uses torque model, NOT oscillator** — damped harmonic oscillator was removed (physics were inverted for flat orgs). Agility score = CEO's pivot efficiency from calcTriangleGeometry. See docs/TORQUE_MODEL.md and council-transcript-20260407-agility.md.
 
+## Evals (Recursive Autoresearch)
+
+Research loop for model exploration and hypothesis testing. Inspired by Karpathy autoresearch.
+
+### Directory Structure
+```
+evals/
+  orchestrator.sh       # Main loop: reads config → assembles prompt → calls claude -p → updates state
+  config.json           # current_cycle, enrichment_level (sandbox/validated/full), model_params
+  insights.md           # Accumulated findings across all cycles (long-term memory)
+  prompts/
+    system-prompt.md    # Research agent identity, scoring rubric, journal format template
+    seed.md             # Research seeds (hand-written for C1, agent-generated after)
+  journal/
+    cycle-NNN.md        # Per-cycle findings (hypotheses, evidence, scores, compounding check)
+  helpers/
+    run-models.ts       # CLI bridge: npx tsx run-models.ts '{"fn":"calcOrgMetrics","args":{...}}'
+    sweep.ts            # Sweep runner: --fn calcThermalLag --vary levels=2:10 --fixed decisionCycle=3
+```
+
+### Running a Cycle
+```bash
+./evals/orchestrator.sh        # Run next cycle (auto-reads current_cycle from config.json)
+npm run eval                   # Same via npm
+npm run eval:models -- '{"fn":"calcLagHealth","args":{"totalDelay":50}}'
+npm run eval:sweep -- --fn calcThermalLag --vary levels=2:10 --fixed decisionCycle=3
+```
+
+### Enrichment Levels
+- `sandbox` (cycles 1-2): model functions + parameter sweeps + 6 reference companies only
+- `validated` (cycles 3-4): + web search to validate specific claims from prior cycles
+- `full` (cycle 5+): + proactive web research, new company data, cross-domain analogies
+Set manually in `evals/config.json` — does NOT auto-escalate.
+
+### Gotchas
+- **Guard prevents overwrite**: if `cycle-NNN.md` already exists, orchestrator exits with error
+- **BSD sed on macOS**: use `awk` for multi-condition extraction, not sed with `{...}` groups
+- **tsx required**: `npm install -D tsx` needed to run helpers directly
+
 ## Deployment
 - GitHub Pages: [https://mattbayne83.github.io/shape-matters/](https://mattbayne83.github.io/shape-matters/)
 - `public/_redirects` — SPA fallback (`/* /index.html 200`)
@@ -190,4 +230,7 @@ npm run lint       # ESLint
 npm run test       # Vitest (single run)
 npm run test:watch # Vitest (watch mode)
 npm run preview    # Preview production build
+npm run eval       # Run next autoresearch cycle (./evals/orchestrator.sh)
+npm run eval:models -- '{"fn":"...","args":{...}}'  # Run a single model function
+npm run eval:sweep -- --fn <fn> --vary <p=start:end> --fixed <p=v ...>  # Parameter sweep
 ```

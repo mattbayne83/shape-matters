@@ -3,13 +3,13 @@ import { healthBandColor } from '../../lib/healthScores';
 interface RadarChartProps {
   fidelity: number;
   lagHealth: number;
-  responseHealth: number;
+  autonomyHealth: number;
 }
 
 const PILLARS = [
   { key: 'fidelity', label: 'Fidelity' },
   { key: 'lag', label: 'Latency' },
-  { key: 'response', label: 'Agility' },
+  { key: 'autonomy', label: 'Autonomy' },
 ] as const;
 
 const SEGMENTS = 10;
@@ -28,8 +28,8 @@ const SEG_COLORS = [
   '#dc2626', // 90-100 red-600
 ];
 
-export function RadarChart({ fidelity, lagHealth, responseHealth }: RadarChartProps) {
-  const scores = [fidelity, lagHealth, responseHealth];
+export function RadarChart({ fidelity, lagHealth, autonomyHealth }: RadarChartProps) {
+  const scores = [fidelity, lagHealth, autonomyHealth];
 
   return (
     <div className="flex items-stretch justify-center gap-3 w-full h-full px-6 py-4">

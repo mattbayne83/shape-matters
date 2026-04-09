@@ -48,7 +48,7 @@ function CompactSlider({ id, label, value, displayValue, min, max, step = 1, acc
 
   return (
     <div>
-      <div className="flex justify-between items-baseline mb-1">
+      <div className="flex justify-between items-baseline mb-1 whitespace-nowrap">
         <label htmlFor={id} className="text-[10px] font-bold uppercase tracking-wide" style={{ color }}>
           {label}
         </label>
@@ -100,6 +100,14 @@ function CompactSlider({ id, label, value, displayValue, min, max, step = 1, acc
   );
 }
 
+function dciHint(dci: number): string {
+  if (dci >= 80) return 'IC-led';
+  if (dci >= 60) return 'Distributed';
+  if (dci >= 40) return 'Guided';
+  if (dci >= 20) return 'Managed';
+  return 'Top-down';
+}
+
 function cycleHint(days: number): string {
   if (days <= 1.5) return 'Rapid';
   if (days <= 3) return 'Fast';
@@ -117,6 +125,8 @@ export function InputStrip() {
   const setFidelityRate = useCompanyStore((s) => s.setFidelityRate);
   const decisionCycle = useCompanyStore((s) => s.decisionCycle);
   const setDecisionCycle = useCompanyStore((s) => s.setDecisionCycle);
+  const dci = useCompanyStore((s) => s.dci);
+  const setDci = useCompanyStore((s) => s.setDci);
 
   const [hcSlider, setHcSlider] = useState(() => Math.round(headcountToSlider(headcount)));
   const [preset, setPreset] = useState('custom');
@@ -141,6 +151,8 @@ export function InputStrip() {
     const pos = Math.round(headcountToSlider(company.employees));
     setHcSlider(pos);
     storeHeadcount(sliderToHeadcount(pos));
+    if (company.decisionCycle != null) setDecisionCycle(company.decisionCycle);
+    if (company.dci != null) setDci(company.dci);
   };
 
   const handleLevels = (v: number) => { setPreset('custom'); storeLevels(v); };
@@ -155,7 +167,7 @@ export function InputStrip() {
   return (
     <div className="bg-white border border-stone-200 rounded-xl shadow-sm">
       {/* ── Row 1: Sliders ── */}
-      <div className="grid grid-cols-[1fr_1fr_1fr_auto_1fr] items-end gap-x-4 p-3 px-4">
+      <div className="grid grid-cols-[1fr_1fr_1fr_auto_1fr_auto_1fr] items-end gap-x-4 p-3 px-4">
         <CompactSlider id="is-levels" label="Depth" value={levels} displayValue={String(levels)} min={1} max={15} accent="ember" onChange={handleLevels} range={['Flat', 'Deep']} />
         <CompactSlider id="is-size" label="Headcount" value={hcSlider} displayValue={formatHeadcount(headcount)} min={0} max={100} accent="ember" onChange={handleHeadcount} range={['50', '500K']} />
         <CompactSlider id="is-fidelity" label="Fidelity/Layer" value={fidelityRate} displayValue={`${fidelityRate}%`} min={50} max={98} accent="ember" onChange={setFidelityRate} ticks={[{ value: 70, label: 'Low trust' }, { value: 82, label: 'Typical' }, { value: 93, label: 'High trust' }]} />
@@ -166,6 +178,28 @@ export function InputStrip() {
         </div>
 
         <CompactSlider id="is-cycle" label="Cycle Time" value={decisionCycle} displayValue={`${Math.round(decisionCycle)}d`} min={1} max={14} step={0.5} accent="warm-stone" onChange={setDecisionCycle} hint={cycleHint(decisionCycle)} ticks={[{ value: 2, label: 'Startup' }, { value: 4, label: 'Tech' }, { value: 7, label: 'Enterprise' }]} />
+
+        {/* ── Divider ── */}
+        <div className="self-stretch flex items-center py-1">
+          <div className="w-px h-full bg-stone-200" />
+        </div>
+
+        <CompactSlider
+          id="is-dci"
+          label="Authority"
+          value={dci}
+          displayValue={`${dci}%`}
+          min={0}
+          max={100}
+          accent="warm-stone"
+          onChange={(v) => { setPreset('custom'); setDci(v); }}
+          hint={dciHint(dci)}
+          ticks={[
+            { value: 20, label: 'CEO-led' },
+            { value: 50, label: 'Balanced' },
+            { value: 80, label: 'IC-led' },
+          ]}
+        />
       </div>
 
       {/* ── Row 2: Presets + share ── */}

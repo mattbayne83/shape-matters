@@ -1,7 +1,7 @@
 # org-shape — Shape Matters
 
 ## Product Vision
-Open-source interactive research tool exploring how organizational depth degrades information fidelity, increases communication costs, and impacts effectiveness. Based on Bartlett (1932), Deming (1982), and Toyota's Gemba Walk.
+Open-source interactive diagnostic engine for understanding how organizational shape creates friction — and which realistic levers change it. Three pillars: **Fidelity** (information decay across layers), **Latency** (decision propagation delay), **Autonomy** (distribution of decision rights). Grounded in Bartlett (1932), Deming (1982), Toyota's Gemba Walk, and the Bloom–Van Reenen World Management Survey (~15k firms). A living model — the brief began as a two-channel essay; the product has evolved into a three-pillar diagnostic, with openness to additional physics/engineering principles (see `docs/PHYSICS_MODELS.md`) as they earn empirical anchoring.
 
 ## Tech Stack
 - React 19, TypeScript 5.9, Vite 7
@@ -188,7 +188,6 @@ Shared inputs across sections:
 - **`activeScenarioId` defaults to `'innovation-proposal'`** — simulator is never blank on load.
 - **Scenario relay levels are hand-authored** — 5 scenarios × 8 levels each. Custom message engine (`applyRelayTransforms`) exists but is not currently wired to the UI.
 - **Autonomy pillar uses DCI, NOT oscillator** — damped harmonic oscillator was removed. Autonomy score = DCI × depth discount (log(3)/log(L)). DCI slider (0-100) is a separate input from fidelity, breaking the prior Fidelity-Agility redundancy. See docs/TORQUE_MODEL.md and council-transcript-20260407-agility.md.
-- **CONGESTION_GAMMA=0.1** is a module-level constant in `triangleGeometry.ts` — not exposed in UI or store. Per-hop fidelity adjusted as `r_eff = r × (1 - γ × n_k/N_max)`. **Cycle 6 H4: at γ=0.1 the impact on CEO agility is <1.1pp for all 6 reference companies** — this is structural scaffolding, not a live lever. Do NOT advertise or surface in UI copy until back-fit against observed data.
 - **BindingPillarCallout is always visible** — two modes gated by `allTied`, which is computed via the **theorem-backed binary rule** `scoreBand(min) === scoreBand(composite)` (Cycle 9 H2 + H4). When the min pillar and the composite share a band → balanced mode (warm-stone accent). When they differ → bottlenecked mode with the pillar's accent color. This is a strict refinement of the old `max−min < 10` threshold: it correctly catches Amazon's 8pt-gap false-Fresh case that the threshold missed. The theorem `band(min) ≤ band(mean)` (AM-min + band monotonicity) guarantees the min-band is never *higher* than the composite band, so band differences are always downward flips.
 - **BindingPillarCallout picks the highest-impact lever across all four**, not just the primary lever for the lowest pillar. Matters when a pillar is capped — e.g., Amazon's autonomy is often the lowest pillar but DCI is a dead slider there because team-path autonomy saturates at 100 (Cycle 7 H2 + H3). Computing `topLever` globally keeps the recommendation correct.
 - **`sensitivity.ts` computes raw continuous pillar scores**, bypassing the `Math.round` calls inside `calcBlendedScores`. Rounding quantizes 1-unit finite-difference derivatives to zero, which would break both BindingPillarCallout and LeverExchangeRates. The sensitivity engine mirrors the blend math but returns floats.
@@ -235,7 +234,6 @@ Set manually in `evals/config.json` — does NOT auto-escalate.
 
 ### Cycle Status (as of 2026-04-10)
 - **10 cycles complete** (C1–C10 in `evals/journal/`). Key results in `evals/insights.md`.
-- **Cycle 6 H4**: CONGESTION_GAMMA at 0.1 is effectively inert — structural scaffolding only.
 - **Cycle 6 H5**: `DCI = 25 × (WMS − 1)` linear mapping grounds DCI in the Bloom–Van Reenen World Management Survey (~15k firms).
 - **Cycle 7 H2**: Amazon is "false-Fresh" (composite Fresh, fidelity Aging). Now resolved in code via the theorem-backed binary rule.
 - **Cycle 7 H3 (refuted)**: Team path strictly dominates → `teamDecisionMix` is a commitment lever, not a tradeoff lever.

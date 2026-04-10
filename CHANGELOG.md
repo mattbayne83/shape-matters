@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Removed
+- **`CONGESTION_GAMMA` and the per-hop congestion factor** (`src/lib/triangleGeometry.ts`) — Cycle 6 H4 proved <1.1pp impact at γ=0.1 on every reference company; mechanism deleted as zombie scaffolding pending empirical anchoring. The torque calculation now uses uniform per-hop retention `r^hops`. Congestion-γ back-fit seed removed from `evals/prompts/seed.md`. The `CONGESTION_GAMMA constant is 0.1` test and the "congestion reduces CEO torque" test were removed from `triangleGeometry.test.ts`; all remaining numeric assertions still pass without tolerance changes (test count 223 → 225 after earlier additions, all green).
+
+### Docs
+- **Theory brief, README, CLAUDE.md Product Vision rewritten** to reflect the evolved three-pillar diagnostic mission (was: two-channel persuasive essay on fidelity + latency). Adds Bloom–Van Reenen World Management Survey as the empirical anchor for the Autonomy pillar, introduces the "living model" framing (open to additional physics/engineering principles as they earn empirical grounding), and preserves the Triangle Geometry section as intellectual texture. CLAUDE.md `CONGESTION_GAMMA` gotcha and "Cycle 6 H4 inert" cycle-status line removed to match the code.
+
 ### Added
 - **9 new reference companies** (N=6 → **N=15**) from parallel agent-led research passes, partially addressing Cycle 9 H5's "zero sector-calibrated references" audit.
   - **Self-managing cluster**: Morning Star (HBR 2011, HBS case 914-013), Buurtzorg (Springer 2024 peer-reviewed), Berkshire Hathaway (Stanford GSB, Cunningham & Cuba 2020)

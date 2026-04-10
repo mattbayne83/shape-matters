@@ -19,9 +19,11 @@ describe('calcAutonomyScore', () => {
     expect(result.score).toBe(100);
   });
 
-  it('validates Finding 15: Amazon (L=9, DCI=72) beats Meta (L=6, DCI=28)', () => {
+  it('validates Finding 15: Amazon (L=9, DCI=72) beats Meta (L=6, DCI=35)', () => {
+    // Meta DCI recalibrated 28 → 35 in Cycle 12 H10. Amazon still wins:
+    // amazon = 72 × 0.5 = 36 vs meta = 35 × log(3)/log(6) ≈ 21.
     const amazon = calcAutonomyScore(72, 9);
-    const meta = calcAutonomyScore(28, 6);
+    const meta = calcAutonomyScore(35, 6);
     expect(amazon.score).toBeGreaterThan(meta.score);
   });
 
@@ -60,7 +62,7 @@ describe('calcAutonomyScore', () => {
     const nucor = calcAutonomyScore(82, 4);     // 82 × 0.79 = 65
     const amazon = calcAutonomyScore(72, 9);    // 72 × 0.5 = 36
     const google = calcAutonomyScore(58, 8);    // 58 × 0.53 = 31
-    const meta = calcAutonomyScore(28, 6);      // 28 × 0.61 = 17
+    const meta = calcAutonomyScore(35, 6);      // 35 × 0.61 = 21 (Cycle 12 H10)
     const oneok = calcAutonomyScore(22, 6);     // 22 × 0.61 = 13
 
     expect(oneok.score).toBeLessThan(meta.score);

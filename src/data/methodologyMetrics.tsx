@@ -56,6 +56,15 @@ export const METHODOLOGY_METRICS: MetricDefinition[] = [
     constants: 'd = decision cycle (days/layer)',
     category: 'latency',
   },
+  {
+    id: 'methodology-nyquist-ceiling',
+    title: 'Nyquist Ceiling',
+    formula: <>L*(d, T) = 1 + √(T / (4d))</>,
+    description:
+      'The deepest org that can still close its strategic feedback loop at cadence T with per-layer decision cycle d. Derived from classical control theory: treating the organization as a closed-loop controller with natural period T and feedback delay τ = d·(L−1)², the phase-margin crossover τ = T/4 yields this closed form. Above L*, decisions arrive out of phase with the strategic tempo and the loop becomes oscillatory — "policy whiplash." At a quarterly cadence (T=90), a d=3 org hits its ceiling at L ≈ 3.7; at an annual cadence (T=365), the same org can sustain L ≈ 6.5 before phase-margin collapse. Deep command orgs like pre-Gerstner IBM (L=11, d=5) run phase-unstable even at annual cadence — which is exactly the historical record of 12–18 month product decisions.',
+    constants: 'd = decision cycle (days/layer), T = strategic cadence period (days)',
+    category: 'latency',
+  },
 
   // ── Autonomy Pillar ──
   {

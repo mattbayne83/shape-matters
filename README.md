@@ -1,18 +1,16 @@
 # org-shape — The Shape of Effectiveness
 
-An interactive research tool exploring how organizational depth degrades information fidelity, increases communication costs, and impacts effectiveness.
+An interactive diagnostic engine for understanding how organizational shape creates friction, and for identifying realistic levers to change it. A living research tool — we started with two cost channels (fidelity and latency) and have since added a third pillar (autonomy) grounded in the Bloom–Van Reenen World Management Survey. The model remains open to additional physics/engineering principles as they earn empirical anchoring.
 
 **Live site:** [https://mattbayne83.github.io/shape-matters/](https://mattbayne83.github.io/shape-matters/)
 
-## The Thesis
+## Three Pillars
 
-Every management layer is a lossy relay. Using Bartlett's (1932) serial reproduction research as the empirical basis, information degrades ~18% per layer (82% retention). A 9-level org retains only ~17% of original signal at the top. Round-trip fidelity (info up, decision down) compounds further.
+1. **Fidelity** — Information decays at each person-to-person relay. Bartlett (1932) serial reproduction + Deming's Point 8 (fear filter). Formulas: `r^(L-1)` upward, `r^(2(L-1))` round-trip.
+2. **Latency** — Decision propagation delay grows quadratically with depth. Deming + Toyota Gemba Walk as the bypass circuit around the lossy chain. Formula: `d × (L-1)²`.
+3. **Autonomy** — Distribution of decision rights, discounted by depth. Grounded in Bloom & Van Reenen's World Management Survey (~15k firms); Cycle 6 H5 maps WMS scores to DCI via `DCI = 25 × (WMS − 1)`. Formula: `DCI × log(3)/log(L)`, capped at 100.
 
-Three cost channels of organizational depth:
-
-1. **Fidelity Loss** — Information decays per relay: r^(L-1) upward, r^(2(L-1)) round-trip
-2. **Communication Complexity** — Bottleneck nodes at each level create queues; cross-functional paths route vertically through silos
-3. **Decision Latency** — Round-trip time scales 2x(levels-1), with reinterpretation and political filtering at each layer
+Together these form a diagnostic: users model their org, see which pillar is binding, and explore which lever (signal clarity, decision speed, decision rights, team autonomy) actually moves the composite.
 
 ## Features
 

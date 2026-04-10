@@ -79,6 +79,15 @@ const LEVER_BOUNDS: Record<Lever, { min: number; max: number }> = {
  * Mirrors the blend math in `calcBlendedScores` but skips the display-level
  * `Math.round` calls — rounding quantizes finite-difference derivatives and
  * can zero out real lever effects. For sensitivity analysis we need raw floats.
+ *
+ * TODO (Cycle 12 H3 follow-up): when the UI scenario picker lands, thread a
+ * `scenarioWeights` argument through here and mirror the H3 structural gate
+ * from `blendedModel.ts`: saturate monoF and monoA to 100 only when BOTH
+ * `scenarioWeights.fidelity >= STRATEGY_FIDELITY_THRESHOLD` AND
+ * `levels >= L_STAR_STRATEGY`. Until a caller actually passes scenarioWeights,
+ * this engine stays pure Operational — matching the current default UI
+ * behavior and the BindingPillarCallout/LeverExchangeRates consumers. See
+ * BACKLOG.md Phase 3 scenario picker entry.
  */
 export function computeScores(state: SensitivityState): PillarScores {
   const { levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix } = state;

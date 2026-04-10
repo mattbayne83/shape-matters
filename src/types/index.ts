@@ -181,6 +181,15 @@ export interface AutonomyResult {
   color: string;                // health band color
 }
 
+// ── Nyquist Stability (Cycle 12 H2) ──────────────────────────────────
+export type NyquistStabilityBand = 'stable' | 'thin' | 'oscillatory';
+
+export interface NyquistStability {
+  lStar: number;                 // analytic critical depth: 1 + √(T/(4d))
+  margin: number;                // L − L*  (negative = below ceiling)
+  band: NyquistStabilityBand;    // margin ≤ 0 → stable, ≤ 1 → thin, > 1 → oscillatory
+}
+
 // ── Blended Model (Team vs Monolithic) ───────────────────────────────
 export interface BlendedScores {
   fidelity: number;      // 0-100
@@ -190,4 +199,19 @@ export interface BlendedScores {
   monoFidelity: number;  // monolithic fidelity (for delta display)
   monoLag: number;       // monolithic lag health
   monoAutonomy: number;  // monolithic autonomy
+  /**
+   * Which branch of the CEO-flat Strategy model ran:
+   * - `'operational'`       — no strategy bonus requested (fidelity weight < 0.5)
+   * - `'strategy-applied'`  — strategy weights passed AND `levels ≥ L_STAR_STRATEGY`:
+   *                           mono F and A saturated to 100 before blending
+   * - `'strategy-gated'`    — strategy weights passed BUT `levels < L_STAR_STRATEGY`:
+   *                           user asked for strategy mode, but Cycle 12 H3's
+   *                           structural gate declined to apply the bonus because
+   *                           the channel still carries strategy messages at this depth
+   *
+   * Cycle 12 H3 introduced the structural gate as a replacement for the
+   * original unconditional Cycle 10 H1b saturation. See `blendedModel.ts` for
+   * the derivation of `L_STAR_STRATEGY`.
+   */
+  scenarioMode?: 'operational' | 'strategy-gated' | 'strategy-applied';
 }

@@ -31,7 +31,7 @@ const META: SensitivityState = {
   headcount: 74067,
   fidelityRate: 82,
   decisionCycle: 2.5,
-  dci: 28,
+  dci: 35, // Cycle 12 H10 recalibration (was 28)
   teamDecisionMix: 30,
 };
 
@@ -119,8 +119,10 @@ describe('findBindingPillar', () => {
     expect(result.allTied).toBe(true);
   });
 
-  it('does NOT flag all-tied for Meta (23pt gap — the canonical binding case)', () => {
-    // Meta autonomy ≈ 25, fidelity ≈ 51, lag ≈ 68 — 23pt spread, binding pillar is autonomy
+  it('does NOT flag all-tied for Meta (binding case, autonomy pillar)', () => {
+    // After the Cycle 12 H10 DCI recalibration (28 → 35), Meta's blended
+    // autonomy lifts from ~25 to ~32 at mix=30. Spread across the three
+    // pillars is still well above 10 points, binding pillar is still autonomy.
     const result = findBindingPillar(META);
     expect(result.allTied).toBe(false);
     expect(result.pillar).toBe('autonomy');

@@ -10,6 +10,10 @@ _Cycles 8–10 complete as of 2026-04-10. No active cycle._
 
 ### 🔴 High Priority
 
+**Pillar abstraction refactor — make new principles cheap to add**
+The product mission has evolved from a two-channel persuasive essay (Bartlett + Deming) to a three-pillar diagnostic engine (Fidelity + Latency + Autonomy) that should remain genuinely open to new physics/engineering principles. Right now adding a new pillar means: new store field, new slider, new `calc*` function, new sensitivity lever, new `findBindingPillar` branch, new exchange-rate pair, new company data field, and new tests across ~6 files. The Autonomy pillar took 4 cycles (C7→C10) to stabilize against team-path dominance precisely because there's no shared abstraction. Extract a `Pillar` interface (id, label, accent color, score function, lever bindings, sensitivity hook, methodology metadata) so adding pillar #4 is data + one calc function + tests, not a six-file rewrite. Refactor `ModelYourOrg`, `sensitivity.ts`, `blendedModel.ts`, `BindingPillarCallout`, `LeverExchangeRates`, and the Methodology section against the new abstraction. This is the scaffolding that makes "openness to new principles" real rather than aspirational.
+_Source: /elon mission audit, 2026-04-10_
+
 **CEO-flat Strategy bonus — the first constructive mechanism**
 Cycles 7→10 ran four separate mechanisms for breaking team-path strategic dominance. Every fidelity-only mechanism failed. Cycle 10 H1b identified the minimum viable fix: a joint mono-path F+A bonus (`kF ≥ 5, kA ≥ 2.75`) applied only when Strategy-weighted. Cleaner reformulation: for Strategy scenarios, set `monoF ← 100` and `monoA ← 100` directly ("CEO-flat Strategy model"). Produces a clean bimodal scenario optimum with a depth-monotone flip cascade (Haier → Nucor → Meta → Google → Amazon). Add an optional `scenarioWeights` parameter to `calcBlendedScores`, implement the bonus, verify all 6 original reference companies' Strategy optima flip to mix ≤ 70 while Operational optima stay at mix = 100.
 _Source: Cycle 10 H1b (the first constructive result of the Cycle 7→10 arc)_

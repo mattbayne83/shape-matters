@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "eval": "bash evals/orchestrator.sh",
     "eval:models": "tsx evals/helpers/run-models.ts",
-    "eval:sweep": "tsx evals/helpers/sweep.ts"
+    "eval:sweep": "tsx evals/helpers/sweep.ts",
+    "eval:lint": "tsx evals/helpers/lint-loop.ts"
   },
   "dependencies": {
     "framer-motion": "^12.35.0",

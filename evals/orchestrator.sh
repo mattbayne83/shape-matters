@@ -66,10 +66,12 @@ if [ -s "$EVALS_DIR/insights.md" ]; then
   echo "" >> "$PROMPT_FILE"
 fi
 
-# Seeds (for cycle 1: seed.md, for later cycles: extracted from previous journal)
-if [ "$CYCLE" -eq 1 ]; then
+# Seeds — seed.md is now a LIVING backlog read on every cycle.
+# Cycles > 1 also carry forward the prior journal's "Seeds for Next Cycle" section
+# (already included above via the full previous-cycle attachment).
+if [ -s "$EVALS_DIR/prompts/seed.md" ]; then
   echo "---" >> "$PROMPT_FILE"
-  echo "## Research Seeds" >> "$PROMPT_FILE"
+  echo "## Living Seed Pool (evals/prompts/seed.md)" >> "$PROMPT_FILE"
   echo "" >> "$PROMPT_FILE"
   cat "$EVALS_DIR/prompts/seed.md" >> "$PROMPT_FILE"
   echo "" >> "$PROMPT_FILE"

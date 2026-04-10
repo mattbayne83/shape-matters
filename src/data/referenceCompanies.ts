@@ -1,7 +1,8 @@
 import type { Company } from '../types';
 
 // DCI (Decision-Centrality Index, 0-100) and teamDecisionMix (0-100) assignments
-// are grounded in Cycle 5 H5 research (evals/journal/cycle-005.md).
+// are grounded in Cycle 5 H5 research (evals/journal/cycle-005.md), with Meta
+// recalibrated in Cycle 12 H10 (evals/journal/cycle-012.md).
 //
 // H5 recommendations — current values — basis for deviation:
 //   Valve    92  → 92   (no deviation; Jeri Ellsworth + Puranam evidence)
@@ -10,8 +11,14 @@ import type { Company } from '../types';
 //   Amazon   75  → 72   (−3; modest downward adjustment — strategic centralization)
 //   Nucor    72  → 82   (+10; Iverson's "Plain Talk" + plant GM full P&L authority
 //                         justify stronger signal than the H5 lower bound)
-//   Meta     18  → 28   (+10; engineering ICs retain meaningful technical autonomy
-//                         below the Zuckerberg-centralized strategic layer)
+//   Meta     18  → 35   (Cycle 12 H10: 28 was below every command-archetype
+//                         company (Walmart 30, VHA 30, IBM-pre-Gerstner 30,
+//                         GE-Welch 35) — not defensible. Cycle 11 H10 +
+//                         Cycle 12 H10 convergently confirm that DCI=35 lifts
+//                         band(min) from Stale to Aging at teamDecisionMix=70
+//                         and keeps Meta at-or-above the most-decentralized
+//                         command archetype without overstating
+//                         post-Year-of-Efficiency decentralization.)
 //
 // teamDecisionMix values derive from Cycle 5 H3 Table ("estimated team structures"):
 // the fraction of decisions resolved at two-pizza-team depth rather than traversing
@@ -91,7 +98,9 @@ export const REFERENCE_COMPANIES: Company[] = [
     source: 'SEC 10-K (2024); Meta Year of Efficiency blog post',
     sourceUrl: 'https://about.fb.com/news/2023/03/mark-zuckerberg-meta-year-of-efficiency/',
     decisionCycle: 2.5,
-    dci: 28,   // Centralized product decisions, IC execution
+    dci: 35,   // Cycle 12 H10 recalibration (was 28). Command-archetype lower-bound
+               // argument: strictly at-or-above the most-decentralized command org
+               // (GE-Welch=35), below Ford-pre-Mulally=40.
     dciSource: 'qualitative-estimate',
     teamDecisionMix: 30, // Centralized culture
   },

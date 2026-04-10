@@ -1,18 +1,13 @@
 {
-  "current_cycle": 11,
+  "current_cycle": 13,
   "enrichment_level": "full",
   "status": "active",
-  "reference_companies": [
-    "valve",
-    "nucor",
-    "google",
-    "meta-2024",
-    "haier",
-    "amazon"
-  ],
+  "reference_companies_source": "src/data/referenceCompanies.ts (15 companies across 6 archetypes — read live, do not hardcode here)",
   "model_params": {
     "default_fidelity_rate": 82,
     "default_decision_cycle": 3,
     "default_team_decision_mix": 50
-  }
+  },
+  "loop_mission": "three-pillar diagnostic, open to new physics/engineering principles; seeds must cover both Refine and Explore lanes unless a lane is justifiably empty",
+  "last_prompt_refresh": "2026-04-10"
 }

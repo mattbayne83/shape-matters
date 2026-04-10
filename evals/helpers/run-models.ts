@@ -47,14 +47,36 @@ const FUNCTIONS = {
   calcAutonomyScore: ({ dci, levels }: { dci: number; levels: number }) =>
     calcAutonomyScore(dci, levels),
 
-  calcBlendedScores: ({ levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix }: {
+  calcBlendedScores: ({
+    levels,
+    headcount,
+    fidelityRate,
+    decisionCycle,
+    dci,
+    teamDecisionMix,
+    scenarioWeights,
+  }: {
     levels: number;
     headcount: number;
     fidelityRate: number;
     decisionCycle: number;
     dci: number;
     teamDecisionMix: number;
-  }) => calcBlendedScores({ levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix }),
+    // Optional Cycle 12 H3 strategy-mode weights. When passed with
+    // `fidelity >= 0.5` AND `levels >= L_STAR_STRATEGY`, the mono path's F
+    // and A saturate to 100 before blending. Example CLI shape:
+    //   npx tsx evals/helpers/run-models.ts '{"fn":"calcBlendedScores","args":{"levels":9,"headcount":1556000,"fidelityRate":82,"decisionCycle":3,"dci":72,"teamDecisionMix":0,"scenarioWeights":{"fidelity":0.55,"lag":0.10,"autonomy":0.35}}}'
+    scenarioWeights?: { fidelity: number; lag: number; autonomy: number };
+  }) =>
+    calcBlendedScores({
+      levels,
+      headcount,
+      fidelityRate,
+      decisionCycle,
+      dci,
+      teamDecisionMix,
+      scenarioWeights,
+    }),
 } as const;
 
 const AVAILABLE_FUNCTIONS = Object.keys(FUNCTIONS).join(', ');
@@ -78,7 +100,7 @@ Available functions:
   healthBandColor(score)
   scoreBand(score)
   calcAutonomyScore(dci, levels)
-  calcBlendedScores(levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix)
+  calcBlendedScores(levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix, scenarioWeights?)
 
 Notes:
   - fidelityRate is a percentage (e.g. 82, not 0.82)

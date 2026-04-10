@@ -2,18 +2,6 @@ import type { TriangleGeometry, LayerInertia, ShapeClassification, Restructuring
 import { calcOrgMetrics } from './orgMetrics';
 
 /**
- * Signal-decay congestion factor. Each hop's fidelity degrades proportional to
- * transmitting layer size. See docs/TORQUE_MODEL.md and evals/journal/cycle-005.md (H1).
- *
- * Cycle 6 H4: at γ=0.1 the impact on CEO agility is <1.1pp for all 6 reference
- * companies. Kept as structural scaffolding — proves a signal-transmission
- * correction CAN break the normalization invariance that defeated the Cycle 4
- * mass-based log-form correction. Not surfaced in UI; do NOT advertise as a
- * lever until back-fit against observed data (Cycle 7+ seed).
- */
-export const CONGESTION_GAMMA = 0.1;
-
-/**
  * Compute the employee count at each layer of the org hierarchy.
  * Layer 0 = frontline ICs (bottom), Layer L-1 = CEO (top).
  * Uses the geometric narrowing model: count_k = N / span^k.
@@ -112,12 +100,10 @@ export function calcTriangleGeometry(
     0
   );
 
-  // Torque-based agility with signal-decay congestion.
-  // Each hop's effective fidelity: r_eff = r × (1 - γ × n_transmitter / N_max)
-  // Path fidelity = product of per-hop r_eff values from origin to target.
+  // Torque-based agility.
+  // Path fidelity = r^hops between origin and target. Per-hop retention is uniform.
   // See docs/TORQUE_MODEL.md for full derivation.
   const r = fidelityRate / 100;
-  const maxLayerCount = Math.max(...layerCounts);
   const torqueProfile = layerCounts.map((_, origin) => {
     let torque = 0;
     for (let k = 0; k < levels; k++) {
@@ -125,8 +111,7 @@ export function calcTriangleGeometry(
       if (origin !== k) {
         const step = origin < k ? 1 : -1;
         for (let hop = origin; hop !== k; hop += step) {
-          const r_eff = r * (1 - CONGESTION_GAMMA * (layerCounts[hop] / maxLayerCount));
-          pathFidelity *= r_eff;
+          pathFidelity *= r;
         }
       }
       torque += layerCounts[k] * pathFidelity;

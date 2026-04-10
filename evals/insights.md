@@ -5,6 +5,17 @@
 
 ---
 
+## Archived arcs (2026-04-10)
+
+- **Cycle 7→10 team-path dominance arc — CLOSED.** Four cycles attempted to break team-path strict dominance via fidelity-only mechanisms; all failed. Cycle 10 H1b identified the joint F+A mono bonus (CEO-flat Strategy model) as the first constructive fix, landed in `blendedModel.ts` on 2026-04-10 via an optional `scenarioWeights` parameter. **Do not re-open this arc or carry forward its seeds unless the bonus itself is shown to fail under new evidence.** The converged insight — *autonomy, not fidelity, is the dominance mechanism at deep orgs* — stands.
+- **CONGESTION_GAMMA — DELETED.** Cycle 6 H4 proved <1.1pp impact at γ=0.1. Removed from `triangleGeometry.ts` on 2026-04-10 as zombie scaffolding. Do not re-add without empirical anchoring.
+
+## Loop re-framing (2026-04-10)
+
+The research loop's objective has been widened from "compounding depth on the current three pillars" to a **dual objective**: (1) *Refine* — sharpen existing pillars and constants; (2) *Explore* — probe new physics/engineering principles as candidate pillars or model challenges. Every cycle from Cycle 11 onward is expected to attempt at least one hypothesis from each lane. See `evals/prompts/system-prompt.md` for the updated rules and scoring rubric (now includes **Principle-expansion 1–5**).
+
+---
+
 ### Cycle 1 — 2026-04-08
 
 1. **The default 82% fidelity rate places Amazon exactly on the round-trip cliff** (RT=4.18%, just below 5%). A single percentage point change matters enormously at 9 levels. The cliff formula `0.05^(1/(2*(L-1)))` gives the minimum viable retention rate for any depth.
@@ -284,4 +295,109 @@
    provenance. Only the UI disclosure work remains. (H5)
 
 ---
+
+
+### Cycle 11 — 2026-04-10
+
+1. **The Cycle 10 CEO-flat Strategy bonus misfires on self-managing
+   orgs on the 15-company set.** (H1) 13 of 15 companies flip to
+   mix=0 under the bonus, including Haier (DCI=88, microenterprise
+   philosophy), Buurtzorg (14k nurses, 2 directors), and Berkshire (27
+   people at HQ, "delegation just short of abdication"). The
+   Cycle 10 depth-monotone cascade is invisible on the full set because
+   the shipped bonus sits past every flip threshold simultaneously.
+   **Minimum viable fix**: gate the bonus on mono-path autonomy below
+   threshold (e.g. `monoA < 70`) — the principled reading is that the
+   CEO can only be a legitimate strategic hub when strategy is
+   *actually* centralized. This is the first new Refine finding since
+   the Cycle 7→10 arc closed and becomes the top Cycle 12 seed.
+
+2. **Control theory (H2) is the strongest Explore promotion.** Quarterly
+   `τ_crit ≈ 22.5` days cleanly separates the 15 companies into three
+   bands: stable (L≤3), thin-margin (L=4), oscillatory (L=6+). This
+   is the mechanism behind "policy whiplash" that the Latency pillar
+   has been gesturing at. Dedicated cycle should derive `L*(d, ω_n)`
+   and calibrate per relay-simulator scenario.
+
+3. **Information theory (H3) is the strongest cross-pillar
+   generalization.** Bartlett's 82% ≈ SNR 4.56 = 2.47 bits/hop makes
+   Fidelity a function of message complexity rather than a scalar.
+   Halving effective SNR quadruples Amazon's L=9 retention loss
+   without any pillar-input change. H3 also provides the theoretical
+   justification for the H1 autonomy-gate: the bonus should fire
+   per-scenario-SNR, not per-fidelity-weight.
+
+4. **Queueing theory (H4) inverts the expected story.** Deep command
+   orgs have the *lowest* manager ρ because spans shrink as depth
+   grows. ρ measures hierarchical slack, not congestion. Haier-style
+   high-ρ orgs are throughput-bound; IBM-style low-ρ orgs are
+   depth-bound. New diagnostic axis, not a new pillar.
+
+5. **Dunbar/Miller (H5) confirms the "shifted-architecture" frame for
+   self-managing orgs.** All 5 self-managing/flat orgs violate the
+   Miller floor; all 6 command orgs carry 3–4 layers of slack above
+   it. "Bureaucratic slack = L − L_min" could land as a Methodology
+   overlay.
+
+6. **Meta DCI 28 is implausible.** (H10) Below every command
+   archetype in the live set. Flip threshold to Aging is DCI=31 —
+   smaller than expected. Defensible recalibration range 35–45.
+
+7. **Three Explore candidates demoted or parked.** Conway's law needs
+   a dataset (H6: needs-enrichment). Jackson networks dominated by H4
+   (H8: demote). Thermodynamics unoperationalizable (H9: demote, as
+   `seed.md` anticipated). Percolation is niche (H7: inconclusive,
+   reorg-shock only).
+
+---
+
+
+### Cycle 12 — 2026-04-10
+
+1. **H1 and H3 converge on the same Cycle 10 bonus gate from opposite
+   directions.** H1's `monoA < 50` autonomy-threshold gate and H3's
+   `L ≥ ⌈L*(strategy)⌉ = 5` structural gate both yield 15-of-15
+   correct behavior on the reference set. H3 is preferred because it
+   is principled (derived from Shannon channel capacity + an Expired
+   threshold), while H1 requires choosing a threshold in the empirical
+   `[37, 58]` separation zone. **Recommended implementation: H3's
+   structural gate.**
+
+2. **H2 produces the first analytic closed-form the research loop has
+   ever landed: `L*(d, T) = 1 + √(T/(4d))`.** This is the Nyquist
+   ceiling for feedback-loop stability, grounds the Latency pillar in
+   classical control theory, and cleanly separates the 15-company
+   reference set by quarterly-cadence stability. IBM-pre-Gerstner and
+   Ford-pre-Mulally are deeply oscillatory even at annual cadence — a
+   prediction that matches the historical record (12–18 month IBM
+   product decisions, 4–6 year Ford vehicle cycles).
+
+3. **H3 formalizes the Fidelity pillar as `F(L, scenario)` via Shannon
+   channel capacity.** Bartlett's 82% retention is the `SNR = 4.56`
+   special case of a Gaussian channel. Scenario-typed SNR multipliers
+   produce per-scenario critical depths `L*(strategy) = 4.68`,
+   `L*(innovation) = 6.16`, `L*(operations) = 9.11`. These are
+   *structural* breakpoints — not calibration choices — and they
+   explain why Meta sits exactly at the innovation ceiling and Amazon
+   at the operations ceiling. **The five relay-simulator scenarios
+   should be re-grounded in the SNR ladder rather than hand-authored.**
+
+4. **The combined H2+H3 story: each pillar acquires a scenario type
+   parameter.** Fidelity becomes `F(L, scenario-SNR)`, Latency becomes
+   `L(L, d, scenario-cadence)`. Autonomy remains structural. This is
+   a significant evolution of the pillar model without adding a fourth
+   pillar — exactly the "refine + expand" objective the loop is
+   designed for.
+
+5. **H1 correctly identifies Berkshire as a boundary case that needs a
+   different mechanism.** Berkshire's `rawMonoA = 59` is right at the
+   edge of any autonomy-gate separation band. The H3 structural gate
+   handles Berkshire correctly without any special-casing (Berkshire
+   is L=4 < L*(strategy)=4.68, so the bonus doesn't fire). This is
+   another independent validation of H3 over H1 — **H3 handles the
+   Berkshire subsidiaryPattern issue for free.**
+
+6. **Meta DCI recalibration is ready to ship.** H10 confirms Cycle 11
+   H10: DCI=35 lifts `band(min)` from Stale to Aging and sits in the
+   defensible midpoint of the command-archetype band.
 

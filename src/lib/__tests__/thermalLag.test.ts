@@ -4,6 +4,9 @@ import {
   calcMarginalLayerCost,
   calcLagRatio,
   calcLayerDelays,
+  calcThermalLag,
+  calcLStar,
+  calcNyquistStability,
 } from '../thermalLag';
 
 describe('calcPropagationDelay', () => {
@@ -105,5 +108,74 @@ describe('calcLayerDelays', () => {
     const delays = calcLayerDelays(1, 3);
     expect(delays).toHaveLength(1);
     expect(delays[0].cumulativeDelay).toBe(0);
+  });
+});
+
+// ── Cycle 12 H2: Nyquist ceiling ─────────────────────────────────────
+describe('calcLStar and calcNyquistStability — Nyquist ceiling (Cycle 12 H2)', () => {
+  it('calcLStar(3, 90) ≈ 3.739 (d=3, quarterly cadence)', () => {
+    expect(calcLStar(3, 90)).toBeCloseTo(3.739, 2);
+  });
+
+  it('propagation-delay invariant: totalDelay(round(L*), d) ≈ T/4', () => {
+    // By construction, τ = d·(L−1)² equals T/4 exactly at L = L*(d, T).
+    // With integer rounding of L*, the invariant holds within ~one (2L−3)·d
+    // step — loose here because the tolerance depends on where L* falls.
+    const cases: Array<[number, number]> = [
+      [3, 90],
+      [1, 90],
+      [3, 365],
+    ];
+    for (const [d, T] of cases) {
+      const lStarFloat = calcLStar(d, T);
+      const L = Math.round(lStarFloat);
+      const delay = calcThermalLag(L, d).totalDelay;
+      const target = T / 4;
+      // Rounding step: max jump from rounding L by 0.5 is about (2·lStarFloat − 2)·d.
+      const tolerance = d * Math.max(1, 2 * lStarFloat - 1);
+      expect(Math.abs(delay - target)).toBeLessThanOrEqual(tolerance);
+    }
+  });
+
+  it('monotone in d: deeper per-layer cycle lowers the ceiling at fixed T', () => {
+    const T = 90;
+    let prev = Infinity;
+    for (const d of [1, 2, 3, 4, 5]) {
+      const curr = calcLStar(d, T);
+      expect(curr).toBeLessThan(prev);
+      prev = curr;
+    }
+  });
+
+  it('monotone in T: longer cadence raises the ceiling at fixed d', () => {
+    const d = 3;
+    let prev = -Infinity;
+    for (const T of [7, 30, 90, 365]) {
+      const curr = calcLStar(d, T);
+      expect(curr).toBeGreaterThan(prev);
+      prev = curr;
+    }
+  });
+
+  it('band = "stable" for Nucor-ish params (L=3, d=3, T=90)', () => {
+    // L*(3, 90) ≈ 3.739 → margin = 3 − 3.739 < 0 → stable
+    expect(calcNyquistStability(3, 3, 90).band).toBe('stable');
+  });
+
+  it('band = "oscillatory" for Amazon-ish params (L=9, d=3, T=90)', () => {
+    // L*(3, 90) ≈ 3.739 → margin = 9 − 3.739 ≈ 5.26 → oscillatory (> 1)
+    const r = calcNyquistStability(9, 3, 90);
+    expect(r.band).toBe('oscillatory');
+    expect(r.margin).toBeGreaterThan(1);
+  });
+
+  it('band thresholds are inclusive at boundaries', () => {
+    // Construct an exact-boundary case by inverting L* for chosen (d, T).
+    // With d = 1, T = 16: L* = 1 + √(16/4) = 3 → L=3 has margin=0 → stable.
+    expect(calcNyquistStability(3, 1, 16).band).toBe('stable');
+    // L=4 gives margin=1 → thin (still ≤ 1).
+    expect(calcNyquistStability(4, 1, 16).band).toBe('thin');
+    // L=5 gives margin=2 → oscillatory.
+    expect(calcNyquistStability(5, 1, 16).band).toBe('oscillatory');
   });
 });

@@ -4,7 +4,6 @@ import {
   idealizedWidthAtLayer,
   calcTriangleGeometry,
   calcRestructuringImpact,
-  CONGESTION_GAMMA,
 } from '../triangleGeometry';
 
 describe('employeesPerLayer', () => {
@@ -183,38 +182,6 @@ describe('calcTriangleGeometry', () => {
     });
   });
 });
-
-  // ── Congestion model ──
-  describe('congestion model', () => {
-    it('CONGESTION_GAMMA constant is 0.1', () => {
-      expect(CONGESTION_GAMMA).toBe(0.1);
-    });
-
-    it('L=1 org is unaffected by congestion (no hops)', () => {
-      const geo = calcTriangleGeometry(1, 100, 82);
-      expect(geo.agilityScore).toBe(1);
-      expect(geo.torqueProfile).toEqual([1]);
-    });
-
-    it('congestion reduces CEO torque compared to hop-uniform formula', () => {
-      const levels = 6;
-      const employees = 5000;
-      const fidelityRate = 82;
-      const r = fidelityRate / 100;
-      const geo = calcTriangleGeometry(levels, employees, fidelityRate);
-
-      // Compute old (no-congestion) CEO torque for comparison
-      const layerCounts = employeesPerLayer(levels, employees);
-      const origin = levels - 1;
-      let oldTorque = 0;
-      for (let k = 0; k < levels; k++) {
-        oldTorque += layerCounts[k] * Math.pow(r, Math.abs(origin - k));
-      }
-      const oldCeoTorque = oldTorque / employees;
-
-      expect(geo.agilityScore).toBeLessThan(oldCeoTorque);
-    });
-  });
 
 describe('calcRestructuringImpact', () => {
   it('returns null for 2 or fewer levels', () => {

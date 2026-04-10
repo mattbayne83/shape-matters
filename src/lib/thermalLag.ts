@@ -1,4 +1,9 @@
-import type { ThermalLagResult, LayerDelay } from '../types';
+import type {
+  ThermalLagResult,
+  LayerDelay,
+  NyquistStability,
+  NyquistStabilityBand,
+} from '../types';
 
 const ROLE_LABELS = [
   'CEO', 'SVP', 'VP', 'Director', 'Sr. Manager', 'Manager',
@@ -36,6 +41,57 @@ export function calcLayerDelays(levels: number, decisionCycle: number): LayerDel
     cumulativeDelay: decisionCycle * k * k,
     marginalDelay: k === 0 ? 0 : decisionCycle * (2 * k - 1),
   }));
+}
+
+/**
+ * Analytic Nyquist phase-margin critical depth:
+ *
+ *   L*(d, T) = 1 + √(T / (4d))
+ *
+ * Derived by treating the org as a closed-loop controller with natural
+ * period `T` (strategic cadence, days) and feedback delay `τ = d·(L−1)²`
+ * from the Fourier-conduction propagation model. The stability crossover
+ * `τ = T/4` (one-quarter-period phase margin) yields the closed form above.
+ *
+ * Above `L*`, strategic feedback arrives out of phase with cadence and the
+ * loop becomes oscillatory ("policy whiplash"). Below `L*`, the loop is
+ * phase-stable.
+ *
+ * Cycle 12 H2 first-landed analytic formula — see `evals/journal/cycle-012.md`.
+ *
+ * @param d - per-layer decision cycle (days/layer). Must be > 0.
+ * @param T - strategic cadence period (days). Must be ≥ 0.
+ */
+export function calcLStar(d: number, T: number): number {
+  return 1 + Math.sqrt(T / (4 * d));
+}
+
+/**
+ * Classify an org's position relative to its Nyquist ceiling.
+ *
+ * Returns the analytic `lStar`, the depth margin `L − lStar`, and a
+ * three-band classification:
+ *   - `stable`      — margin ≤ 0 (depth at or below the ceiling)
+ *   - `thin`        — 0 < margin ≤ 1 (one layer of slack burned)
+ *   - `oscillatory` — margin > 1 (phase-margin collapse)
+ *
+ * Thresholds are inclusive at the upper bound of `stable`/`thin`. See
+ * `calcLStar` for the underlying derivation.
+ *
+ * Cycle 12 H2 — `evals/journal/cycle-012.md`.
+ */
+export function calcNyquistStability(
+  L: number,
+  d: number,
+  T: number,
+): NyquistStability {
+  const lStar = calcLStar(d, T);
+  const margin = L - lStar;
+  let band: NyquistStabilityBand;
+  if (margin <= 0) band = 'stable';
+  else if (margin <= 1) band = 'thin';
+  else band = 'oscillatory';
+  return { lStar, margin, band };
 }
 
 export function calcThermalLag(levels: number, decisionCycle: number): ThermalLagResult {

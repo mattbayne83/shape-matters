@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcOrgMetrics } from '../orgMetrics';
+import { calcOrgMetrics, calcShannonFidelity, SHANNON_BASE_SNR } from '../orgMetrics';
 
 describe('calcOrgMetrics', () => {
   // ── Standard case: 6 levels, 5000 employees, 82% fidelity ──
@@ -106,6 +106,46 @@ describe('calcOrgMetrics', () => {
       const m = calcOrgMetrics(9, 10000, 50);
       // 0.50^8 ≈ 0.39%
       expect(m.fidelityAtTopPct).toBeLessThan(1);
+    });
+  });
+
+  // ── Cycle 12 H3: Shannon channel model ──
+  describe('calcShannonFidelity — Shannon channel model (Cycle 12 H3)', () => {
+    it('SHANNON_BASE_SNR equals 0.82 / 0.18 ≈ 4.5556', () => {
+      expect(SHANNON_BASE_SNR).toBeCloseTo(4.5556, 3);
+    });
+
+    it('at multiplier=1.0, round-trips with calcOrgMetrics.fidelityAtTopPct', () => {
+      // Bartlett 82% is the operational-scenario default — the Shannon model
+      // must reproduce it exactly (modulo floating-point noise).
+      for (const L of [3, 6, 9]) {
+        const shannon = calcShannonFidelity(L, 1.0, 82);
+        const direct = calcOrgMetrics(L, 5000, 82).fidelityAtTopPct;
+        expect(shannon).toBeCloseTo(direct, 6);
+      }
+    });
+
+    it('returns 100 at L=1 regardless of multiplier', () => {
+      for (const mult of [0.4, 1.0, 2.0]) {
+        expect(calcShannonFidelity(1, mult, 82)).toBe(100);
+      }
+    });
+
+    it('halving the multiplier produces stricter decay than the baseline at L=9', () => {
+      const baseline = calcShannonFidelity(9, 1.0, 82);
+      const halved = calcShannonFidelity(9, 0.5, 82);
+      expect(halved).toBeLessThan(baseline);
+    });
+
+    it('monotone decreasing in L at any fixed multiplier', () => {
+      for (const mult of [0.4, 1.0, 2.0]) {
+        let prev = calcShannonFidelity(1, mult, 82);
+        for (let L = 2; L <= 11; L++) {
+          const curr = calcShannonFidelity(L, mult, 82);
+          expect(curr).toBeLessThanOrEqual(prev);
+          prev = curr;
+        }
+      }
     });
   });
 

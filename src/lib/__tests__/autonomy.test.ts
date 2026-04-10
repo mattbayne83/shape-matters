@@ -75,4 +75,48 @@ describe('calcAutonomyScore', () => {
     const deep = calcAutonomyScore(43, 9);
     expect(deep.score).toBeLessThan(30);
   });
+
+  // ── Cycle 7 H4 structural invariants ──
+  describe('structural invariants (Cycle 7 H4)', () => {
+    it('L=1 and L=3 produce identical scores for any DCI (both discount=1)', () => {
+      for (let dci = 0; dci <= 100; dci += 10) {
+        const l1 = calcAutonomyScore(dci, 1).score;
+        const l3 = calcAutonomyScore(dci, 3).score;
+        expect(l1).toBe(l3);
+      }
+    });
+
+    it('DCI=0 produces score=0 at any depth', () => {
+      for (let l = 1; l <= 12; l++) {
+        expect(calcAutonomyScore(0, l).score).toBe(0);
+      }
+    });
+
+    it('score is monotonically non-increasing in L for L ≥ 3 (at any fixed DCI)', () => {
+      for (let dci = 10; dci <= 100; dci += 10) {
+        let prev = calcAutonomyScore(dci, 3).score;
+        for (let l = 4; l <= 12; l++) {
+          const curr = calcAutonomyScore(dci, l).score;
+          expect(curr).toBeLessThanOrEqual(prev);
+          prev = curr;
+        }
+      }
+    });
+
+    it('score never exceeds 100 at any input', () => {
+      for (let dci = 0; dci <= 100; dci += 5) {
+        for (let l = 1; l <= 12; l++) {
+          expect(calcAutonomyScore(dci, l).score).toBeLessThanOrEqual(100);
+        }
+      }
+    });
+
+    it('L=2 score is higher than L=1 for sub-cap DCIs (log(3)/log(2) ≈ 1.585 lift)', () => {
+      // Verifies the quirk Cycle 7 H4 flagged: moving L=1 → L=2 *raises* autonomy
+      // for any DCI below ~63 (the cap frontier). Locks the nonintuitive-but-correct behavior.
+      const l1 = calcAutonomyScore(50, 1).score;
+      const l2 = calcAutonomyScore(50, 2).score;
+      expect(l2).toBeGreaterThan(l1);
+    });
+  });
 });

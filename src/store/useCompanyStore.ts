@@ -73,7 +73,7 @@ export const useCompanyStore = create<CompanyState & CompanyActions>()(
       activeScenarioId: 'innovation-proposal',
       decisionCycle: 3,
       dci: 50,
-      teamDecisionMix: 0,
+      teamDecisionMix: 50,  // Midpoint blend — matches Cycle 5 H3: real orgs route ~50-70% of decisions locally, monolithic (0) is a worst-case bound
       expandedPillar: null,
       contextExpanded: false,
       setFidelityRate: (rate) => set({ fidelityRate: rate }),

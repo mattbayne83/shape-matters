@@ -10,6 +10,8 @@ import { InputStrip } from './InputStrip';
 import { MetricCard } from './MetricCard';
 import { FlippableMetricCard } from './FlippableMetricCard';
 import { PillarDashboard } from './PillarDashboard';
+import { BindingPillarCallout } from './BindingPillarCallout';
+import { LeverExchangeRates } from './LeverExchangeRates';
 
 export function ModelYourOrg() {
   const levels = useCompanyStore((s) => s.levels);
@@ -33,6 +35,14 @@ export function ModelYourOrg() {
 
       {/* ── Pillar Dashboard (70/30 radar + cards) ── */}
       <PillarDashboard />
+
+      {/* ── Diagnostic row: Binding Pillar + Lever Exchange Rates ──
+           auto-fit grid gracefully collapses to a single column when
+           BindingPillarCallout returns null (all-tied case) */}
+      <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(320px,1fr))]">
+        <BindingPillarCallout />
+        <LeverExchangeRates />
+      </div>
 
       {/* ── What-If / Restructuring Impact ── */}
       {restructure && (

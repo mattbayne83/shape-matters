@@ -76,3 +76,111 @@
 
 ---
 
+
+### Cycle 6 — 2026-04-09
+
+1. **Blended-model elasticity is monotonic in depth, saturating near L=9 at ~70 health points.**
+   Amazon/Google get the maximum possible upside (66–70 points of composite lift) from team
+   routing; Haier/Nucor get <26 because their monolithic baseline is already Live/Fresh.
+   This makes `teamDecisionMix` the highest-leverage UI control *specifically for deep
+   orgs.* (H1)
+
+2. **Meta is structurally unreachable by blending alone.** No value of teamDecisionMix
+   between 0 and 100 will push Meta to Fresh, because autonomy = DCI × depthDiscount(L) is
+   capped at ~44 for DCI=28 at team depth. Meta needs the DCI slider raised to ~41+ before
+   routing even matters. This creates a new 2×2: deep orgs split into *routing-curable*
+   (Amazon, Google) vs *governance-locked* (Meta). (H2)
+
+3. **Amazon is 2 fidelity points under Fresh at live calibration; +1pp of r (82→83) is
+   equivalent to +2.5 points of mix.** The substitution rate `Δmix/Δr ≈ 2.5` holds between
+   r=80% and r=86%. Per-hop signal quality is the cheapest lever for deep orgs near
+   breakeven. (H3)
+
+4. **Congestion γ=0.1 is structurally inert for real (geometric) orgs — sub-1.1pp effect
+   on CEO agility for every reference company.** The parameter survives as scaffolding
+   for future matrix-org archetypes, but does *not* currently affect rankings. It is not
+   advertising-worthy in UI copy. (H4)
+
+5. **DCI ≈ 25 × (WMS_decentralization − 1) is a defensible linear mapping** to the Bloom–
+   Van Reenen World Management Survey's published 1–5 scale (~15,000 firms, 35 countries).
+   Current reference DCIs are consistent with WMS patterns within ±10 points. The mapping
+   provides empirical grounding for DCI in Methodology. (H5)
+
+---
+
+
+### Cycle 7 — 2026-04-09
+
+1. **Variance-aware DCI drops Amazon's composite by 3.6 points (72.7 → 69).** The ranking
+   is preserved, but Amazon's true weakest dimension shifts from *fidelity* to *strategic
+   autonomy* — a second-order binding-pillar problem nested inside H2. Under single-scalar
+   DCI, the current UI recommends signal-quality improvements (r↑); under variance-aware
+   DCI, the correct recommendation is to distribute strategic decision rights. (H1)
+
+2. **Amazon is the only reference company that is *false-Fresh*.** Composite = 72.7
+   (Fresh band) but fidelity = 63 (Aging). Three of six companies have mean-min pillar
+   gaps of 10+ points (Haier 13, Nucor 12.3, Meta 23). The UI should annotate the
+   weakest pillar in any composite callout to prevent this error class. (H2)
+
+3. **The blended model's team-path is a strict dominator.** At every company above L=1
+   and for every scenario weighting, optimal `teamDecisionMix = 100`. Team path cuts
+   depth to 2, halves decision cycle, and shares the same DCI — so it wins on all three
+   pillars simultaneously. `teamDecisionMix` is therefore **not a tradeoff lever**;
+   it's a **commitment lever** (how much of your decision volume can you *feasibly*
+   delegate, given governance and coordination constraints). This is a UX reframe and
+   a modeling gap. (H3 refuted → reframed)
+
+4. **The L=1 autonomy edge case is already handled.** No bug. Note: `calcAutonomyScore`
+   returns identical values for L=1 and L=3 because `log(3)/log(1)` is overridden to 1
+   and `log(3)/log(3) = 1`. Worth adding an invariant test. (H4)
+
+5. **The WMS DCI mapping is calibrated within ±15 pts for industrial manufacturing
+   (Nucor), and explicitly outlier-flagged for Haier (48 pt gap — rendanheyi is
+   genuinely exceptional).** The tech sector cannot be validated against WMS with
+   current data sources; MOPS microdata is the next enrichment step. (H5)
+
+---
+
+
+### Cycle 8 — 2026-04-09
+
+1. **DCI-only team-path penalty is structurally insufficient to break strict
+   dominance at deep orgs.** (H1) Even at `k_strategic = 0.4`, Amazon/Google/Meta's
+   Strategy-scenario optimal mix stays at 99–100 because the team-path fidelity
+   advantage is huge (L=9 mono: 20% vs team L=2: 82%). Only Haier (L=3, small
+   fidelity gap) breaks. **The correct modeling fix is a team-path fidelity
+   penalty**, not an autonomy penalty. This sharpens Cycle 7's H3 refutation
+   into a specific architectural next step.
+
+2. **Band-flip risk is 4× more common than Cycle 7 thought.** (H2) At mix=70,
+   four of six reference companies (Nucor, Meta, Haier, Amazon) have
+   `band(mean) ≠ band(min)`, not one. Cycle 7 only checked "false Fresh" but the
+   symmetric cases — **false Live (Nucor, Haier), false Fresh (Amazon),
+   false Aging (Meta)** — are just as important. The principled UI rule is to
+   display `band(min)` as the headline and treat composite as secondary.
+
+3. **Variance-aware DCI shifts composites but does not change weakest-pillar
+   labels.** (H3) Zero of six companies flip `argmin(F,L,A)` when autonomy is
+   decomposed into (strategic, operational) with 0.3/0.7 weights. The pillar-level
+   diagnostic is **robust** to this decomposition; the Cycle 7 Amazon finding
+   ("strategic autonomy is the true binding constraint") is a *sub-pillar* effect,
+   not a cross-pillar one. UI implication: keep the existing 3-pillar dashboard
+   and surface strategic/operational DCI only as an optional sub-pillar disclosure
+   on the Autonomy card when their gap is large.
+
+4. **The L=2 autonomy bump is now quantified: `A(dci, 2) = 100` for any
+   `dci ≥ 63`.** (H4) Team path runs at L=2 by construction, which means
+   team-path autonomy saturates for most realistic DCI values. This is a
+   structural optimism in `calcBlendedScores` — it assumes "teams preserve
+   authority" unconditionally, compounding the fidelity optimism identified in
+   H1. Fixing both together via a team-path context penalty is the right
+   refactor shape.
+
+5. **MOPS Durable Goods mean places Nucor's DCI = 82 ~24 pts above sector
+   average, not 14.** (H5) Nucor joins Haier as a clear outlier rather than
+   a representative sample. Only the WMS *framework* has empirical grounding;
+   the individual reference company DCIs are curated estimates. Methodology
+   should acknowledge this rather than claiming sector-calibrated values.
+
+---
+

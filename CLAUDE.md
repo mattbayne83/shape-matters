@@ -49,7 +49,7 @@ Single-page scroll layout in `src/pages/ScrollPage.tsx`. Navigation via anchor l
 `SectionNav` component renders the nav bar with these anchors.
 
 ### Key Directories
-- `src/lib/` — Pure calculation functions (orgMetrics.ts, depthTax.ts, triangleGeometry.ts, thermalLag.ts, autonomy.ts, blendedModel.ts, fidelityColor.ts, healthScores.ts, signalRelay.ts, contextHints.ts, styles.ts, scrollToAnchor.ts)
+- `src/lib/` — Pure calculation functions (orgMetrics.ts, depthTax.ts, triangleGeometry.ts, thermalLag.ts, autonomy.ts, blendedModel.ts, sensitivity.ts, fidelityColor.ts, healthScores.ts, signalRelay.ts, contextHints.ts, usePrefersReducedMotion.ts, styles.ts, scrollToAnchor.ts)
 - `src/data/` — Reference company data (6 companies, 5 archetypes) + methodologyMetrics.tsx (13 metric definitions) + scenarios.ts (5 relay simulation scenarios)
 - `src/store/` — Zustand persist store (fidelityRate, levels, headcount, decisionCycle, dci, teamDecisionMix — shared across sections) + non-persisted UI state (activeScenarioId, expandedPillar, contextExpanded)
 - `src/components/model/` — Visualization & interaction components
@@ -65,7 +65,7 @@ Shared inputs across sections:
 - `fidelityRate: number` (default 82), `levels: number` (default 6), `headcount: number` (default 5000)
 - `decisionCycle: number` (default 3, days/layer) — Lag model input
 - `dci: number` (default 50, range 0-100) — Decision-Centrality Index for Autonomy pillar
-- `teamDecisionMix: number` (default 0, range 0-100) — blended model team-routing percentage
+- `teamDecisionMix: number` (default 50, range 0-100) — blended model team-routing percentage. Default bumped from 0 to 50 post-Cycle 6 audit: the midpoint blend is a more realistic starting view than the monolithic worst-case.
 - `activeScenarioId: string | null` (default `'innovation-proposal'`) — non-persisted
 - `expandedPillar: 'fidelity' | 'lag' | 'autonomy' | null` (default null) — non-persisted
 - `contextExpanded: boolean` (default false) — non-persisted, controls context bar expand/collapse
@@ -89,7 +89,9 @@ Shared inputs across sections:
 - `RelayCascade` — Orchestrates cascade display: Origin card → first relay (always visible) → expandable middle layers → SignalVerdictCard. Uses `truncateRelayLevels` to match org depth.
 - `RelayCard` — Single relay level card with level badge, role, distorted message, lost/added detail tags, incentive annotation. Opacity fades based on `fidelityPct` (floor 0.35).
 - `SignalVerdictCard` — Bottom verdict card: final message in quotes, fidelity %, relay count, verdict label. Border color from `fidelityColor(pct, semantic)`.
-- `ModelYourOrg` (~178 lines) — Layout orchestrator: InputStrip at top, PillarDashboard below, What-If panel, More Metrics disclosure. More Metrics always contains 6 FlippableMetricCards (fidelity metrics) + 5 secondary MetricCards.
+- `ModelYourOrg` (~167 lines) — Layout orchestrator: InputStrip → PillarDashboard → **diagnostic row (BindingPillarCallout + LeverExchangeRates)** → What-If panel → More Metrics disclosure. The diagnostic row uses `grid-cols-[repeat(auto-fit,minmax(320px,1fr))]` so it collapses to a single column if one child is absent. More Metrics always contains 6 FlippableMetricCards (fidelity metrics) + 5 secondary MetricCards.
+- `BindingPillarCallout` (~98 lines) — Always-visible diagnostic above the LeverExchangeRates. Two modes: **Bottlenecked** (pillar spread ≥ 10 points) names the weakest pillar in its accent color and the highest-impact lever; **Balanced** (spread < 10) uses warm-stone accent and acknowledges the balance while still pointing at the top marginal lever. Reads the store directly, uses `findBindingPillar()` from sensitivity.ts.
+- `LeverExchangeRates` (~99 lines) — Pairwise lever substitution ratios ("+1 pt Signal Clarity ≡ +2.5 pt Team Autonomy") computed from live composite-health sensitivities. Hides rows where a ratio is non-finite (capped/inert levers). Shows a commitment-lever caveat footnote when any visible ratio touches Team Autonomy — per Cycle 7 H3, that slider is a commitment/feasibility lever, not a tradeoff lever.
 - `InputStrip` — Three-tier layout. Tier 1: collapsible context bar (stone bg) with Depth + Headcount summary, "Edit" expands inline sliders (warm-stone accent). Tier 2: 4-column CSS grid of lever sliders (Fidelity, Cycle Time, Authority, Team Routing) all with ember accent — always visible, primary interaction. Tier 3: company preset pills ("Compare") + Share button. Company presets trigger a 0.5s settle animation (`@keyframes settle` in index.css) on changed lever wrappers. Custom slider CSS in `index.css` (`.custom-slider`): track fill gradient, 14px thumbs with white border + shadow, hover scale, focus ring.
 - `PillarDashboard` (~220 lines) — 30/70 CSS grid layout: left column (3fr, `order-last lg:order-first`) shows 3 stacked PillarCards. Right column (7fr, `order-first lg:order-last`) swaps between EQ chart and expanded pillar content via AnimatePresence crossfade. **Mobile: detail panel renders ABOVE cards** so pillar tap updates the visible panel without scrolling off-screen; auto-scrolls into view on expand. Detail panel gets accent-colored left border (3px) when a pillar is expanded. One pillar expands at a time. Expanded panel titles standardized in PillarDashboard (not inside child components). Fidelity expanded = SignalCascade + RoundTripFidelity (side-by-side). Lag expanded = DotTimeline (propagation delay SVG). Autonomy expanded = AuthoritySpectrum (health band track with score-positioned company dots).
 - `PillarCard` (~166 lines) — Summary card: 0-100 health score headline (colored by band), description, rotary knob SVG (270° sweep, needle + fill arc), directional "Explore >" / "< Back" CTA. Active card gets accent border + top bar + glowing shadow; inactive siblings dim to 55% opacity + 0.97 scale. Hover: `bg-stone-50/50` background shift. **Mobile: smaller knob (56px vs 72px), tighter padding, smaller score text.**
@@ -122,7 +124,13 @@ Shared inputs across sections:
 - `calcRestructuringImpact(levels, employees, fidelityRate)` — deltas for agility, inertia, managerRatio, fidelity
 - `calcThermalLag(levels, decisionCycle)` — totalDelay (d×(L-1)²), marginalLayerCost, lagRatio, per-layer delays
 - `calcAutonomyScore(dci, levels)` — score (0-100), depthDiscount (log(3)/log(L)), crossoverFloor, label, color. DCI × depthDiscount, capped at 100.
-- `calcBlendedScores(params)` — blends team-path (L_team=min(L,2), d_team=d×0.5) with hierarchy-path scores using teamDecisionMix (0-100). Returns blended pillar scores + deltas from monolithic baseline.
+- `calcBlendedScores(params)` — blends team-path (L_team=min(L,2), d_team=d×0.5) with hierarchy-path scores using teamDecisionMix (0-100). Returns blended pillar scores + deltas from monolithic baseline. **Rounds at every step** for display — do NOT use this for derivatives, use `sensitivity.ts` helpers instead.
+- **`sensitivity.ts` — shared engine for BindingPillarCallout + LeverExchangeRates.**
+  - `computeScores(state)` — pillar scores + composite `(F+L+A)/3`, all as **raw continuous floats** (mirrors blended math but skips rounding so finite-difference derivatives don't get quantized to zero).
+  - `calcLeverSensitivity(state, lever)` — `∂composite/∂lever` per +1 unit nudge. Sign-flipped for decisionCycle so "positive = better" across all levers. `atCap` flag honors the actual UI slider bounds.
+  - `calcAllLeverSensitivities(state)` — same, all four levers, deterministic order.
+  - `findBindingPillar(state)` — returns the lowest-scoring pillar, the **highest-impact lever across all four** (not just the primary lever for the lowest pillar — matters when a pillar is capped), the multiplier vs the 2nd-best lever, and `allTied` (true when pillar spread < 10).
+  - `calcExchangeRates(state)` — three pairwise substitution ratios: fidelityRate↔teamDecisionMix, fidelityRate↔dci, decisionCycle↔teamDecisionMix. Inert/capped levers return `Infinity` and the UI hides those rows.
 - `fidelityColor(percentage, semantic?)` — Monochrome: stone-300 → stone-900. Semantic mode: ember → stone-700.
 - `metricColor(goodness)` — Maps 0-1 score to stone-700 (best) → ember (worst)
 - `calcLagHealth(totalDelay)` — 0-100 health score: `100 × e^(-delay/100)`. Labels: Live (85+), Fresh (65-84), Aging (40-64), Stale (20-39), Expired (0-19)
@@ -172,7 +180,12 @@ Shared inputs across sections:
 - **`activeScenarioId` defaults to `'innovation-proposal'`** — simulator is never blank on load.
 - **Scenario relay levels are hand-authored** — 5 scenarios × 8 levels each. Custom message engine (`applyRelayTransforms`) exists but is not currently wired to the UI.
 - **Autonomy pillar uses DCI, NOT oscillator** — damped harmonic oscillator was removed. Autonomy score = DCI × depth discount (log(3)/log(L)). DCI slider (0-100) is a separate input from fidelity, breaking the prior Fidelity-Agility redundancy. See docs/TORQUE_MODEL.md and council-transcript-20260407-agility.md.
-- **CONGESTION_GAMMA=0.1** is a module-level constant in `triangleGeometry.ts` — not exposed in UI or store. Per-hop fidelity adjusted as `r_eff = r × (1 - γ × n_k/N_max)`.
+- **CONGESTION_GAMMA=0.1** is a module-level constant in `triangleGeometry.ts` — not exposed in UI or store. Per-hop fidelity adjusted as `r_eff = r × (1 - γ × n_k/N_max)`. **Cycle 6 H4: at γ=0.1 the impact on CEO agility is <1.1pp for all 6 reference companies** — this is structural scaffolding, not a live lever. Do NOT advertise or surface in UI copy until back-fit against observed data.
+- **BindingPillarCallout is always visible** — two modes gated by `allTied` (pillar spread `max−min`). Threshold is **< 10 points = balanced** (Cycle 7 H2 recommendation). Below that the callout shows the balanced copy with a warm-stone accent; at/above it shows the binding-pillar copy with the pillar's accent color. Sub-10pt gaps are treated as noise, not actionable bottlenecks.
+- **BindingPillarCallout picks the highest-impact lever across all four**, not just the primary lever for the lowest pillar. Matters when a pillar is capped — e.g., Amazon's autonomy is often the lowest pillar but DCI is a dead slider there because team-path autonomy saturates at 100 (Cycle 7 H2 + H3). Computing `topLever` globally keeps the recommendation correct.
+- **`sensitivity.ts` computes raw continuous pillar scores**, bypassing the `Math.round` calls inside `calcBlendedScores`. Rounding quantizes 1-unit finite-difference derivatives to zero, which would break both BindingPillarCallout and LeverExchangeRates. The sensitivity engine mirrors the blend math but returns floats.
+- **`LEVER_BOUNDS` in sensitivity.ts mirrors the actual InputStrip slider ranges** (fidelityRate 50-98, decisionCycle 1-14, dci 0-100, teamDecisionMix 0-100). Keep these in sync with the sliders so `atCap` detection matches what the user can actually push.
+- **Team Autonomy is a commitment lever, not a tradeoff lever** (Cycle 7 H3 refutation) — the team path strictly dominates on all three pillars, so the optimal `teamDecisionMix` is always 100 in the current model. LeverExchangeRates surfaces this as a footnote caveat whenever a visible rate touches it. The real-world limit is governance feasibility, not score geometry. A future "team-path context penalty" (strategic-decision haircut) would restore this as a genuine tradeoff — see Cycle 7 seed #1.
 - **Slider labels renamed** — Signal Clarity (was Fidelity/Layer), Decision Speed (was Cycle Time), Decision Rights (was Authority), Team Autonomy (was Team Routing). All lever sliders use ember accent.
 - **AuthoritySpectrum uses health band track** — 5-segment colored track (Expired→Live) at 35% opacity. "You" dot and company dots positioned by computed autonomy SCORE, not raw DCI. Dot has colored ring glow shadow.
 - **Pillar expanded titles standardized** — All 3 panel titles rendered in PillarDashboard (not inside child components). Same class: `text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center mb-3`.
@@ -212,6 +225,15 @@ npm run eval:sweep -- --fn calcThermalLag --vary levels=2:10 --fixed decisionCyc
 - `full` (cycle 5+): + proactive web research, new company data, cross-domain analogies
 Set manually in `evals/config.json` — does NOT auto-escalate.
 
+### Cycle Status (as of 2026-04-09)
+- **7 cycles complete** (C1–C7 in `evals/journal/`). Key results in `evals/insights.md`.
+- **Cycle 6 H4**: CONGESTION_GAMMA at 0.1 is effectively inert — structural scaffolding only.
+- **Cycle 6 H5**: `DCI = 25 × (WMS − 1)` linear mapping grounds DCI in the Bloom–Van Reenen World Management Survey (~15k firms).
+- **Cycle 7 H1**: Variance-aware DCI drops Amazon 3.6 pts and flips its binding constraint from fidelity to strategic autonomy.
+- **Cycle 7 H2**: Amazon is "false-Fresh" (composite 72.7 Fresh, fidelity 63 Aging). Three of six companies have mean-min pillar gaps ≥10 → this is the threshold behind `allTied` in sensitivity.ts.
+- **Cycle 7 H3 (refuted)**: Team path strictly dominates → `teamDecisionMix` is a commitment lever, not a tradeoff lever. Seed #1 for future cycles: introduce a strategic-decision team-path haircut to restore scenario coupling.
+- **Cycle 8**: running as of session date; seeds focus on team-path context penalty + variance-aware DCI store migration.
+
 ### Gotchas
 - **Guard prevents overwrite**: if `cycle-NNN.md` already exists, orchestrator exits with error
 - **BSD sed on macOS**: use `awk` for multi-condition extraction, not sed with `{...}` groups
@@ -224,7 +246,7 @@ Set manually in `evals/config.json` — does NOT auto-escalate.
 
 ## Testing
 - **Vitest 4** with separate `vitest.config.ts`
-- 200 unit tests across 10 files in `src/lib/__tests__/`:
+- **223 unit tests across 11 files** in `src/lib/__tests__/`:
   - `orgMetrics.test.ts` — span, flatness, fidelity, managers, edge cases
   - `depthTax.test.ts` — signal, drift, latency, decision quality, formula verification
   - `triangleGeometry.test.ts` — layer distribution, shape gap, torque/agility, classification, restructuring
@@ -232,9 +254,10 @@ Set manually in `evals/config.json` — does NOT auto-escalate.
   - `signalRelay.test.ts` — transformation rules, cumulative application, truncation logic, scenario data integrity
   - `thermalLag.test.ts` — quadratic propagation delay, marginal cost, lag ratio, per-layer delays, edge cases
   - `healthScores.test.ts` — lag health (exponential decay), band colors, edge cases
-  - `autonomy.test.ts` — DCI scoring, depth discount, crossover floor, band labels
+  - `autonomy.test.ts` — DCI scoring, depth discount, crossover floor, band labels, + **Cycle 7 H4 structural invariants** (L=1/L=3 identity, DCI=0 → score=0, non-increasing in L for L≥3, 100-cap, L=1→L=2 lift for sub-cap DCIs)
   - `contextHints.test.ts` — slider context hint strings, boundary conditions
   - `blendedModel.test.ts` — team-path blending, delta calculations, edge cases
+  - `sensitivity.test.ts` — computeScores raw-float math, finite-difference lever sensitivities, bounds-aware `atCap`, findBindingPillar (10pt threshold + topLever = argmax across all four), calcExchangeRates pairwise ratios + capped-lever handling
 
 ## Commands
 ```bash

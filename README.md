@@ -19,7 +19,7 @@ Three cost channels of organizational depth:
 - **Interactive Fidelity Demo** — Animated visualization of signal decay across management layers
 - **Message Relay Simulator** — 5 scenario-driven simulations showing how messages distort through org levels with incentive annotations explaining *why* each layer reframes the signal
 - **Company Comparison** — 6 reference companies across 5 archetypes with shape metrics and signal fidelity
-- **Model Your Org** — Three-pillar diagnostic: Fidelity (signal decay), Lag (propagation delay), Autonomy (decision centrality). Workbench layout: 4 lever sliders + collapsible structural context. Explore each pillar's visualization independently.
+- **Model Your Org** — Three-pillar diagnostic: Fidelity (signal decay), Latency (propagation delay), Autonomy (decision centrality). Workbench layout: 4 lever sliders + collapsible structural context. Explore each pillar's visualization independently. Below the dashboard: a diagnostic row with a **Binding Pillar** callout (names the weakest pillar + highest-impact lever) and **Lever Exchange Rates** (pairwise substitution ratios computed from live sensitivities).
 - **Thermal Lag Model** — Fourier-inspired quadratic delay model showing how org depth compounds propagation time
 - **Torque Model** — Physics-based pivot efficiency showing what fraction of the org actually receives a CEO directive
 - **Gemba Walk Analysis** — Illustrates direct observation vs. relay chain information loss
@@ -76,7 +76,7 @@ npm run eval       # Run next autoresearch cycle
 src/
   components/
     layout/       SectionNav — anchor-based navigation bar
-    model/        28 visualization & interaction components
+    model/        31 visualization & interaction components
     ui/           Prose, FadeIn, GeometricHero
   pages/
     ScrollPage    Single-page layout with all sections
@@ -85,24 +85,30 @@ src/
     depthTax      Depth tax model (signal, drift, decision costs)
     triangleGeometry  Shape gap, slope, gravity, agility calculations
     thermalLag    Thermal lag model (quadratic propagation delay, marginal cost)
+    autonomy      DCI × depth discount scoring for the Autonomy pillar
+    blendedModel  Team-path/hierarchy blended scores (two-pizza model)
+    sensitivity   Composite-health derivatives, binding pillar, lever exchange rates
     healthScores  Unified 0-100 pillar health scoring (lag health, band colors)
     fidelityColor Gradient mapping utility (stone monochrome + ember semantic)
+    signalRelay   6-tier regex distortion engine + scenario level truncation
+    contextHints  Slider descriptive-text strings
     styles        Tailwind class constants
     scrollToAnchor Smooth scroll utility for metric → methodology links
-    __tests__/    189 unit tests (orgMetrics, depthTax, triangleGeometry, fidelityColor, signalRelay, thermalLag, healthScores, autonomy, contextHints)
+    __tests__/    223 unit tests across 11 files
   store/
-    useCompanyStore  Zustand persist store (levels, headcount, fidelityRate, decisionCycle)
+    useCompanyStore  Zustand persist store (levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix)
   data/
-    referenceCompanies  6 curated reference companies (with decisionCycle)
+    referenceCompanies  6 curated reference companies (with decisionCycle, dci, teamDecisionMix)
     scenarios       5 relay simulation scenarios (safety, customer, innovation, strategy, operations)
+    methodologyMetrics  13 metric definitions for the Methodology section
   types/
-    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, ThermalLagResult, AutonomyResult, Scenario, RelayLevel
+    index         Company, OrgMetrics, DepthTaxResult, TriangleGeometry, ThermalLagResult, AutonomyResult, BlendedScores, Scenario, RelayLevel
 ```
 
 ## Architecture
 
 - **No router** — Single-page scroll layout with anchor-based navigation (`#problem`, `#simulate`, `#evidence`, `#proof`, `#model`, `#methodology`)
-- **Shared inputs** — Levels (default 6), headcount (default 5000), fidelity rate (default 82%) stored in Zustand persist, accessible from all visualizations
+- **Shared inputs** — Levels (default 6), headcount (default 5000), fidelity rate (default 82%), decision cycle (default 3), DCI (default 50), team decision mix (default 50) stored in Zustand persist, accessible from all visualizations
 - **Custom SVG/Canvas** — All charts and visualizations are built from scratch (no charting library)
 - **Dynamic colors** — Runtime hex values use inline `style` (Tailwind can't JIT runtime hex)
 

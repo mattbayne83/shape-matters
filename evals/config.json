@@ -1,8 +1,7 @@
 {
-  "current_cycle": 6,
+  "current_cycle": 9,
   "enrichment_level": "full",
-  "status": "paused",
-  "pause_reason": "Council recommends validation or UI work over further engine refinement (2026-04-09)",
+  "status": "active",
   "reference_companies": [
     "valve",
     "nucor",
@@ -13,6 +12,7 @@
   ],
   "model_params": {
     "default_fidelity_rate": 82,
-    "default_decision_cycle": 3
+    "default_decision_cycle": 3,
+    "default_team_decision_mix": 50
   }
 }

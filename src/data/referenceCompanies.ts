@@ -1,5 +1,23 @@
 import type { Company } from '../types';
 
+// DCI (Decision-Centrality Index, 0-100) and teamDecisionMix (0-100) assignments
+// are grounded in Cycle 5 H5 research (evals/journal/cycle-005.md).
+//
+// H5 recommendations — current values — basis for deviation:
+//   Valve    92  → 92   (no deviation; Jeri Ellsworth + Puranam evidence)
+//   Haier    88  → 88   (no deviation; Humanocracy + HBS cases)
+//   Google   58  → 58   (no deviation; post-2020 bureaucratic drift)
+//   Amazon   75  → 72   (−3; modest downward adjustment — strategic centralization)
+//   Nucor    72  → 82   (+10; Iverson's "Plain Talk" + plant GM full P&L authority
+//                         justify stronger signal than the H5 lower bound)
+//   Meta     18  → 28   (+10; engineering ICs retain meaningful technical autonomy
+//                         below the Zuckerberg-centralized strategic layer)
+//
+// teamDecisionMix values derive from Cycle 5 H3 Table ("estimated team structures"):
+// the fraction of decisions resolved at two-pizza-team depth rather than traversing
+// the full hierarchy. Amazon=70 and Haier=80 match H3 directly; others interpolated
+// from archetype.
+
 export const REFERENCE_COMPANIES: Company[] = [
   // ── Flat by Design ────────────────────────────────────────────────
   {

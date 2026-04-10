@@ -1,7 +1,16 @@
 import type { TriangleGeometry, LayerInertia, ShapeClassification, RestructuringImpact } from '../types';
 import { calcOrgMetrics } from './orgMetrics';
 
-/** Signal-decay congestion factor. Each hop's fidelity degrades proportional to transmitting layer size. */
+/**
+ * Signal-decay congestion factor. Each hop's fidelity degrades proportional to
+ * transmitting layer size. See docs/TORQUE_MODEL.md and evals/journal/cycle-005.md (H1).
+ *
+ * Cycle 6 H4: at γ=0.1 the impact on CEO agility is <1.1pp for all 6 reference
+ * companies. Kept as structural scaffolding — proves a signal-transmission
+ * correction CAN break the normalization invariance that defeated the Cycle 4
+ * mass-based log-form correction. Not surfaced in UI; do NOT advertise as a
+ * lever until back-fit against observed data (Cycle 7+ seed).
+ */
 export const CONGESTION_GAMMA = 0.1;
 
 /**

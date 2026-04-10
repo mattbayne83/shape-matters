@@ -2,7 +2,19 @@ import type { HealthScore } from '../types';
 
 const LAG_TAU = 100;
 
-const LAG_LABELS: [number, string][] = [
+/** Band labels in descending order of health (best → worst). */
+export type Band = 'Live' | 'Fresh' | 'Aging' | 'Stale' | 'Expired';
+
+/** Rank: 4 = Live (best) → 0 = Expired (worst). Used for theorem assertions. */
+export const BAND_RANK: Record<Band, number> = {
+  Live: 4,
+  Fresh: 3,
+  Aging: 2,
+  Stale: 1,
+  Expired: 0,
+};
+
+const LAG_LABELS: [number, Band][] = [
   [85, 'Live'],
   [65, 'Fresh'],
   [40, 'Aging'],
@@ -18,7 +30,7 @@ const BAND_COLORS: [number, string][] = [
   [0, '#dc2626'],
 ];
 
-function lookupBand(score: number, bands: [number, string][]): string {
+function lookupBand<T>(score: number, bands: [number, T][]): T {
   for (const [threshold, value] of bands) {
     if (score >= threshold) return value;
   }
@@ -27,6 +39,17 @@ function lookupBand(score: number, bands: [number, string][]): string {
 
 export function healthBandColor(score: number): string {
   return lookupBand(Math.round(score), BAND_COLORS);
+}
+
+/**
+ * Map any 0-100 score to its band label. Used by sensitivity.ts for the
+ * band-flip test (`scoreBand(min) !== scoreBand(mean)`).
+ *
+ * See Cycle 9 H4: `band(min) ≤ band(mean)` is provable via AM-min + band
+ * monotonicity. 10,000-triple Monte Carlo confirmed 0 upflips.
+ */
+export function scoreBand(score: number): Band {
+  return lookupBand(Math.round(score), LAG_LABELS);
 }
 
 export function calcLagHealth(totalDelay: number): HealthScore {

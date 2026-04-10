@@ -24,14 +24,17 @@ Three cost channels of organizational depth:
 - **Torque Model** — Physics-based pivot efficiency showing what fraction of the org actually receives a CEO directive
 - **Gemba Walk Analysis** — Illustrates direct observation vs. relay chain information loss
 
-## Reference Companies (6)
+## Reference Companies (15)
 
 | Archetype | Companies |
 |---|---|
-| **Flat by Design** | Valve (1 level), Nucor (4) |
+| **Flat by Design** | Valve (1), Nucor (4), Morning Star (1) |
+| **Self-Managing** | Haier (3), Buurtzorg (2), Berkshire Hathaway (4) |
 | **Tech Giants** | Google (8), Amazon (9) |
 | **Recently Flattened** | Meta (6) |
-| **Experimental** | Haier (3) |
+| **Command** | GE–Welch (10), IBM pre-Gerstner (11), Walmart (8), USPS (10), VA-VHA (10), Ford pre-Mulally (11) |
+
+Historical-era entries (GE, IBM, Ford) are snapshots of a specific organizational moment, not current-state. Each company's `dciSource` field tags whether its DCI value is grounded in a case study, a qualitative estimate, or the Bloom–Van Reenen World Management Survey sector mean.
 
 ## Key Formulas
 

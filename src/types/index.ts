@@ -2,24 +2,43 @@ export type Archetype =
   | 'flat'
   | 'tech'
   | 'flattened'
-  | 'experimental'
-  | 'energy';
+  | 'self-managing'
+  | 'energy'
+  | 'command';
 
 export const ARCHETYPE_LABELS: Record<Archetype, string> = {
   flat: 'Flat by Design',
   tech: 'Tech Giants',
   flattened: 'Recently Flattened',
-  experimental: 'Experimental',
+  'self-managing': 'Self-Managing',
   energy: 'Energy',
+  command: 'Command',
 };
 
 export const ARCHETYPE_COLORS: Record<Archetype, string> = {
   flat: '#1C1917',    // stone-900
   tech: '#292524',    // stone-800
   flattened: '#44403c', // stone-700
-  experimental: '#57534e', // stone-600
+  'self-managing': '#57534e', // stone-600
   energy: '#78716c',   // stone-500
+  command: '#0c0a09',  // stone-950 — darker than flat to signal depth
 };
+
+/**
+ * Provenance tag for a company's DCI value.
+ *
+ * - `case-study`: grounded in published academic cases, books, or employee
+ *   handbooks with primary-source management quotes (e.g., Haier in Hamel's
+ *   *Humanocracy*, Valve in the Handbook + Ellsworth's first-hand account).
+ * - `qualitative-estimate`: inferred from culture decks, journalism, and
+ *   Glassdoor signals. Not empirically grounded in a single primary source.
+ * - `wms-sector`: calibrated against Bloom-Van Reenen World Management Survey
+ *   sector means via `DCI = 25 × (WMS_score − 1)`. No reference company
+ *   currently uses this tag — firm-level microdata is not publicly accessible.
+ *
+ * Cycle 9 H5 audit: zero of six reference companies are sector-calibrated.
+ */
+export type DciSource = 'case-study' | 'qualitative-estimate' | 'wms-sector';
 
 export interface Company {
   id: string;
@@ -35,6 +54,7 @@ export interface Company {
   sourceUrl?: string;
   decisionCycle?: number;     // days/layer (optional for backward compat)
   dci?: number;                 // Decision-Centrality Index (0-100, optional for backward compat)
+  dciSource?: DciSource;      // provenance tag for the dci value (Cycle 9 H5)
   teamDecisionMix?: number;   // default team-routing % when selected as preset (0-100)
   narrative?: string;         // human-readable "so what" one-liner for Proof section
 }

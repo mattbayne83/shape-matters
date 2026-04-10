@@ -9,8 +9,12 @@ import { calcOrgMetrics } from '../../lib/orgMetrics';
 export function HeroSection() {
   const fidelityRate = useCompanyStore((s) => s.fidelityRate);
 
-  const flat = REFERENCE_COMPANIES[0]; // Valve, 1 level
-  const deep = REFERENCE_COMPANIES[REFERENCE_COMPANIES.length - 1]; // Amazon, 9 levels
+  // Look up by id rather than position — the dataset now includes historical
+  // snapshots (e.g. Ford pre-Mulally, L=11) that are deeper than Amazon but
+  // aren't current-era comparison points. Hero compares flattest current org
+  // to the deepest current-era tech giant.
+  const flat = REFERENCE_COMPANIES.find((c) => c.id === 'valve')!;
+  const deep = REFERENCE_COMPANIES.find((c) => c.id === 'amazon')!;
 
   const flatM = useMemo(
     () => calcOrgMetrics(flat.levels, flat.employees, fidelityRate),

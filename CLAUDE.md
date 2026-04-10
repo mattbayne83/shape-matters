@@ -76,8 +76,16 @@ Shared inputs across sections:
 - `buildShareUrl()` builds `?l=&h=&f=&d=&ci=&tm=#model` URL from current state
 
 ### Data Model
-- 6 reference companies across 5 archetypes: `flat`, `tech`, `flattened`, `experimental`, `energy`
-- `Company` type includes `archetype`, `source`, `sourceUrl` fields
+- **15 reference companies** across **6 archetypes**: `flat`, `tech`, `flattened`, `self-managing`, `energy`, `command`
+  - `flat`: Valve, Nucor, Morning Star
+  - `self-managing`: Haier, Buurtzorg, Berkshire Hathaway
+  - `tech`: Google, Amazon
+  - `flattened`: Meta
+  - `command`: GE (Welch), IBM (pre-Gerstner), Walmart, USPS, VA-VHA, Ford (pre-Mulally)
+  - `energy`: (unused slot — preserved for future entries)
+  - Historical-era companies (GE-Welch 1990-2001, IBM pre-Gerstner 1990-1993, Ford pre-Mulally 2001-2006) coexist with current-era entries. Components that need a "current deepest" should look up by id, not `REFERENCE_COMPANIES[length-1]` — Ford is deeper than Amazon at L=11.
+- `Company` type includes `archetype`, `source`, `sourceUrl`, `dciSource` fields
+- `DciSource`: `'case-study' | 'qualitative-estimate' | 'wms-sector'` — provenance tag per Cycle 9 H5. Ford is the first and only `wms-sector` entry (pegged to Bloom-Van Reenen US auto manufacturing mean).
 - `ShapeClassification`: `mesa` | `pyramid` | `diamond` | `obelisk`
 - `RestructuringImpact`: Delta metrics for removing one level (agility, inertia, managerRatio, fidelity)
 - 5 relay simulation scenarios across categories: safety, customer, innovation, strategy, operations
@@ -181,7 +189,7 @@ Shared inputs across sections:
 - **Scenario relay levels are hand-authored** — 5 scenarios × 8 levels each. Custom message engine (`applyRelayTransforms`) exists but is not currently wired to the UI.
 - **Autonomy pillar uses DCI, NOT oscillator** — damped harmonic oscillator was removed. Autonomy score = DCI × depth discount (log(3)/log(L)). DCI slider (0-100) is a separate input from fidelity, breaking the prior Fidelity-Agility redundancy. See docs/TORQUE_MODEL.md and council-transcript-20260407-agility.md.
 - **CONGESTION_GAMMA=0.1** is a module-level constant in `triangleGeometry.ts` — not exposed in UI or store. Per-hop fidelity adjusted as `r_eff = r × (1 - γ × n_k/N_max)`. **Cycle 6 H4: at γ=0.1 the impact on CEO agility is <1.1pp for all 6 reference companies** — this is structural scaffolding, not a live lever. Do NOT advertise or surface in UI copy until back-fit against observed data.
-- **BindingPillarCallout is always visible** — two modes gated by `allTied` (pillar spread `max−min`). Threshold is **< 10 points = balanced** (Cycle 7 H2 recommendation). Below that the callout shows the balanced copy with a warm-stone accent; at/above it shows the binding-pillar copy with the pillar's accent color. Sub-10pt gaps are treated as noise, not actionable bottlenecks.
+- **BindingPillarCallout is always visible** — two modes gated by `allTied`, which is computed via the **theorem-backed binary rule** `scoreBand(min) === scoreBand(composite)` (Cycle 9 H2 + H4). When the min pillar and the composite share a band → balanced mode (warm-stone accent). When they differ → bottlenecked mode with the pillar's accent color. This is a strict refinement of the old `max−min < 10` threshold: it correctly catches Amazon's 8pt-gap false-Fresh case that the threshold missed. The theorem `band(min) ≤ band(mean)` (AM-min + band monotonicity) guarantees the min-band is never *higher* than the composite band, so band differences are always downward flips.
 - **BindingPillarCallout picks the highest-impact lever across all four**, not just the primary lever for the lowest pillar. Matters when a pillar is capped — e.g., Amazon's autonomy is often the lowest pillar but DCI is a dead slider there because team-path autonomy saturates at 100 (Cycle 7 H2 + H3). Computing `topLever` globally keeps the recommendation correct.
 - **`sensitivity.ts` computes raw continuous pillar scores**, bypassing the `Math.round` calls inside `calcBlendedScores`. Rounding quantizes 1-unit finite-difference derivatives to zero, which would break both BindingPillarCallout and LeverExchangeRates. The sensitivity engine mirrors the blend math but returns floats.
 - **`LEVER_BOUNDS` in sensitivity.ts mirrors the actual InputStrip slider ranges** (fidelityRate 50-98, decisionCycle 1-14, dci 0-100, teamDecisionMix 0-100). Keep these in sync with the sliders so `atCap` detection matches what the user can actually push.
@@ -225,14 +233,16 @@ npm run eval:sweep -- --fn calcThermalLag --vary levels=2:10 --fixed decisionCyc
 - `full` (cycle 5+): + proactive web research, new company data, cross-domain analogies
 Set manually in `evals/config.json` — does NOT auto-escalate.
 
-### Cycle Status (as of 2026-04-09)
-- **7 cycles complete** (C1–C7 in `evals/journal/`). Key results in `evals/insights.md`.
+### Cycle Status (as of 2026-04-10)
+- **10 cycles complete** (C1–C10 in `evals/journal/`). Key results in `evals/insights.md`.
 - **Cycle 6 H4**: CONGESTION_GAMMA at 0.1 is effectively inert — structural scaffolding only.
 - **Cycle 6 H5**: `DCI = 25 × (WMS − 1)` linear mapping grounds DCI in the Bloom–Van Reenen World Management Survey (~15k firms).
-- **Cycle 7 H1**: Variance-aware DCI drops Amazon 3.6 pts and flips its binding constraint from fidelity to strategic autonomy.
-- **Cycle 7 H2**: Amazon is "false-Fresh" (composite 72.7 Fresh, fidelity 63 Aging). Three of six companies have mean-min pillar gaps ≥10 → this is the threshold behind `allTied` in sensitivity.ts.
-- **Cycle 7 H3 (refuted)**: Team path strictly dominates → `teamDecisionMix` is a commitment lever, not a tradeoff lever. Seed #1 for future cycles: introduce a strategic-decision team-path haircut to restore scenario coupling.
-- **Cycle 8**: running as of session date; seeds focus on team-path context penalty + variance-aware DCI store migration.
+- **Cycle 7 H2**: Amazon is "false-Fresh" (composite Fresh, fidelity Aging). Now resolved in code via the theorem-backed binary rule.
+- **Cycle 7 H3 (refuted)**: Team path strictly dominates → `teamDecisionMix` is a commitment lever, not a tradeoff lever.
+- **Cycle 8 → 9 → 10 convergent arc**: four separate mechanisms tested for breaking team-path strategic dominance (team-A tax, team-F tax, mono-F bonus, depth-stratified F tax). Every fidelity-only mechanism fails. **Autonomy, not fidelity, is the dominance mechanism.** The minimum viable fix is a joint mono F+A bonus for Strategy scenarios (`kF ≥ 5, kA ≥ 2.75`) — the "CEO-flat Strategy model" in Cycle 10 H1b. Depth-monotone flip cascade: Haier → Nucor → Meta → Google → Amazon.
+- **Cycle 9 H4 + Cycle 10 H4**: `band(min) ≤ band(mean)` proven as a theorem and exhaustively verified on the full 1,030,301-triple integer grid (0 upflips). Codified in `findBindingPillar` via the `scoreBand(min) === scoreBand(composite)` rule.
+- **Cycle 10 H3**: 4-of-6 band-flip count is calibration-stable — Nucor, Meta, Haier, Amazon flip under current DCIs. Amazon's 9pt gap is below any naive threshold but caught by the binary rule.
+- **Cycle 10 open seed (HIGH)**: implement CEO-flat Strategy bonus in `blendedModel.ts` — first constructive mechanism in the Cycle 7→10 arc that survives all refutations.
 
 ### Gotchas
 - **Guard prevents overwrite**: if `cycle-NNN.md` already exists, orchestrator exits with error

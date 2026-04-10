@@ -184,3 +184,104 @@
 
 ---
 
+
+### Cycle 9 — 2026-04-09
+
+1. **Team-path lock-in is monotone in depth, and the lock-in is unbreakable
+   at L≥8 by any team-side penalty.** (H1) Amazon's Strategy-weighted
+   mono baseline is 23.0 against team ceiling 88.25; the team path would need
+   a *joint* F+L+A penalty below `k ≈ 0.26` to lose — equivalent to all three
+   team pillars being cut to a quarter of nominal. The correct architectural
+   fix is to **improve the mono path on Strategy scenarios** (global-context
+   bonus for CEO-origin decisions), not to penalize the team path. This
+   inverts Cycle 8's proposed direction and rules out an entire family of
+   "team tax" modeling strategies.
+
+2. **Band-flip risk reproduces 4-of-6 under the live `calcBlendedScores`
+   pathway.** (H2) Confirmed via direct integration with `src/lib/` functions.
+   Amazon's gap (8.0) sits below any reasonable `gap ≥ 10` threshold but is
+   caught by the binary `band(min) ≠ band(mean)` rule, making the binary rule
+   a strict refinement. All 4 flips are downward, reaffirming Cycle 8 H2's
+   core asymmetry claim.
+
+3. **The L=2 autonomy saturation cannot be "fixed" without regressing the
+   companies that matter.** (H3) Uncapping helps high-DCI companies (Nucor,
+   Haier) that don't need the help, leaves binding-pillar companies (Meta,
+   Amazon) unchanged, and breaks L=1 edge cases (Valve). Lowering the discount
+   to 1.3 uniformly decreases composites — exactly the wrong direction. **Leave
+   the saturation in place**; the structural L=2-as-flat-org assumption is
+   honest. Only the Methodology annotation matters.
+
+4. **`band(min) ≤ band(mean)` is a theorem, not a heuristic.** (H4) Proven
+   by AM-min inequality plus band monotonicity and empirically verified
+   (0 upflips in 10,000 random triples). 82.5% of random triples flip
+   downward, meaning the composite-only headline is systematically optimistic
+   for roughly 5-in-6 random calibrations. Real-company flip rate is 67%,
+   slightly lower — consistent with Cycle 5's "DCI variance as decorrelator"
+   finding (coherent management styles produce tighter pillar triples).
+
+5. **Zero reference companies have sector-calibrated DCIs.** (H5) Three
+   case-study outliers (Valve, Nucor, Haier) and three qualitative tech-sector
+   estimates (Google, Meta, Amazon). The WMS framework is empirically grounded,
+   but the *values* applied to the reference set are all curated. This is a
+   small but meaningful epistemic cleanup for Methodology.
+
+---
+
+
+### Cycle 10 — 2026-04-09
+
+1. **Cycle 9's own proposed fix (mono-path fidelity bonus) is refuted by
+   Cycle 10.** Neither multiplicative (`monoF × k`) nor floor (`max(r^(L−1),
+   r^2)`) variants can break Amazon's Strategy lock-in at any `k`. Mono
+   fidelity maxes out at a 44-pt contribution to the Strategy-weighted
+   score, but Amazon needs 65 pts. The remaining 21 must come from lag
+   and autonomy. **This closes the fidelity-only family of fixes from
+   *both* directions.** (H1)
+
+2. **The minimum viable mono-path bonus is "CEO-flat for Strategy":
+   `monoF ← 100` AND `monoA ← ~100` simultaneously, via `kF ≥ 5` AND
+   `kA ≥ 2.75`.** Fine-grained analysis showed these thresholds are
+   sharp — Amazon's optimum is flat at 100 below them and drops cleanly
+   to 0 above them. The flip order across companies is strictly
+   depth-monotone (Haier → Nucor → Meta → Google → Amazon). This is a
+   much sharper architectural spec than Cycle 9's "global-context bonus"
+   and encodes the theoretically defensible claim that CEO-origin
+   strategic decisions have *both* near-perfect fidelity (no compound
+   decay at the CEO's own level) and near-full authority (centralized
+   by definition). (H1b)
+
+3. **Depth-stratified team-path fidelity taxes are also insufficient.**
+   `k_F(L) = max(0.3, 1−0.1(L−3))` and the steeper variant both produce
+   **zero movement** in any company's optimal Strategy mix. Even crushing
+   Amazon's team fidelity to 16.4% (`k_F = 0.20`) leaves its optimum at
+   100, because team lag (100) + team autonomy (100) contribute 45 pts —
+   more than Amazon's entire mono Strategy score of 25 regardless of
+   team fidelity. (H2)
+
+4. **The Cycle 7→10 arc has converged: autonomy, not fidelity, is the
+   team-path's dominance mechanism at deep orgs.** Every proposed
+   fix that targets fidelity alone fails. The only mechanisms that work
+   are joint F+A bonuses (mono side) or joint F+A taxes (team side). This
+   reframes the entire "team-path context penalty" search: any future
+   work must include autonomy as a primary lever.
+
+5. **4-of-6 band-flip count is robust to reference-DCI recalibration.**
+   Under current DCIs (Valve 92, Google 58, Amazon 72, etc.) the same
+   four companies flip downward: Nucor, Meta, Haier, Amazon. Amazon's
+   mean-min gap shrinks from 8.0 (Cycle 9) to 9.0 (Cycle 10) — still
+   below a naive `gap ≥ 10` threshold, still caught by the binary
+   `band(min)` rule. The `band(min)` refinement is calibration-stable. (H3)
+
+6. **`band(min) ≤ band(mean)` verified exhaustively across 1,030,301
+   integer triples (0 upflips).** The 16.9% same-band / 83.1% downflip
+   split is within 0.6% of Cycle 9's 10k-triple Monte Carlo, confirming
+   both the theorem and the estimate precision. Ready for a hard unit-test
+   invariant. (H4)
+
+7. **`dciSource` is already implemented.** Cycle 9 seed #4 resolved
+   silently; all six reference entries are tagged with the correct
+   provenance. Only the UI disclosure work remains. (H5)
+
+---
+

@@ -4,19 +4,39 @@
 
 ## In Progress
 
-**Cycle 8 autoresearch** — running in background as of 2026-04-09. Seeds focus on team-path context penalty (strategic-decision haircut to restore scenario-mix coupling) and variance-aware DCI store migration (`dciStrategic` + `dciOperational`).
+_Cycles 8–10 complete as of 2026-04-10. No active cycle._
 
 ## Next Up
 
 ### 🔴 High Priority
 
-**Team-path context penalty**
-Modify `calcBlendedScores` so the team path applies a DCI (or fidelity) haircut for "strategic" decisions — minimum fix to make `teamDecisionMix` a genuine tradeoff lever rather than a strict dominator. Cycle 7 H3 refutation showed the current team path wins on all three pillars simultaneously; adding a strategic-decision penalty would restore scenario coupling.
-_Source: Research cycle 7 (refuted H3) → cycle 8 seed #1_
+**CEO-flat Strategy bonus — the first constructive mechanism**
+Cycles 7→10 ran four separate mechanisms for breaking team-path strategic dominance. Every fidelity-only mechanism failed. Cycle 10 H1b identified the minimum viable fix: a joint mono-path F+A bonus (`kF ≥ 5, kA ≥ 2.75`) applied only when Strategy-weighted. Cleaner reformulation: for Strategy scenarios, set `monoF ← 100` and `monoA ← 100` directly ("CEO-flat Strategy model"). Produces a clean bimodal scenario optimum with a depth-monotone flip cascade (Haier → Nucor → Meta → Google → Amazon). Add an optional `scenarioWeights` parameter to `calcBlendedScores`, implement the bonus, verify all 6 original reference companies' Strategy optima flip to mix ≤ 70 while Operational optima stay at mix = 100.
+_Source: Cycle 10 H1b (the first constructive result of the Cycle 7→10 arc)_
 
-**Variance-aware DCI store migration**
-Add `dciStrategic` + `dciOperational` to `useCompanyStore` (or replace scalar `dci` with a mean+spread representation). Cycle 7 H1 showed Amazon's composite drops 3.6 points under variance-aware DCI and its binding constraint shifts from fidelity to strategic autonomy — a second-order binding-pillar problem the current UI can't see.
-_Source: Research cycle 7 H1 → cycle 8 seed #2_
+**Meta DCI recalibration**
+Across Cycles 6–10, Meta is the only company whose binding constraint is DCI-locked autonomy (A=36 even at mix=70). `dciSource` is `qualitative-estimate`. Survey public sources (Year of Efficiency, SEC filings, Glassdoor, Levels.fyi L5-L7 interview banks) and propose a defensible range. Testable: does raising Meta's DCI from 28 to ~40 move band(min) from Stale to Aging?
+_Source: Cycle 10 seed #2_
+
+### 🟠 Medium Priority
+
+**`band(min)` PillarDashboard prototype behind a feature flag**
+Cycle 10 H3 showed the rule is calibration-stable; Cycle 10 H4 proved it's a hard safety floor. One-line change in PillarDashboard: use `scoreBand(min(F,L,A))` for the headline band color + label instead of `scoreBand((F+L+A)/3)`. Ship behind a feature flag and walk all 15 reference companies to validate the UX. Under this rule, 4 of the original 6 flip downward: Nucor (Live → Fresh), Haier (Live → Fresh), Meta (Aging → Stale), Amazon (Fresh → Aging). All 4 are downward flips, all are theoretically correct per the Cycle 10 H4 theorem.
+_Source: Cycle 9 seed #3 → Cycle 10 seed #3_
+
+**Surface `dciSource` in Methodology + CompanyCard**
+The data field exists for all 15 companies. UI disclosure remains. Show the tag (`Case study` | `Qualitative estimate` | `WMS sector`) as a subtle badge next to each company's DCI value in CompanyCard, plus a one-paragraph note in the Methodology Autonomy card. Epistemic hygiene for the published framework.
+_Source: Cycle 10 seed #5_
+
+**Second research pass for dataset gaps**
+Agent-led research flagged 4 remaining gaps for a future cycle: (1) only 1 middle-band company besides Google/Ford — a Southern European manufacturer or US hospital system would strengthen mechanism-probing; (2) only 1 `wms-sector` entry (Ford) and 1 partial (MHI deferred) — Cycle 9 H5 audit only partially addressed; (3) no non-Haier Chinese company; (4) healthcare is thin — a US hospital system in the middle band would bridge Buurtzorg (high DCI) and VA-VHA (low).
+_Source: Agent research 2026-04-10_
+
+**Deferred candidates from agent research**
+- **Toyota** — deferred pending variance-aware DCI architecture. Bimodal structure (operational DCI ≈ 85, strategic DCI ≈ 25) would be hidden under a single scalar DCI.
+- **Deutsche Bank, Mitsubishi Heavy Industries, GE-Immelt** — MEDIUM confidence, deferred pending better operational-authority data or a second research pass.
+- **Spotify** — LOW confidence, published sources directly contradict (Kniberg 2012 vs. Lee 2020 vs. Kniberg's disavowal). Requires a project-level decision on whether to represent "stated models" as a separate category.
+_Source: Agent research 2026-04-10_
 
 
 ### 🔴 High Priority
@@ -55,7 +75,11 @@ _Source: Research cycle 1_
 
 ## Recently Added
 
-- **BindingPillarCallout + LeverExchangeRates + `sensitivity.ts` engine** — Cycle 6/7 UI implementation: diagnostic row under the PillarDashboard. Binding pillar diagnostic is always visible with adaptive copy (Bottlenecked / Balanced modes, 10pt spread threshold). Lever exchange rates show pairwise substitution ratios with a commitment-lever footnote when Team Autonomy is involved. (2026-04-09)
+- **9 new reference companies (N=6 → N=15)** from agent-led research. Self-managing cluster: Morning Star, Buurtzorg, Berkshire. Command cluster (bureaucratic counterweights): GE-Welch, IBM pre-Gerstner, Walmart, USPS, VA-VHA, Ford pre-Mulally. Ford is the first `wms-sector`-anchored DCI. New `command` archetype added. `experimental` renamed to `self-managing`. (2026-04-10)
+- **BindingPillarCallout swapped to theorem-backed binary rule** `scoreBand(min) === scoreBand(composite)` — strict refinement of the old 10pt threshold. Catches Amazon's 8pt-gap false-Fresh case the threshold missed. Backed by exhaustive 1.03M-triple theorem verification. (2026-04-10)
+- **Cycles 8–10 complete.** Cycle 8 proved H2 false-Fresh extends to 4-of-6 companies. Cycle 9 proved `band(min) ≤ band(mean)` as a theorem. Cycle 10 H1b identified the CEO-flat Strategy model as the first constructive mechanism in the Cycle 7→10 arc. (2026-04-09 to 2026-04-10)
+- **`dciSource` field + theorem-locked unit test** — epistemic provenance tags for DCI values; property-based test on 9000+ triples locks the band safety floor. (2026-04-10)
+- **BindingPillarCallout + LeverExchangeRates + `sensitivity.ts` engine** — Cycle 6/7 UI implementation: diagnostic row under the PillarDashboard. (2026-04-09)
 - **Cycle 7 research** — variance-aware DCI, false-Fresh diagnosis, first refutation in 7 cycles (teamDecisionMix commitment lever), autonomy structural invariants locked. (2026-04-09)
 - **Cycle 6 research** — WMS→DCI linear calibration, CONGESTION_GAMMA proven inert at γ=0.1, elasticity monotonic in depth, Meta governance-locked vs Amazon routing-curable 2×2. (2026-04-09)
 - **Cycle 5 research** — DCI variance is the sole F-A decorrelation mechanism, two-pizza blended model framework. (2026-04-09)

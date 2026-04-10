@@ -9,7 +9,9 @@ import {
   calcPropagationDelay,
   calcMarginalLayerCost,
 } from '../../src/lib/thermalLag.js';
-import { calcLagHealth, healthBandColor } from '../../src/lib/healthScores.js';
+import { calcLagHealth, healthBandColor, scoreBand } from '../../src/lib/healthScores.js';
+import { calcAutonomyScore } from '../../src/lib/autonomy.js';
+import { calcBlendedScores } from '../../src/lib/blendedModel.js';
 
 const FUNCTIONS = {
   calcOrgMetrics: ({ levels, employees, fidelityRate }: { levels: number; employees: number; fidelityRate: number }) =>
@@ -38,6 +40,21 @@ const FUNCTIONS = {
 
   healthBandColor: ({ score }: { score: number }) =>
     healthBandColor(score),
+
+  scoreBand: ({ score }: { score: number }) =>
+    scoreBand(score),
+
+  calcAutonomyScore: ({ dci, levels }: { dci: number; levels: number }) =>
+    calcAutonomyScore(dci, levels),
+
+  calcBlendedScores: ({ levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix }: {
+    levels: number;
+    headcount: number;
+    fidelityRate: number;
+    decisionCycle: number;
+    dci: number;
+    teamDecisionMix: number;
+  }) => calcBlendedScores({ levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix }),
 } as const;
 
 const AVAILABLE_FUNCTIONS = Object.keys(FUNCTIONS).join(', ');
@@ -59,6 +76,9 @@ Available functions:
   calcMarginalLayerCost(levels, decisionCycle)
   calcLagHealth(totalDelay)
   healthBandColor(score)
+  scoreBand(score)
+  calcAutonomyScore(dci, levels)
+  calcBlendedScores(levels, headcount, fidelityRate, decisionCycle, dci, teamDecisionMix)
 
 Notes:
   - fidelityRate is a percentage (e.g. 82, not 0.82)

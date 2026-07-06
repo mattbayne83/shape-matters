@@ -1,6 +1,6 @@
 # The Shape Matters Argument
 
-**Status:** Proposal (v1) — copy not yet deployed to components.
+**Status:** v1 — deployed to components (hero, section labels, `ObjectionsSection`, Therefore transition).
 
 This is the site's marketing argument, in the sense Billy Broas uses the term: the
 chain of claims a reader must accept for the conclusion — *go measure your org's

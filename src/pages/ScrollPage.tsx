@@ -4,6 +4,7 @@ import { InteractiveFidelityDemo } from '../components/model/InteractiveFidelity
 import { GembaComparison } from '../components/model/GembaComparison';
 import { ComparisonView } from '../components/model/ComparisonView';
 import { ModelYourOrg } from '../components/model/ModelYourOrg';
+import { ObjectionsSection } from '../components/model/ObjectionsSection';
 import { MethodologySection } from '../components/model/MethodologySection';
 import { HeroSection } from '../components/model/HeroSection';
 import { SimulateSection } from '../components/model/SimulateSection';
@@ -78,7 +79,7 @@ export function ScrollPage() {
       {/* ─── THE PROBLEM (the math behind it) ─── */}
       <section id="problem" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
         <FadeIn className="max-w-5xl mx-auto">
-          <div className={`${SECTION_LABEL} mb-3`}>The Problem</div>
+          <div className={`${SECTION_LABEL} mb-3`}>Premise 2 · Losses Compound with Depth</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-6">
             Why This Happens
           </h2>
@@ -107,7 +108,7 @@ export function ScrollPage() {
       {/* ─── THE EVIDENCE (trimmed — Gemba + unified model only) ─── */}
       <section id="evidence" className="py-16 md:py-24 px-6 md:px-12">
         <FadeIn className="max-w-5xl mx-auto">
-          <div className={`${SECTION_LABEL} mb-3`}>The Evidence</div>
+          <div className={`${SECTION_LABEL} mb-3`}>Premise 3 · The Best Operators Already Know</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-6">
             They Already Knew
           </h2>
@@ -155,7 +156,7 @@ export function ScrollPage() {
       {/* ─── THE PROOF ─── */}
       <section id="proof" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
         <FadeIn className="max-w-5xl mx-auto">
-          <div className={`${SECTION_LABEL} mb-3`}>The Proof</div>
+          <div className={`${SECTION_LABEL} mb-3`}>The Premises, Tested</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
             Real Companies, Real Structures
           </h2>
@@ -168,11 +169,15 @@ export function ScrollPage() {
         </FadeIn>
       </section>
 
-      {/* ─── TRANSITION DARE ─── */}
+      {/* ─── THE OBJECTIONS ─── */}
+      <ObjectionsSection />
+
+      {/* ─── THEREFORE ─── */}
       <section className="py-12 md:py-16 px-6 md:px-12">
         <FadeIn className="max-w-3xl mx-auto text-center">
+          <div className={`${SECTION_LABEL} mb-3`}>Therefore</div>
           <p className="text-lg text-stone-500 font-medium italic">
-            Now it's your turn.
+            If the premises hold, the only unknown left is your numbers.
           </p>
         </FadeIn>
       </section>
@@ -180,12 +185,13 @@ export function ScrollPage() {
       {/* ─── MODEL YOUR ORG ─── */}
       <section id="model" className="py-16 md:py-24 px-6 md:px-12 bg-stone-50">
         <FadeIn className="max-w-5xl mx-auto">
-          <div className={`${SECTION_LABEL} mb-3`}>Model Your Org</div>
+          <div className={`${SECTION_LABEL} mb-3`}>The Conclusion</div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
             How Much Signal Survives Your Structure?
           </h2>
           <p className="text-sm text-stone-500 mb-8">
-            Structure determines fidelity and speed. Authority distribution is your lever.
+            You've seen the premises and the proof. This is the conclusion, applied:
+            your depth, your spans, your decision mix — your ceiling.
           </p>
           <ModelYourOrg />
         </FadeIn>

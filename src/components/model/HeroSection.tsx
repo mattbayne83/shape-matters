@@ -40,9 +40,10 @@ export function HeroSection() {
         </div>
 
         <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-          Every management layer is a lossy relay. This tool models how organizational depth
-          degrades information fidelity, inflates communication costs, and impacts the decisions
-          that shape culture and performance.
+          Your org chart is an information system — and most were never engineered as one.
+          Every management layer is a lossy relay, and the losses compound. Shape, not talent,
+          sets the ceiling on what your leaders can know and how fast they can act. Here's the
+          argument — and the tool to measure your ceiling.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
@@ -50,13 +51,13 @@ export function HeroSection() {
             href="#model"
             className="px-8 py-3.5 bg-ember text-white font-medium rounded-lg hover:bg-ember-deep hover:shadow-xl hover:shadow-ember/20 active:scale-95 transition-all text-sm w-full sm:w-auto"
           >
-            Model Your Org
+            Measure Your Ceiling
           </a>
           <a
-            href="#problem"
+            href="#simulate"
             className="px-8 py-3.5 bg-white text-stone-700 font-medium border border-stone-300 rounded-lg hover:bg-stone-50 hover:border-stone-400 hover:text-stone-900 active:scale-95 transition-all flex items-center justify-center gap-2 text-sm w-full sm:w-auto"
           >
-            Read the Theory
+            Read the Argument
             <ArrowRight className="w-4 h-4" />
           </a>
         </div>
@@ -66,7 +67,7 @@ export function HeroSection() {
           <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[200px]">
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
-                Fidelity
+                Fidelity · What Survives
               </div>
               <div className="flex items-baseline justify-between mb-1">
                 <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums text-stone-900">
@@ -94,7 +95,7 @@ export function HeroSection() {
           <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[200px]">
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
-                Decision Speed
+                Decision Speed · How Fast It Moves
               </div>
               <div className="flex items-baseline justify-between mb-1">
                 <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums text-stone-900">
@@ -140,7 +141,7 @@ export function HeroSection() {
           <div className="group flex flex-col justify-between text-left py-5 px-5 bg-stone-50 border border-stone-200 rounded-xl hover:shadow-lg hover:shadow-stone-200/50 hover:bg-white transition-all duration-300 cursor-default h-[200px]">
             <div>
               <div className="text-[10px] font-semibold uppercase tracking-wide text-stone-400 mb-3">
-                Flatness Index
+                Flatness Index · The Shape Behind Both
               </div>
               <div className="flex items-baseline justify-between mb-1">
                 <div className="text-3xl md:text-4xl font-bold font-mono tracking-tight tabular-nums text-stone-900">

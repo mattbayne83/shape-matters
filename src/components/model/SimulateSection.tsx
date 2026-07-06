@@ -11,7 +11,7 @@ export function SimulateSection() {
   return (
     <section id="simulate" className="py-16 md:py-24 px-6 md:px-12">
       <FadeIn className="max-w-5xl mx-auto">
-        <div className={`${SECTION_LABEL} mb-3`}>The Telephone Effect</div>
+        <div className={`${SECTION_LABEL} mb-3`}>Premise 1 · Every Relay Loses Signal</div>
         <h2 className="text-3xl md:text-5xl font-bold font-serif text-stone-900 tracking-tight mb-2">
           Watch Your Message Decay
         </h2>

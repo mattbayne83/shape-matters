@@ -6,6 +6,7 @@ const SECTIONS = [
   { id: 'problem', label: 'Problem' },
   { id: 'evidence', label: 'Evidence' },
   { id: 'proof', label: 'Proof' },
+  { id: 'objections', label: 'Objections' },
   { id: 'model', label: 'Model' },
   { id: 'methodology', label: 'Methodology' },
 ];

@@ -7,6 +7,7 @@ React 19, TypeScript 5.9, Vite 7, Tailwind CSS 4, Zustand 5 (persist), Lucide Re
 
 ## Docs
 - [docs/TECHNICAL.md](docs/TECHNICAL.md) — full architecture, components, calculations, evals, gotchas
+- [docs/ARGUMENT.md](docs/ARGUMENT.md) — the marketing argument (thesis, premises, objections); scroll-page copy traces to it
 - [design-system.md](design-system.md) — design token reference
 - [docs/THEORY_BRIEF.md](docs/THEORY_BRIEF.md), [docs/TORQUE_MODEL.md](docs/TORQUE_MODEL.md), [docs/PHYSICS_MODELS.md](docs/PHYSICS_MODELS.md), [docs/BAHCALL_LOONSHOTS.md](docs/BAHCALL_LOONSHOTS.md)
 - `evals/insights.md` — accumulated findings from 10 autoresearch cycles

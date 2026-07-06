@@ -204,14 +204,25 @@ it). Each block: the objection verbatim in the skeptic's voice as the heading,
 the concession first, the reframe second. Format suggestion: match the existing
 `bg-white border border-stone-200 rounded-xl` card language from `#evidence`.
 
-### Transition ("Now it's your turn.")
+### Transition ("Now it's your turn.") → the Therefore band
 
-**Current:** *Now it's your turn.* (a dare)
+**Was:** *Now it's your turn.* (a dare, small and skippable)
 
-**Proposed:** label **Therefore**, text:
-> If the premises hold, the only unknown left is your numbers.
+**Now:** a full-bleed `stone-900` band — the page's only dark moment, so the eye
+cannot skip the argument's hinge. Three beats:
 
-This converts running the model from "try the widget" into intellectual honesty.
+1. **Syllogism recap** — the three premises in mono with one-word verdicts
+   (*measured / arithmetic / admitted*), echoing the Bartlett/Deming/Toyota
+   mono card in `#evidence`.
+2. **The ∴ glyph** — the mathematical "therefore" as the divider, on-brand for
+   a theorem-backed site.
+3. **The conclusion + action** —
+   > If the premises hold, the only unknown left is **your numbers**.
+   with an ember CTA repeating the hero's promise: *Measure Your Ceiling* → `#model`.
+
+Design enacting argument: premises accumulate in light, the conclusion lands in
+ink. This converts running the model from "try the widget" into intellectual
+honesty.
 
 ### Model Your Org subhead
 

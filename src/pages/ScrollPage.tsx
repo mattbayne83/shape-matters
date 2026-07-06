@@ -172,13 +172,43 @@ export function ScrollPage() {
       {/* ─── THE OBJECTIONS ─── */}
       <ObjectionsSection />
 
-      {/* ─── THEREFORE ─── */}
-      <section className="py-12 md:py-16 px-6 md:px-12">
+      {/* ─── THEREFORE (the pivot — the page's only dark moment) ─── */}
+      <section className="bg-stone-900 py-20 md:py-28 px-6 md:px-12">
         <FadeIn className="max-w-3xl mx-auto text-center">
-          <div className={`${SECTION_LABEL} mb-3`}>Therefore</div>
-          <p className="text-lg text-stone-500 font-medium italic">
-            If the premises hold, the only unknown left is your numbers.
+          <div className="inline-block text-left font-mono text-[11px] md:text-xs text-stone-400 space-y-2 mb-10">
+            <div>
+              <span className="text-ember">✓</span> Premise 1 — every relay loses signal ·{' '}
+              <span className="text-stone-200">measured</span>
+            </div>
+            <div>
+              <span className="text-ember">✓</span> Premise 2 — losses compound with depth ·{' '}
+              <span className="text-stone-200">arithmetic</span>
+            </div>
+            <div>
+              <span className="text-ember">✓</span> Premise 3 — the best operators already know ·{' '}
+              <span className="text-stone-200">admitted</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-4 mb-10" aria-hidden="true">
+            <div className="h-px w-16 bg-stone-700" />
+            <div className="text-ember text-3xl font-serif leading-none">∴</div>
+            <div className="h-px w-16 bg-stone-700" />
+          </div>
+
+          <p className="text-lg md:text-xl text-stone-400 font-serif italic mb-3">
+            If the premises hold,
           </p>
+          <p className="text-3xl md:text-5xl font-bold font-serif text-white tracking-tight mb-10">
+            the only unknown left is <span className="text-ember">your numbers</span>.
+          </p>
+
+          <a
+            href="#model"
+            className="inline-block px-8 py-3.5 bg-ember text-white font-medium rounded-lg hover:bg-ember-deep hover:shadow-xl hover:shadow-ember/20 active:scale-95 transition-all text-sm"
+          >
+            Measure Your Ceiling
+          </a>
         </FadeIn>
       </section>
 

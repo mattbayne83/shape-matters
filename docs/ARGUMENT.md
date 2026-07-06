@@ -166,20 +166,23 @@ How the argument lands on the scroll page, section by section. Titles marked
 > depth degrades information fidelity, inflates communication costs, and impacts
 > the decisions that shape culture and performance.
 
-**Deployed subhead** (states the thesis — nothing else), set as a two-tier deck:
-> *setup, small sans, stone-500:* Your org chart is an information system. Most
-> were never engineered as one.
->
-> *thesis, serif display, stone-900:* **Shape, not talent,** sets the ceiling on
-> what your leaders can know and how fast they can act.
+**Deployed subhead** (states the thesis — nothing else), one quiet paragraph
+with a single emphasized phrase:
+> Your org chart is an information system. Most were never engineered as one.
+> **Shape, not talent,** sets the ceiling on what your leaders can know and how
+> fast they can act.
 
 Short declaratives, two jobs: the reframe, then the stakes. The
 lossy-relay/compounding line belongs to Premises 1–2 (the scroll delivers it
 seconds later), and "here's the argument, and the tool" was meta-narration the
-CTA buttons directly below already perform. The thesis line is serif because
-every section headline is serif — it inherits the authority the reader learns
-to assign to that voice. Ember stays exclusive to CTAs so orange always means
-"act here."
+CTA buttons directly below already perform.
+
+Emphasis rules learned from mobile testing: the hero already has an eyebrow,
+the wordmark art, two CTAs, and metric cards competing for attention, so the
+subhead stays one type voice at paragraph scale — no display-size thesis line.
+Exactly one phrase gets weight ("Shape, not talent," — the argument lives in
+that contrast; "information system" is only the setup), and ember stays
+exclusive to CTAs so orange always means "act here."
 
 **CTAs:** primary `Measure Your Ceiling` → `#model`; secondary `Read the Argument`
 → `#simulate`. ("Model Your Org" describes a feature; "Measure Your Ceiling"

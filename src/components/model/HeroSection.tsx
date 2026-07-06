@@ -41,9 +41,8 @@ export function HeroSection() {
 
         <p className="text-lg md:text-xl text-stone-500 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
           Your org chart is an information system — and most were never engineered as one.
-          Every management layer is a lossy relay, and the losses compound. Shape, not talent,
-          sets the ceiling on what your leaders can know and how fast they can act. Here's the
-          argument — and the tool to measure your ceiling.
+          Shape, not talent, sets the ceiling on what your leaders can know and how fast
+          they can act.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">

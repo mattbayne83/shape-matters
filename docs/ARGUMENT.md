@@ -166,11 +166,15 @@ How the argument lands on the scroll page, section by section. Titles marked
 > depth degrades information fidelity, inflates communication costs, and impacts
 > the decisions that shape culture and performance.
 
-**Proposed subhead** (states the thesis):
+**Deployed subhead** (states the thesis — nothing else):
 > Your org chart is an information system — and most were never engineered as
-> one. Every management layer is a lossy relay, and the losses compound. Shape,
-> not talent, sets the ceiling on what your leaders can know and how fast they
-> can act. Here's the argument — and the tool to measure your ceiling.
+> one. Shape, not talent, sets the ceiling on what your leaders can know and
+> how fast they can act.
+
+Two sentences, two jobs: the reframe, then the stakes. The lossy-relay/compounding
+line belongs to Premises 1–2 (the scroll delivers it seconds later), and
+"here's the argument — and the tool" was meta-narration the CTA buttons
+directly below already perform.
 
 **CTAs:** primary `Measure Your Ceiling` → `#model`; secondary `Read the Argument`
 → `#simulate`. ("Model Your Org" describes a feature; "Measure Your Ceiling"

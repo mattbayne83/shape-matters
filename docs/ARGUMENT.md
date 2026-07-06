@@ -38,9 +38,9 @@ problems have a structural floor that no amount of talent can dig below."*
 
 ## 2. The thesis (one sentence)
 
-> **Your org chart is an information system — and most were never engineered as
-> one. Shape, not talent, sets the ceiling on what your leaders can know and how
-> fast they can act.**
+> **Your org chart is an information system. Most were never engineered as one.
+> Shape, not talent, sets the ceiling on what your leaders can know and how fast
+> they can act.**
 
 Everything on the page either supports this sentence or handles an objection to it.
 
@@ -166,15 +166,20 @@ How the argument lands on the scroll page, section by section. Titles marked
 > depth degrades information fidelity, inflates communication costs, and impacts
 > the decisions that shape culture and performance.
 
-**Deployed subhead** (states the thesis — nothing else):
-> Your org chart is an information system — and most were never engineered as
-> one. Shape, not talent, sets the ceiling on what your leaders can know and
-> how fast they can act.
+**Deployed subhead** (states the thesis — nothing else), set as a two-tier deck:
+> *setup, small sans, stone-500:* Your org chart is an information system. Most
+> were never engineered as one.
+>
+> *thesis, serif display, stone-900:* **Shape, not talent,** sets the ceiling on
+> what your leaders can know and how fast they can act.
 
-Two sentences, two jobs: the reframe, then the stakes. The lossy-relay/compounding
-line belongs to Premises 1–2 (the scroll delivers it seconds later), and
-"here's the argument — and the tool" was meta-narration the CTA buttons
-directly below already perform.
+Short declaratives, two jobs: the reframe, then the stakes. The
+lossy-relay/compounding line belongs to Premises 1–2 (the scroll delivers it
+seconds later), and "here's the argument, and the tool" was meta-narration the
+CTA buttons directly below already perform. The thesis line is serif because
+every section headline is serif — it inherits the authority the reader learns
+to assign to that voice. Ember stays exclusive to CTAs so orange always means
+"act here."
 
 **CTAs:** primary `Measure Your Ceiling` → `#model`; secondary `Read the Argument`
 → `#simulate`. ("Model Your Org" describes a feature; "Measure Your Ceiling"
